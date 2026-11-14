@@ -45,3 +45,8 @@ Este arquivo complementa o Prompt Mestre com fatos do ambiente onde o código es
 
 ## Documentação do Prompt 00
 A documentação final foi concluída na revisão: [Discovery FLW](flw-discovery.md) e [relatório da etapa e Revisão Gemini](etapas/prompt-00.md). Os resultados locais e as pendências de URL externa e duas contas FLW estão separados nesses documentos. A homologação externa continua pendente; consulte os critérios de entrada antes do Prompt 01.
+
+## Atualização (14/11/2026 09:50 BRT) — hospedagem liberada
+- O repositório agora é **público** e o **GitHub Pages está habilitado** (build_type workflow): https://adilsonzetta.github.io/zetta-estetica/ . No próximo ajuste do workflow `.github/workflows/deploy.yml`, ative também o gatilho `push` na branch `main` (mantendo `workflow_dispatch`) e gere `dist/404.html` como fallback SPA. O workflow não deve depender da pilha local (testes que precisam de Postgres/GoTrue local não rodam no CI; rode só lint, testes unitários e build).
+- Variáveis no GitHub: `vars.VITE_SUPABASE_URL` e `secrets.VITE_SUPABASE_PUBLISHABLE_KEY` / `secrets.VITE_SUPABASE_ANON_KEY` (chave publishable `sb_publishable_...`). Aceite as duas no frontend.
+- Projeto Supabase hospedado criado: ref `ijjhtfryawtjoxvprjix` (sa-east-1). As migrations de `supabase/migrations/` serão aplicadas nele pelo orquestrador via MCP; por isso elas NÃO podem depender de nada da emulação local (`scripts/local-stack/bootstrap.sql` é só local; storage/auth já existem no Supabase real). Seeds de demonstração ficam separados das migrations (`supabase/seed.sql` ou scripts), nunca dentro de migrations.

@@ -1,7 +1,10 @@
-name: Homologação manual no GitHub Pages
+name: Build e publicação no GitHub Pages
 
-# Repo privado: Pages está indisponível no plano atual. Não executar em push.
+# Pages liberado conforme atualização do ambiente em 14/11/2026.
+# CI não depende de Postgres/GoTrue locais.
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -28,6 +31,7 @@ jobs:
       - run: npm run build
         env:
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
           VITE_FLW_RETURN_URL: ${{ vars.VITE_FLW_RETURN_URL }}
       - uses: actions/upload-pages-artifact@v3

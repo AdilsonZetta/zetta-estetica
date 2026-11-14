@@ -1,0 +1,19 @@
+-- Somente dados sintéticos. Usuários são criados pela API Auth em scripts/seed-local.mjs.
+insert into public.tenants(id,slug,name) values
+ ('10000000-0000-0000-0000-000000000001','clinica-aurora','Clínica Aurora • demonstração'),
+ ('20000000-0000-0000-0000-000000000001','clinica-horizonte','Clínica Horizonte • demonstração') on conflict do nothing;
+insert into public.units(id,tenant_id,name) values
+ ('10000000-0000-0000-0000-000000000011','10000000-0000-0000-0000-000000000001','Aurora • Centro'),
+ ('10000000-0000-0000-0000-000000000012','10000000-0000-0000-0000-000000000001','Aurora • Unidade restrita'),
+ ('20000000-0000-0000-0000-000000000011','20000000-0000-0000-0000-000000000001','Horizonte • Centro') on conflict do nothing;
+insert into public.tenant_entitlements(tenant_id,module_key) select id,'core' from public.tenants on conflict do nothing;
+insert into public.tenant_memberships(tenant_id,user_id,role,status)
+select t.id,u.id, case when u.email in ('a@example.com','b@example.com') then 'clinic_admin' else 'manager' end,
+ case when u.email='revogado@example.com' then 'revoked' else 'active' end
+from public.tenants t cross join auth.users u where
+ (t.slug='clinica-aurora' and u.email in ('a@example.com','multi@example.com','revogado@example.com')) or
+ (t.slug='clinica-horizonte' and u.email in ('b@example.com','multi@example.com'))
+on conflict(tenant_id,user_id) do update set status=excluded.status,role=excluded.role;
+insert into public.membership_units(tenant_id,membership_id,unit_id)
+select m.tenant_id,m.id,u.id from public.tenant_memberships m join public.units u on u.tenant_id=m.tenant_id
+where u.id::text in ('10000000-0000-0000-0000-000000000011','20000000-0000-0000-0000-000000000011') on conflict do nothing;

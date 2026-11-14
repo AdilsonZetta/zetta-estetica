@@ -9,7 +9,7 @@ test('sem backend mostra estado claro e formulário desabilitado', async ({ page
   await expect(page.getByLabel('E-mail de teste')).toBeVisible()
 })
 test('alterna os destinos sintéticos sem prometer autorização', async ({ page }) => {
-  const response = await page.goto('/zetta-estetica/')
+  const response = await page.goto(path)
   expect(response?.status()).toBe(200)
   await expect(page.getByText('SIM-CARD-A')).toBeVisible()
   await page.getByLabel('Clínica de demonstração').selectOption('clinica-horizonte')

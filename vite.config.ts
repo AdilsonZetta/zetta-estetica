@@ -1,7 +1,10 @@
 import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
 
-// Prova isolada. A aplicação React será criada no Prompt 01.
+// Laboratório do Discovery preservado como entrada independente.
 export default defineConfig({
   base: '/zetta-estetica/',
+  plugins: [react(), tailwindcss()],
   build: { rollupOptions: { input: { main: 'index.html', lab: 'integration-lab/index.html' } } },
 })
