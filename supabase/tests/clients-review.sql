@@ -1,0 +1,25 @@
+begin;
+set local search_path=public,extensions;
+select no_plan();
+select is(to_regprocedure('public.set_client_link(uuid,uuid,uuid,text,text,text,text,uuid)'),null,'Assinatura sem versão removida');
+select ok(not has_function_privilege('anon','public.set_client_link(uuid,uuid,uuid,text,text,text,text,uuid,integer)','EXECUTE'),'Anônimo sem RPC de vínculo');
+select ok(not has_function_privilege('service_role','public.set_client_link(uuid,uuid,uuid,text,text,text,text,uuid,integer)','EXECUTE'),'Serviço sem RPC de vínculo operacional');
+select ok(has_function_privilege('authenticated','public.set_client_link(uuid,uuid,uuid,text,text,text,text,uuid,integer)','EXECUTE'),'Sessão pode chamar RPC autorizada no corpo');
+select set_config('request.jwt.claims',json_build_object('sub',(select id from auth.users where email='a@example.com'),'role','authenticated')::text,true);
+create temp table review_fixture(client uuid,link uuid);
+grant all on review_fixture to authenticated;
+set local role authenticated;
+insert into review_fixture(client) select public.save_client('10000000-0000-0000-0000-000000000001','10000000-0000-0000-0000-000000000011','Revisão proveniência sintética',reviewed=>true);
+update review_fixture set link=public.set_client_link('10000000-0000-0000-0000-000000000001','10000000-0000-0000-0000-000000000011',client,'card','review_sql','review_sql');
+reset role;
+-- Preparação sintética: nenhuma sincronização externa é habilitada.
+update private.client_links set mode='synchronized',source_updated_at='2026-11-14T00:00:00Z' where id=(select link from review_fixture);
+set local role authenticated;
+select throws_ok($$select public.set_client_link('10000000-0000-0000-0000-000000000001','10000000-0000-0000-0000-000000000011',client,'card','review_sql','review_sql','retired',link) from review_fixture$$,'40001',null,'Edição sem versão é recusada');
+select lives_ok($$select public.set_client_link('10000000-0000-0000-0000-000000000001','10000000-0000-0000-0000-000000000011',client,'card','review_sql','review_sql','confirmed',link,2) from review_fixture$$,'Revisão com versão atual aceita');
+select is((public.client_detail('10000000-0000-0000-0000-000000000001','10000000-0000-0000-0000-000000000011',(select client from review_fixture))->'links'->0->>'mode'),'manual','Revisão explicita proveniência manual');
+select is((public.client_detail('10000000-0000-0000-0000-000000000001','10000000-0000-0000-0000-000000000011',(select client from review_fixture))->'links'->0->>'source_updated_at'),null,'Revisão remove carimbo de sincronização');
+select ok(exists(select 1 from jsonb_array_elements(public.client_detail('10000000-0000-0000-0000-000000000001','10000000-0000-0000-0000-000000000011',(select client from review_fixture))->'history') e where e->'effects'->'previous'->>'mode'='synchronized'),'Histórico preserva proveniência anterior');
+reset role;
+select * from finish();
+rollback;

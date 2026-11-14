@@ -371,6 +371,9 @@ isOneToOne: false
 "claim_invitation_delivery":
 { Args: { "invitation": string }; Returns: Json
                            },
+"client_detail":
+{ Args: { "client": string,"tenant": string,"unit": string }; Returns: Json
+                           },
 "complete_flw_manual_task":
 { Args: { "reference": string,"task": string,"tenant": string }; Returns: undefined
                            },
@@ -409,6 +412,9 @@ isOneToOne: false
               "id": string,"name": string,"slug": string
             }[]
                            },
+"merge_clients":
+{ Args: { "confirmed"?: boolean,"reason": string,"source": string,"source_version": number,"survivor": string,"survivor_version": number,"tenant": string,"unit": string }; Returns: Json
+                           },
 "module_probe":
 { Args: { "module": string,"tenant": string,"unit": string }; Returns: string
                            },
@@ -419,6 +425,9 @@ isOneToOne: false
 { Args: Record<PropertyKey, never>; Returns: {
               "id": string,"name": string,"slug": string,"status": string
             }[]
+                           },
+"preview_client_import":
+{ Args: { "rows": Json,"tenant": string,"unit": string }; Returns: Json
                            },
 "preview_module":
 { Args: { "enabled": boolean,"module": string,"tenant": string }; Returns: string
@@ -452,6 +461,15 @@ isOneToOne: false
                            },
 "revoke_support":
 { Args: { "grant_id": string }; Returns: undefined
+                           },
+"save_client":
+{ Args: { "client"?: string,"email"?: string,"expected_version"?: number,"name": string,"phone"?: string,"reviewed"?: boolean,"tenant": string,"unit": string }; Returns: string
+                           },
+"search_clients":
+{ Args: { "after_id"?: string,"query"?: string,"tenant": string,"unit": string }; Returns: Json
+                           },
+"set_client_link":
+{ Args: { "client": string,"expected_version"?: number,"kind": string,"link"?: string,"link_state"?: string,"reference": string,"source": string,"tenant": string,"unit": string }; Returns: string
                            },
 "set_member_scope":
 { Args: { "membership": string,"reason": string,"tenant": string,"units": (string)[] }; Returns: undefined

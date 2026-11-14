@@ -1,0 +1,39 @@
+{
+  "rows": [
+    {
+      "line": 1,
+      "name": "Maria Silva",
+      "errors": [],
+      "status": "review",
+      "candidates": [],
+      "phone_e164": "+5511999990101",
+      "source_ref": "amostra_1"
+    },
+    {
+      "line": 2,
+      "name": "Maria Silva",
+      "errors": [],
+      "status": "review",
+      "candidates": [],
+      "phone_e164": "+5511999990101",
+      "source_ref": "amostra_2"
+    },
+    {
+      "line": 3,
+      "name": "",
+      "errors": [
+        "Nome obrigatório (até 160 caracteres)",
+        "Telefone sem país/DDD suficiente"
+      ],
+      "status": "rejected",
+      "candidates": [],
+      "phone_e164": null,
+      "source_ref": "amostra_3"
+    }
+  ],
+  "total": 3,
+  "review": 2,
+  "dry_run": true,
+  "mapping": "clients.manual.v1",
+  "rejected": 1
+}

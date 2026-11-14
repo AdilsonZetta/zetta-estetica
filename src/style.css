@@ -48,3 +48,14 @@ select { max-width: 550px; }
 .console code, .console pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12px; }
 .console form { max-width: 620px; margin-bottom: 28px; }
 .console .tenant-card h3, .console .tenant-card p { margin: 4px 0; }
+
+.clients { margin-top: 2rem; border-top: 1px solid var(--border, #ddd); padding-top: 1.5rem; }
+.clients form { margin-block: 1.5rem; }
+.clients pre, .clients small { overflow-wrap: anywhere; white-space: pre-wrap; }
+.client-list { list-style: none; padding: 0; display: grid; gap: .75rem; }
+.client-list li { display: grid; gap: .4rem; }
+.clients textarea { width: 100%; box-sizing: border-box; border: 1px solid #aaa; border-radius: .75rem; padding: .75rem; background: #ffffffc7; font: inherit; }
+.clients input[type=checkbox] { width: auto; margin-right: .5rem; }
+.clients [role=tab][aria-selected=true] { background: #cfff04; color: #111; }
+.clients details { margin-block: 1.5rem; }
+.clients summary { cursor: pointer; font-weight: 600; }

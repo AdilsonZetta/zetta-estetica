@@ -11,6 +11,9 @@ set local role authenticated;
 insert into review_jobs select n,(public.request_flw_operation('10000000-0000-0000-0000-000000000001','10000000-0000-0000-0000-000000000011','card.update',gen_random_uuid(),1,gen_random_uuid(),true)->>'delivery_id')::uuid from generate_series(1,25) n;
 reset role;
 update private.tenant_integrations set state='pending' where tenant_id='10000000-0000-0000-0000-000000000001';
+-- Todas as inserções desta transação compartilham now(); desempate por UUID é aleatório.
+-- Ordena a fixture por n para o lease do item 2 sempre caber no lote de dez.
+update private.outbox_events e set occurred_at=now()-interval '1 minute'+make_interval(secs=>j.n) from private.integration_deliveries d join review_jobs j on j.id=d.id where e.id=d.event_id;
 update private.outbox_events set occurred_at=now()-interval '1 day' where id=(select event_id from private.integration_deliveries where id=(select id from review_jobs where n=1));
 update private.integration_deliveries set state='retry',next_attempt_at=now()+interval '1 hour' where id in(select id from review_jobs where n between 2 and 13);
 update private.integration_deliveries set state='retry',attempts=5 where id=(select id from review_jobs where n=14);

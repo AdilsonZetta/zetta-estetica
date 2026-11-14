@@ -112,3 +112,7 @@ Trocar rota, clínica, unidade, identidade ou sair descarta estado anterior, can
 ## Adaptador FLW por capacidades (Prompt 04)
 
 O admin clínico dispõe de tarefas e vínculos manuais em **Administrar equipe → Integração FLW**. Contato, card, cobrança e automação retornam `CAPABILITY_NOT_VERIFIED`; nenhuma chamada FLW foi habilitada. O contrato interno, as fichas de teste, a fila privada, os leases, retries e replay autorizado estão descritos em [Adaptador FLW](docs/flw-adapter.md). Simulação usa exclusivamente `fixtures/simulacao/flw.ts`, com `simulated: true`, e não comprova conta ou capacidade externa. Relatório e homologação: [Prompt 04](docs/etapas/prompt-04.md).
+
+## Clientes (Prompt 05)
+
+**Clínica → Clientes** oferece pesquisa por nome/telefone, ficha, vínculos manuais de contato/card FLW, histórico por módulo habilitado, merge supervisionado e prévia JSON de importação com relatório de rejeições. Toda operação exige unidade autorizada; o UUID é interno e telefone compartilhado nunca provoca fusão automática. FLW permanece manual e sem URL de card homologada. Consulte [contratos e roteiro](docs/clientes.md) e [relatório da etapa](docs/etapas/prompt-05.md). Aplicar as migrations aditivas `202611140011_clients.sql` e `202611140012_clients_review.sql`, nessa ordem, após as anteriores, recarregar PostgREST e gerar tipos; não aplicar fixtures sintéticas no projeto hospedado.
