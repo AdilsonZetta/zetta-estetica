@@ -129,15 +129,20 @@ test('console Zetta: sete telas, conexão pendente, ícone manual e assinatura',
       .getByRole('button', { name: 'Instalações de ícone', exact: true })
       .click()
     await expect(page.getByLabel('URL para instalação manual')).toHaveValue(
-      /\/clinicas\/teste-/
+      /\/launch\/teste-/
     )
     await page
       .getByLabel('Referência manual da conta (sem credenciais)')
       .fill('Conta FLW sintética')
+    await page.getByLabel('Nome do ícone', { exact: true }).fill('Gestão Estética teste')
+    await page.getByLabel('Modo desejado (não habilita capacidade)').selectOption('iframe')
+    await page.getByLabel('Status da instalação manual').selectOption('blocked')
+    await page.getByLabel('Evidência redigida (sem tokens ou dados pessoais)').fill('Sem conta FLW; anotação de bloqueio local.')
     await page
       .getByRole('button', { name: 'Registrar configuração manual' })
       .click()
     await expect(page.getByRole('status')).toContainText('Alteração registrada')
+    await expect(page.getByLabel('Nome do ícone', { exact: true })).toHaveValue('Gestão Estética teste')
     await page
       .getByRole('button', { name: 'Assinaturas SaaS', exact: true })
       .click()

@@ -12,11 +12,23 @@ enabled = true
 sql_paths = ["./seed.sql"]
 [auth]
 enabled = true
-site_url = "http://localhost:5173/zetta-estetica/"
-additional_redirect_urls = ["http://localhost:5173/zetta-estetica/**"]
+site_url = "http://localhost:5173/zetta-estetica/launch"
+additional_redirect_urls = ["http://localhost:5173/zetta-estetica/convites/*"]
 enable_signup = false
 [auth.email]
 enable_confirmations = true
+# Código expira em 10 min; novo pedido no máximo uma vez por minuto.
+otp_expiry = 600
+otp_length = 6
+max_frequency = "1m"
 [storage]
 enabled = true
 file_size_limit = "1MiB"
+
+# Código no corpo, sem URL de login derivada de entrada livre.
+[auth.email.template.magic_link]
+subject = "Seu código Zetta Estética"
+content_path = "./supabase/templates/magic-link.html"
+[auth.email.template.invite]
+subject = "Seu convite Zetta Estética"
+content_path = "./supabase/templates/invite.html"

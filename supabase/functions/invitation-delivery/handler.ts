@@ -10,6 +10,23 @@ export function deliveryHandler(
   config: Config,
   transport: typeof fetch = fetch
 ) {
+  let approvedAppUrl: URL | null = null
+  try {
+    const app = new URL(config.appUrl)
+    if (
+      app.origin === config.allowedOrigin &&
+      !app.username &&
+      !app.password &&
+      !app.search &&
+      !app.hash &&
+      (app.protocol === 'https:' ||
+        (app.protocol === 'http:' &&
+          ['localhost', '127.0.0.1'].includes(app.hostname)))
+    )
+      approvedAppUrl = app
+  } catch {
+    /* Configuração inválida: não enviar convite. */
+  }
   const backendUrl = config.url.replace(/\/+$/, '')
   return async (request: Request): Promise<Response> => {
     const headers = {
@@ -27,7 +44,7 @@ export function deliveryHandler(
       !config.allowedOrigin ||
       !config.publicKey ||
       !config.serviceKey ||
-      !/^https?:\/\//.test(config.appUrl)
+      !approvedAppUrl
     )
       return reply(503, 'SERVER_NOT_CONFIGURED')
     if (
@@ -78,7 +95,7 @@ export function deliveryHandler(
       const item = await claimed.json()
       if (!item) return reply(409, 'DELIVERY_IN_PROGRESS_OR_BLOCKED')
       lease = item.lease
-      const redirect = `${config.appUrl.replace(/\/$/, '')}/convites/${invitation}`
+      const redirect = `${approvedAppUrl!.href.replace(/\/+$/, '')}/convites/${invitation}`
       const sent = await transport(
         `${backendUrl}/auth/v1/invite?redirect_to=${encodeURIComponent(redirect)}`,
         {

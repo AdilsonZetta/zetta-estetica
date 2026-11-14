@@ -206,14 +206,14 @@ isOneToOne: true
                   ]
                 },"tenant_connections": {
                   Row: {
-                    "capability_state": string,"credential_state": string,"evidence": string,"icon_account_label": string,"icon_installer": string | null,"icon_state": string,"icon_updated_at": string | null,"last_test_at": string | null,"opening_mode": string,"return_url": string,"tenant_id": string,"test_state": string
+                    "capability_state": string,"credential_state": string,"desired_mode": string,"evidence": string,"evolution_evidence": string,"icon_account_label": string,"icon_installer": string | null,"icon_name": string,"icon_state": string,"icon_updated_at": string | null,"installation_evidence": string,"installation_status": string,"last_test_at": string | null,"opening_mode": string,"return_url": string,"tenant_id": string,"test_state": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "capability_state"?: string,"credential_state"?: string,"evidence"?: string,"icon_account_label"?: string,"icon_installer"?: string | null,"icon_state"?: string,"icon_updated_at"?: string | null,"last_test_at"?: string | null,"opening_mode"?: string,"return_url"?: string,"tenant_id": string,"test_state"?: string
+                    "capability_state"?: string,"credential_state"?: string,"desired_mode"?: string,"evidence"?: string,"evolution_evidence"?: string,"icon_account_label"?: string,"icon_installer"?: string | null,"icon_name"?: string,"icon_state"?: string,"icon_updated_at"?: string | null,"installation_evidence"?: string,"installation_status"?: string,"last_test_at"?: string | null,"opening_mode"?: string,"return_url"?: string,"tenant_id": string,"test_state"?: string
                   }
                   Update: {
-                    "capability_state"?: string,"credential_state"?: string,"evidence"?: string,"icon_account_label"?: string,"icon_installer"?: string | null,"icon_state"?: string,"icon_updated_at"?: string | null,"last_test_at"?: string | null,"opening_mode"?: string,"return_url"?: string,"tenant_id"?: string,"test_state"?: string
+                    "capability_state"?: string,"credential_state"?: string,"desired_mode"?: string,"evidence"?: string,"evolution_evidence"?: string,"icon_account_label"?: string,"icon_installer"?: string | null,"icon_name"?: string,"icon_state"?: string,"icon_updated_at"?: string | null,"installation_evidence"?: string,"installation_status"?: string,"last_test_at"?: string | null,"opening_mode"?: string,"return_url"?: string,"tenant_id"?: string,"test_state"?: string
                   }
                   Relationships: [
                     {
@@ -386,6 +386,11 @@ isOneToOne: false
 "invite_member":
 { Args: { "clinic_role": string,"email": string,"tenant": string,"unit": string }; Returns: string
                            },
+"launch_context":
+{ Args: { "destination"?: string }; Returns: {
+              "id": string,"name": string,"slug": string
+            }[]
+                           },
 "module_probe":
 { Args: { "module": string,"tenant": string,"unit": string }; Returns: string
                            },
@@ -405,6 +410,9 @@ isOneToOne: false
                            },
 "publish_module":
 { Args: { "change": string }; Returns: undefined
+                           },
+"record_icon_installation":
+{ Args: { "account_label": string,"desired_mode": string,"evidence": string,"evolution"?: string,"icon_name": string,"installation_status": string,"tenant": string }; Returns: undefined
                            },
 "request_invitation_delivery":
 { Args: { "invitation": string }; Returns: string

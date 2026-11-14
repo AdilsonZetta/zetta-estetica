@@ -485,20 +485,20 @@ export function PlatformConsole({ db }: { db: DB }) {
           <>
             <h3>Gestão Estética na FLW</h3>
             <p>
-              Configuração: {tenant.connection?.icon_state || 'pending'} ·
-              Abertura externa com Supabase Auth.
+              Configuração: {tenant.connection?.icon_state || 'pending'} · Aba
+              externa proposta com Supabase Auth; comprovação FLW pendente.
             </p>
             <label htmlFor="launch-url">URL para instalação manual</label>
             <input
               id="launch-url"
               readOnly
-              value={`${window.location.origin}${import.meta.env.BASE_URL}clinicas/${tenant.slug}`}
+              value={`${window.location.origin}${import.meta.env.BASE_URL}launch/${tenant.slug}`}
             />
             <button
               onClick={() =>
                 void navigator.clipboard
                   .writeText(
-                    `${window.location.origin}${import.meta.env.BASE_URL}clinicas/${tenant.slug}`
+                    `${window.location.origin}${import.meta.env.BASE_URL}launch/${tenant.slug}`
                   )
                   .then(() => setNotice('URL copiada.'))
                   .catch(() =>
@@ -515,10 +515,14 @@ export function PlatformConsole({ db }: { db: DB }) {
             <form
               key={`${selected}-form-6`}
               onSubmit={submit((f) =>
-                db.rpc('configure_icon', {
+                db.rpc('record_icon_installation', {
                   tenant: tenant.id,
                   account_label: field(f, 'account'),
-                  return_url: field(f, 'return')
+                  icon_name: field(f, 'icon-name'),
+                  desired_mode: field(f, 'mode'),
+                  installation_status: field(f, 'installation-status'),
+                  evidence: field(f, 'evidence'),
+                  evolution: field(f, 'evolution')
                 })
               )}
             >
@@ -532,14 +536,57 @@ export function PlatformConsole({ db }: { db: DB }) {
                 maxLength={120}
                 defaultValue={tenant.connection?.icon_account_label}
               />
-              <label htmlFor="icon-return">
-                URL de retorno HTTPS (opcional)
-              </label>
+              <label htmlFor="icon-name">Nome do ícone</label>
               <input
-                id="icon-return"
-                name="return"
-                type="url"
-                defaultValue={tenant.connection?.return_url}
+                id="icon-name"
+                name="icon-name"
+                required
+                maxLength={80}
+                defaultValue={tenant.connection?.icon_name || 'Gestão Estética'}
+              />
+              <label htmlFor="icon-mode">
+                Modo desejado (não habilita capacidade)
+              </label>
+              <select
+                id="icon-mode"
+                name="mode"
+                defaultValue={tenant.connection?.desired_mode || 'external_tab'}
+              >
+                <option value="external_tab">Aba externa</option>
+                <option value="same_tab">Mesma aba</option>
+                <option value="iframe">Iframe — evolução condicionada</option>
+                <option value="sso">SSO — evolução condicionada</option>
+              </select>
+              <label htmlFor="icon-status">Status da instalação manual</label>
+              <select
+                id="icon-status"
+                name="installation-status"
+                defaultValue={
+                  tenant.connection?.installation_status || 'pending'
+                }
+              >
+                <option value="pending">Pendente</option>
+                <option value="installed">Instalado</option>
+                <option value="tested">Testado</option>
+                <option value="blocked">Bloqueado</option>
+              </select>
+              <label htmlFor="icon-evidence">
+                Evidência redigida (sem tokens ou dados pessoais)
+              </label>
+              <textarea
+                id="icon-evidence"
+                name="evidence"
+                maxLength={2000}
+                defaultValue={tenant.connection?.installation_evidence}
+              />
+              <label htmlFor="icon-evolution">
+                Evolução: referência de contrato oficial e prova formal
+              </label>
+              <textarea
+                id="icon-evolution"
+                name="evolution"
+                maxLength={2000}
+                defaultValue={tenant.connection?.evolution_evidence}
               />
               <button disabled={busy}>Registrar configuração manual</button>
             </form>

@@ -134,3 +134,24 @@ Deno.test(
     assert((await handle(req())).status === 200)
   }
 )
+
+Deno.test(
+  'Destino de convite deve pertencer à origem aprovada, sem query, fragmento ou credenciais',
+  async () => {
+    for (const appUrl of [
+      'https://outra.invalid/app',
+      'https://app.invalid/app?next=https://evil.invalid',
+      'https://app.invalid/app#token',
+      'https://user:senha@app.invalid/app',
+      'http://app.invalid/app'
+    ]) {
+      let calls = 0
+      const handle = deliveryHandler({ ...config, appUrl }, () => {
+        calls++
+        throw new Error('Não deve enviar')
+      })
+      assert((await handle(req())).status === 503)
+      assert(calls === 0)
+    }
+  }
+)
