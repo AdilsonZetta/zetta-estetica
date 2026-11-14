@@ -1,0 +1,35 @@
+:root { font-family: Inter, sans-serif; color: #171719; background: #fff; font-synthesis: none; line-height: 1.6; }
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+body::before, body::after { content: ''; position: fixed; border-radius: 50%; background: #202024; filter: blur(110px); opacity: .10; width: 420px; height: 420px; z-index: -1; pointer-events: none; }
+body::before { top: -210px; right: -80px; } body::after { bottom: -220px; left: -180px; }
+html { background-image: linear-gradient(#11111104 1px, transparent 1px), linear-gradient(90deg, #11111104 1px, transparent 1px); background-size: 32px 32px; }
+header { padding: 25px 5vw; border-bottom: 1px solid #e8e8e8; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.brand { display: flex; align-items: center; gap: 9px; color: inherit; text-decoration: none; font-size: 25px; font-weight: 600; letter-spacing: -.8px; }
+.brand-detail { font-size: 13px; font-weight: 400; letter-spacing: 0; border-left: 1px solid #d1d1d1; padding-left: 10px; }
+.logo { display: grid; place-items: center; width: 36px; height: 36px; color: #cfff04; background: #171719; border-radius: 11px; }
+main { max-width: 1140px; padding: 55px 28px 24px; margin: auto; }
+.intro { margin-bottom: 34px; }.eyebrow, .step { font-size: 11px; letter-spacing: 1.5px; font-weight: 600; color: #53535a; }
+h1, h2 { font-family: 'Inter Tight', Inter, sans-serif; font-weight: 600; letter-spacing: -.04em; line-height: 1.1; }
+h1 { font-size: clamp(36px, 5vw, 58px); margin: 16px 0; } h2 { font-size: 25px; margin: 0 0 20px; }
+.intro > p:not(.eyebrow) { color: #53535a; }.notice { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; font-size: 13px; margin-top: 24px; }
+.dot { width: 8px; height: 8px; border-radius: 100%; background: #555; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.glass { background: #ffffffc7; backdrop-filter: blur(24px); border: 1px solid #e6e6e8; border-radius: 23px; padding: 28px; box-shadow: 0 8px 35px #11111106; animation: enter .4s ease both; }
+.step { margin-top: 0; margin-bottom: 14px; } .muted { color: #56565d; font-size: 13px; }
+label { display: block; font-size: 13px; font-weight: 500; margin: 14px 0 7px; }
+input, select { width: 100%; font: inherit; padding: 11px 12px; color: inherit; background: #fff; border: 1px solid #c7c7cb; border-radius: 10px; }
+button, .button { display: inline-flex; align-items: center; justify-content: center; gap: 12px; font: inherit; font-size: 14px; font-weight: 500; padding: 12px 16px; min-height: 44px; border: 1px solid #c7c7cb; border-radius: 10px; color: inherit; background: #fff; cursor: pointer; text-decoration: none; transition: transform .15s; }
+button:hover, .button:hover { transform: translateY(-1px); } .primary { background: #cfff04; border-color: #b3dc00; color: #111; }
+form button { margin-top: 20px; width: 100%; } button:disabled { opacity: .65; cursor: not-allowed; transform: none; }
+:focus-visible { outline: 3px solid #171719; outline-offset: 4px; }
+[hidden] { display: none !important; }
+dl { border-top: 1px solid #e6e6e8; padding-top: 16px; font-size: 13px; } dt { color: #56565d; } dd { margin: 0 0 12px; overflow-wrap: anywhere; }
+.chip { font-size: 10px; letter-spacing: .8px; font-weight: 600; border: 1px solid #d6d6da; padding: 7px 10px; border-radius: 100px; white-space: nowrap; }
+#auth-status { font-weight: 500; } #auth-message, #capability-result { overflow-wrap: anywhere; font-size: 13px; }
+footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; color: #56565d; font-size: 12px; padding-top: 32px; }
+.skip { position: fixed; top: -100px; left: 20px; z-index: 2; padding: 10px; background: #fff; color: #111; } .skip:focus { top: 10px; }
+@keyframes enter { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+@media (max-width: 700px) { .grid { grid-template-columns: 1fr; } main { padding: 32px 18px 24px; } header { padding: 20px 18px; } .brand-detail { display: none; } .glass { padding: 23px; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+@media (prefers-reduced-transparency: reduce) { .glass { background: #fff; backdrop-filter: none; } body::before, body::after { display: none; } }

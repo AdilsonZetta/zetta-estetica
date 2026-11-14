@@ -31,7 +31,7 @@ Este arquivo complementa o Prompt Mestre com fatos do ambiente onde o código es
 
 ## Frontend
 - Stack: React 19 + TypeScript + Vite + Tailwind v4 + supabase-js + react-router-dom (mesma base do projeto irmão `/workspace/guia-local`, consulte `package.json`, `vite.config.ts`, `src/index.css`, `src/components/ui`).
-- Deploy no GitHub Pages: `base: '/zetta-estetica/'`, BrowserRouter com basename `import.meta.env.BASE_URL`, `404.html` como fallback SPA (workflow `.github/workflows/deploy.yml` igual ao do guia-local, com `VITE_SUPABASE_URL` em vars e `VITE_SUPABASE_ANON_KEY` em secrets). Sem backend configurado, a UI deve mostrar uma tela clara "Backend não configurado" em vez de quebrar.
+- GitHub Pages NÃO está disponível (repo privado no plano gratuito, HTTP 422). Mantenha o app pronto para Pages mesmo assim, mas o workflow deve rodar só via `workflow_dispatch` (sem gatilho em push) para não falhar a cada commit. Configuração: `base: '/zetta-estetica/'`, BrowserRouter com basename `import.meta.env.BASE_URL`, `404.html` como fallback SPA (workflow `.github/workflows/deploy.yml` igual ao do guia-local, com `VITE_SUPABASE_URL` em vars e `VITE_SUPABASE_ANON_KEY` em secrets). Sem backend configurado, a UI deve mostrar uma tela clara "Backend não configurado" em vez de quebrar.
 - Lint com oxlint. Typecheck com `tsc -b`.
 
 ## Design (obrigatório em todas as telas, inclusive login)
@@ -42,3 +42,6 @@ Este arquivo complementa o Prompt Mestre com fatos do ambiente onde o código es
 - Movimento leve; respeitar `prefers-reduced-motion` e `prefers-reduced-transparency`.
 - Referência: https://lp.pierre.finance/lp/converse, porém com fundo branco. Reaproveite tokens/efeitos de `/workspace/guia-local/src/index.css`.
 - Interface responsiva (desktop e mobile), acessível (labels, foco visível, contraste), estados de carregando/vazio/erro em todas as listas.
+
+## Documentação do Prompt 00
+A documentação final foi concluída na revisão: [Discovery FLW](flw-discovery.md) e [relatório da etapa e Revisão Gemini](etapas/prompt-00.md). Os resultados locais e as pendências de URL externa e duas contas FLW estão separados nesses documentos. A homologação externa continua pendente; consulte os critérios de entrada antes do Prompt 01.

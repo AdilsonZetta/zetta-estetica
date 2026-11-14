@@ -1,0 +1,25 @@
+{
+  "name": "zetta-estetica-discovery",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build && node scripts/spa-fallback.mjs",
+    "lint": "oxlint --deny-warnings",
+    "preview": "vite preview",
+    "test": "node --experimental-strip-types --test tests/lab.test.ts",
+    "test:api": "node --test tests/auth-api.test.mjs",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.119.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.0",
+    "@types/node": "^24.19.2",
+    "oxlint": "^1.90.0",
+    "typescript": "~7.0.2",
+    "vite": "^8.3.6"
+  }
+}
