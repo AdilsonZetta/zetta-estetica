@@ -1,3 +1,4 @@
+import { ClinicIntegrations } from './integrations'
 import React, { useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Link, Route, Routes, useParams, useLocation } from 'react-router-dom'
@@ -100,7 +101,7 @@ function Clinic({ admin = false }: { admin?: boolean }) {
     return () => { live = false }
   }, [tenant, unit])
   if (status) return <section className="glass"><p role="status">{status}</p><Link to="/">Voltar às clínicas</Link></section>
-  return <section className="glass"><p className="step">CONTEXTO ATIVO</p><h2>{tenant?.name}</h2><label htmlFor="unit">Unidade ativa</label><select id="unit" value={unit} onChange={e => { clearTenantContext(); void db?.removeAllChannels(); setUnit(e.target.value) }}>{units.map(u => <option key={u.id} value={u.id}>{u.name}</option>)}</select>{!units.length && <p>Nenhuma unidade autorizada.</p>}{unit && (admin ? canManage ? <><MemberAdmin key={`members:${unit}`} tenant={tenant!.id} unit={unit} /><ClinicModules key={`modules:${unit}`} db={db!} tenant={tenant!.id} unit={unit} admin /></> : <p role="alert">Acesso administrativo negado para esta unidade.</p> : <><ClinicModules key={`modules:${unit}`} db={db!} tenant={tenant!.id} unit={unit} admin={false} selectedModule={module} />{canManage && <Link to={`/clinicas/${slug}/admin`}>Administrar equipe</Link>}</>)}<p><Link to="/">Trocar clínica</Link></p></section>
+  return <section className="glass"><p className="step">CONTEXTO ATIVO</p><h2>{tenant?.name}</h2><label htmlFor="unit">Unidade ativa</label><select id="unit" value={unit} onChange={e => { clearTenantContext(); void db?.removeAllChannels(); setUnit(e.target.value) }}>{units.map(u => <option key={u.id} value={u.id}>{u.name}</option>)}</select>{!units.length && <p>Nenhuma unidade autorizada.</p>}{unit && (admin ? canManage ? <><MemberAdmin key={`members:${unit}`} tenant={tenant!.id} unit={unit} /><ClinicIntegrations key={`flw:${unit}`} db={db!} tenant={tenant!.id} unit={unit} /><ClinicModules key={`modules:${unit}`} db={db!} tenant={tenant!.id} unit={unit} admin /></> : <p role="alert">Acesso administrativo negado para esta unidade.</p> : <><ClinicModules key={`modules:${unit}`} db={db!} tenant={tenant!.id} unit={unit} admin={false} selectedModule={module} />{canManage && <Link to={`/clinicas/${slug}/admin`}>Administrar equipe</Link>}</>)}<p><Link to="/">Trocar clínica</Link></p></section>
 }
 function MemberAdmin({ tenant, unit }: { tenant: string; unit: string }) {
   const [message, setMessage] = useState(''); const [busy, setBusy] = useState(false)

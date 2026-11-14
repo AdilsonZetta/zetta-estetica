@@ -365,8 +365,14 @@ isOneToOne: false
 "check_access":
 { Args: { "module"?: string,"permission": string,"tenant": string,"unit": string }; Returns: boolean
                            },
+"claim_flw_delivery":
+{ Args: { "delivery": string,"tenant": string }; Returns: Json
+                           },
 "claim_invitation_delivery":
 { Args: { "invitation": string }; Returns: Json
+                           },
+"complete_flw_manual_task":
+{ Args: { "reference": string,"task": string,"tenant": string }; Returns: undefined
                            },
 "configure_icon":
 { Args: { "account_label": string,"return_url": string,"tenant": string }; Returns: undefined
@@ -377,8 +383,20 @@ isOneToOne: false
 "export_tenant_metadata":
 { Args: { "tenant": string }; Returns: Json
                            },
+"finish_flw_delivery":
+{ Args: { "delivery": string,"lease": string,"outcome": string,"tenant": string }; Returns: boolean
+                           },
 "finish_invitation_delivery":
 { Args: { "invitation": string,"lease": string,"success": boolean }; Returns: undefined
+                           },
+"flw_capabilities":
+{ Args: { "tenant": string,"unit": string }; Returns: Json
+                           },
+"flw_operations":
+{ Args: { "tenant": string,"unit": string }; Returns: Json
+                           },
+"flw_work_candidates":
+{ Args: { "tenant": string,"unit": string }; Returns: Json
                            },
 "grant_support":
 { Args: { "grantee": string,"minutes": number,"reason": string,"scope": string,"tenant": string }; Returns: string
@@ -411,8 +429,17 @@ isOneToOne: false
 "publish_module":
 { Args: { "change": string }; Returns: undefined
                            },
+"record_flw_capability_test":
+{ Args: { "account_label": string,"capability": string,"documentation": string,"limits_summary": string,"proof": string,"result": string,"sample_summary": string,"scope": string,"tenant": string,"unit": string }; Returns: undefined
+                           },
 "record_icon_installation":
 { Args: { "account_label": string,"desired_mode": string,"evidence": string,"evolution"?: string,"icon_name": string,"installation_status": string,"tenant": string }; Returns: undefined
+                           },
+"replay_flw_delivery":
+{ Args: { "delivery": string,"reconciled"?: boolean,"tenant": string }; Returns: undefined
+                           },
+"request_flw_operation":
+{ Args: { "correlation": string,"entity": string,"operation": string,"simulation"?: boolean,"tenant": string,"unit": string,"version": number }; Returns: Json
                            },
 "request_invitation_delivery":
 { Args: { "invitation": string }; Returns: string
