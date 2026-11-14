@@ -1,0 +1,432 @@
+# Central de Ajuda
+
+## Home
+
+- [Início](https://docs.flw.chat/readme.md): Guias passo a passo, novidades da plataforma e respostas para as dúvidas mais frequentes.
+
+## Guias
+
+- [Início](https://docs.flw.chat/guide/readme.md): Guias de cada módulo da plataforma, do primeiro acesso à operação do dia a dia.
+- [Primeiros Passos](https://docs.flw.chat/guide/documentacao/primeiros-passos.md): Os cadastros essenciais para deixar a plataforma pronta para atender.
+- [Canais](https://docs.flw.chat/guide/documentacao/faq.md): Conecte WhatsApp, Instagram, Messenger e WebChat à plataforma, e resolva os problemas mais comuns de conexão.
+- [WhatsApp (Oficial)](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp.md): Guias para conectar seu número de WhatsApp à plataforma pela API Oficial da Meta, gerenciar conexões e resolver problemas comuns.
+- [Portfólio Empresarial](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/portfolio-empresarial.md): Guias para criar, configurar e gerenciar seu Portfólio Empresarial (Meta Business Manager).
+- [Boas práticas para criação do portfólio](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/portfolio-empresarial/boas-praticas-para-criacao-do-portfolio.md): Diretrizes para criar e configurar seu portfólio empresarial de forma segura, evitando bloqueios e restrições da Meta.
+- [Criar portfólio empresarial](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/portfolio-empresarial/criar-portfolio-empresarial.md): Passo a passo para criar seu portfólio empresarial no Meta Business Manager e começar a gerenciar seus ativos digitais.
+- [Verificar portfólio empresarial](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/portfolio-empresarial/verificar-portfolio-empresarial.md): Guia completo para verificar seu portfólio empresarial na Meta e obter acesso a funcionalidades avançadas.
+- [Verificar domínio](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/portfolio-empresarial/verificar-dominio.md): Como verificar o domínio da sua empresa no Meta Business Manager para liberar funcionalidades avançadas.
+- [Informações do portfólio](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/portfolio-empresarial/informacoes-do-portfolio.md): Como acessar e editar as informações da sua empresa no Meta Business Manager.
+- [Incluir administradores](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/portfolio-empresarial/incluir-administradores.md): Passo a passo para convidar novos administradores ao seu portfólio empresarial na Meta.
+- [Alterar logomarca do portfólio](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/portfolio-empresarial/alterar-logomarca-do-portfolio.md): Guia para alterar a foto de perfil e a logomarca do WhatsApp no portfólio empresarial da Meta.
+- [Desativar autenticação em dois fatores](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/portfolio-empresarial/desativar-autenticacao-em-dois-fatores.md): Como desativar temporariamente a autenticação em dois fatores (2FA) no portfólio empresarial da Meta.
+- [Excluir portfólio empresarial](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/portfolio-empresarial/excluir-portfolio-empresarial.md): Como excluir um portfólio empresarial no Meta Business Manager e quais cuidados tomar antes de realizar essa ação.
+- [CloudAPI](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/cloudapi.md): Guias para conectar, configurar e gerenciar seu canal WhatsApp via Cloud API (API Oficial da Meta).
+- [Conectar Canal](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/cloudapi/conexao-whatsapp-cloud-api.md): Passo a passo para conectar seu número de WhatsApp à plataforma pela Cloud API da Meta.
+- [Migração de Números](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/cloudapi/migracao-de-numeros.md)
+- [Display name](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/cloudapi/alterar-display-name.md): Como alterar o nome de exibição (Display Name) do seu número de WhatsApp na API oficial da Meta.
+- [Perfil do WhatsApp](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/cloudapi/alterar-perfil-do-whatsapp.md): Como alterar foto, descrição, endereço e outras informações do perfil do WhatsApp no portfólio empresarial.
+- [Remover número](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/cloudapi/remover-numero-do-portfolio.md): Como remover um número de telefone da conta do WhatsApp Business (WABA) no Meta Business Manager.
+- [CloudAPI QR Code (Coexistência)](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/cloudapi-qr-code.md): Guias para conectar, gerenciar e desconectar seu canal WhatsApp via Cloud API com leitura de QR Code.
+- [Conectar Canal](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/cloudapi-qr-code/conexao-via-qr-code.md): Passo a passo para conectar seu número de WhatsApp à plataforma via QR Code (modo de coexistência).
+- [Desativar contas de anúncio](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/cloudapi-qr-code/desativar-contas-de-anuncio.md): Como localizar e desativar contas de anúncio criadas automaticamente durante a conexão via QR Code.
+- [Desconectar](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/cloudapi-qr-code/remover-conexao-qr-code.md): Como desconectar um número de WhatsApp conectado via QR Code pelo aplicativo WhatsApp Business.
+- [Pagamentos](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/pagamentos.md): Guias para configurar pagamentos e consultar extratos de conversas na API Oficial do WhatsApp.
+- [Configurar](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/pagamentos/configurar-pagamento.md): Como cadastrar uma forma de pagamento no Meta Business Manager para utilizar a API Oficial do WhatsApp.
+- [Extrato](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/pagamentos/consultar-extrato-de-pagamento.md): Como acessar e consultar o extrato de pagamento de conversas do WhatsApp na Meta Business.
+- [Página de suporte](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/acessar-pagina-de-suporte.md): Como acessar a página inicial de suporte no Meta Business Manager para verificar restrições e obter ajuda.
+- [Erros comuns](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/erros-e-problemas.md): Informações sobre erros comuns da Meta, banimentos e como resolver problemas com o WhatsApp Business.
+- [Códigos de Erros](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/erros-e-problemas/codigos-de-erros-da-meta.md): Descrição dos principais códigos de erro da Meta e orientações para entender suas causas e soluções.
+- [Meu número foi banido](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/erros-e-problemas/meu-numero-foi-banido.md): O que fazer quando seu número comercial é banido no WhatsApp, tipos de banimento e como solicitar uma revisão.
+- [Revisão de banimento](https://docs.flw.chat/guide/documentacao/faq/conexao-whatsapp/erros-e-problemas/solicitar-revisao-de-banimento.md): Passo a passo para solicitar revisão de banimento ou bloqueio da conta do WhatsApp Business na Meta.
+- [WhatsApp (Não Oficial)](https://docs.flw.chat/guide/documentacao/faq/whatsapp-nao-oficial.md): Esta seção apresenta os procedimentos para conectar seu número do WhatsApp à plataforma utilizando APIs não oficiais. Os guias a seguir detalham as etapas necessárias para cada método de integração.
+- [Z-API (Conta Própria)](https://docs.flw.chat/guide/documentacao/faq/whatsapp-nao-oficial/z-api-conta-propria.md): Guia passo a passo para conectar um canal Z-API com conta própria à plataforma.
+- [Z-API (Integrado)](https://docs.flw.chat/guide/documentacao/faq/whatsapp-nao-oficial/z-api-integrado.md): Guia passo a passo para conectar um canal Z-API integrado à plataforma, com faturamento direto pela plataforma.
+- [EvolutionAPI](https://docs.flw.chat/guide/documentacao/faq/whatsapp-nao-oficial/evolutionapi.md): Guia passo a passo para conectar um canal EvolutionAPI à plataforma utilizando sua própria infraestrutura.
+- [Restrições em Conexões Não Oficiais](https://docs.flw.chat/guide/documentacao/faq/whatsapp-nao-oficial/restricoes-em-conexoes-nao-oficiais.md): Entenda os riscos, restrições e bloqueios que podem ocorrer ao usar conexões não oficiais (Z-API e similares) no WhatsApp.
+- [Instagram/Messenger](https://docs.flw.chat/guide/documentacao/faq/instagram-messenger.md): Guias para conectar, renovar e solucionar problemas do Instagram e Messenger na plataforma.
+- [Conectar Canal](https://docs.flw.chat/guide/documentacao/faq/instagram-messenger/cadastrar-instagram-facebook-messenger.md): Guia passo a passo para conectar o Instagram e o Messenger à plataforma e centralizar o atendimento aos seus contatos.
+- [Renovar Token](https://docs.flw.chat/guide/documentacao/faq/instagram-messenger/renovar-token-do-instagram-e-messenger.md): Guia passo a passo para renovar o token de permissão do Instagram e do Facebook Messenger e manter a integração ativa na plataforma.
+- [Instagram: Mensagens Não Chegam](https://docs.flw.chat/guide/documentacao/faq/instagram-messenger/mensagens-do-instagram-nao-chegam.md): Ajuste as configurações do Instagram e do Facebook para que nenhuma mensagem fique de fora do atendimento.
+- [WebChat](https://docs.flw.chat/guide/documentacao/faq/webchat.md): Como criar e configurar um canal WebChat para atender seus contatos por link ou QR Code.
+- [Conformidade e Políticas Comerciais: API Oficial](https://docs.flw.chat/guide/documentacao/conformidade.md)
+- [Setores Permitidos e Proibidos](https://docs.flw.chat/guide/documentacao/conformidade/setores-permitidos-e-proibidos.md)
+- [Diretrizes de Conduta e Integridade](https://docs.flw.chat/guide/documentacao/conformidade/diretrizes-de-conduta-e-integridade.md)
+- [Boas Práticas e Como Evitar Bloqueios](https://docs.flw.chat/guide/documentacao/conformidade/boas-praticas-e-como-evitar-bloqueios.md)
+- [Atendimento](https://docs.flw.chat/guide/documentacao/atendimento.md)
+- [Central de Atendimento](https://docs.flw.chat/guide/documentacao/atendimento/comece-aqui.md)
+- [Acessando a Plataforma pelo Aplicativo Móvel](https://docs.flw.chat/guide/documentacao/atendimento/comece-aqui/acessando-pelo-app.md): Este guia detalha o processo de login seguro e o gerenciamento da sessão no aplicativo móvel.
+- [Acessando a Plataforma pela Web](https://docs.flw.chat/guide/documentacao/atendimento/comece-aqui/acessando-pela-web.md): Este guia detalha o processo de login e as considerações iniciais para acessar sua conta através do navegador.
+- [Abas, Filtros e Ações em Massa](https://docs.flw.chat/guide/documentacao/atendimento/comece-aqui/abas-e-filtros-de-conversas.md): Utilize as Abas, Filtros e Ações em Lote para Otimizar o Fluxo de Trabalho e a Produtividade.
+- [Dados do Contato e Gestão Rápida](https://docs.flw.chat/guide/documentacao/atendimento/comece-aqui/abrir-dados-do-contato.md): Guia para Visualizar, Editar e Gerenciar o Histórico Completo do Cliente Diretamente na Tela de Atendimento.
+- [Como os atendimentos chegam até você](https://docs.flw.chat/guide/documentacao/atendimento/como-os-atendimentos-chegam-ate-voce.md): Entenda por que você vê algumas conversas e não outras, e o que significa o cronômetro que aparece no card.
+- [Operações no Atendimento](https://docs.flw.chat/guide/documentacao/atendimento/operacoes-de-atendimento.md)
+- [Iniciar Atendimento](https://docs.flw.chat/guide/documentacao/atendimento/operacoes-de-atendimento/iniciar-atendimento.md): Guia detalhado para iniciar uma conversa com um novo contato a partir da área de Atendimentos.
+- [Assumir Atendimento](https://docs.flw.chat/guide/documentacao/atendimento/operacoes-de-atendimento/assumir-atendimento.md): Este guia explica como um usuário pode assumir um atendimento recém-chegado à sua equipe.
+- [Transferir Atendimento](https://docs.flw.chat/guide/documentacao/atendimento/operacoes-de-atendimento/transferir-atendimento.md): Este guia explica como transferir conversas entre usuários e equipes, garantindo continuidade, organização e flexibilidade na gestão dos atendimentos.
+- [Concluir e Classificar Atendimento](https://docs.flw.chat/guide/documentacao/atendimento/operacoes-de-atendimento/concluir-atendimento.md): Guia de Processo: Como Concluir e Classificar Atendimentos na Plataforma.
+- [Reiniciar Atendimento](https://docs.flw.chat/guide/documentacao/atendimento/operacoes-de-atendimento/reiniciar-atendimento.md): Este guia explica como reabrir uma conversa que foi concluída ou cuja janela de 24 horas foi encerrada. Aqui, você aprenderá como realizar a reabertura de forma correta.
+- [Preferências de Arquivamento](https://docs.flw.chat/guide/documentacao/atendimento/operacoes-de-atendimento/alterar-padrao-de-arquivamento-12h-imediato.md): Guia de Configuração das Preferências de Arquivamento.
+- [Ferramentas de Interação](https://docs.flw.chat/guide/documentacao/atendimento/ferramentas-de-interacao.md): Nesta seção, você encontra a sua caixa completa de ferramentas para o atendimento.
+- [Enviar Imagem](https://docs.flw.chat/guide/documentacao/atendimento/ferramentas-de-interacao/enviar-imagem.md): Guia detalhado sobre como anexar, legendar e enviar imagens no atendimento, além de como gerenciar as mídias enviadas (baixar, excluir ou responder).
+- [Enviar Vídeo](https://docs.flw.chat/guide/documentacao/atendimento/ferramentas-de-interacao/enviar-video.md): Guia detalhado sobre como anexar, legendar e enviar vídeos no atendimento, além de como gerenciar as mídias enviadas (baixar, excluir ou responder).
+- [Enviar Áudio](https://docs.flw.chat/guide/documentacao/atendimento/ferramentas-de-interacao/enviar-audio.md): Guia detalhado sobre como anexar arquivos de áudio, incluindo as regras essenciais de formato e os limites de tamanho aplicáveis aos canais.
+- [Gravar Áudio](https://docs.flw.chat/guide/documentacao/atendimento/ferramentas-de-interacao/gravar-audio.md): Guia detalhado sobre como gravar mensagens de voz diretamente na plataforma, controlar a velocidade de reprodução e entender as regras de estabilidade.
+- [Enviar Documento](https://docs.flw.chat/guide/documentacao/atendimento/ferramentas-de-interacao/enviar-documento.md): Guia detalhado sobre como anexar arquivos (PDF, DOCX, TXT, etc.) no atendimento e como gerenciar os documentos enviados (baixar, excluir ou encaminhar).
+- [Modelo de Mensagem](https://docs.flw.chat/guide/documentacao/atendimento/ferramentas-de-interacao/enviar-modelo-de-mensagem.md): Guia detalhado sobre como enviar um Modelo de Mensagem (template) aprovado diretamente pela tela de atendimento.
+- [Mensagens Rápidas](https://docs.flw.chat/guide/documentacao/atendimento/ferramentas-de-interacao/enviar-mensagem-rapida.md): Guia detalhado sobre como usar respostas prontas (mensagens rápidas) para agilizar o atendimento, seja pelo menu de anexo ou pelo atalho de barra (/).
+- [Agendar Mensagem](https://docs.flw.chat/guide/documentacao/atendimento/ferramentas-de-interacao/agendamentos-pelo-atendimento.md): Guia detalhado sobre como agendar o envio de um modelo de mensagem ou chatbot para o futuro, diretamente pela tela de atendimento.
+- [Solicitar Pagamento](https://docs.flw.chat/guide/documentacao/atendimento/ferramentas-de-interacao/solicitar-pagamento.md): Guia detalhado sobre como utilizar a funcionalidade de solicitação de pagamento na plataforma, garantindo uma gestão eficaz e organizada das suas cobranças.
+- [Iniciar Chatbot](https://docs.flw.chat/guide/documentacao/atendimento/ferramentas-de-interacao/iniciar-chatbot.md): Guia detalhado sobre como utilizar chatbots durante o atendimento para otimizar processos e melhorar a experiência do cliente.
+- [Notas da Conversa](https://docs.flw.chat/guide/documentacao/atendimento/ferramentas-de-interacao/notas-internas-na-conversa-da-plataforma.md): Guia detalhado sobre o uso das Notas Internas na plataforma: como registrar informações internas de atendimento para melhorar a organização e a eficiência no suporte ao cliente.
+- [Integração com o CRM](https://docs.flw.chat/guide/documentacao/atendimento/integracao-atendimento-x-crm.md)
+- [Criar Cards Através do Atendimento](https://docs.flw.chat/guide/documentacao/atendimento/integracao-atendimento-x-crm/inserir-card-em-painel-1.md): Saiba como inserir, editar e visualizar itens dos seus Painéis durante o atendimento ao cliente.
+- [Grupos do Whatsapp](https://docs.flw.chat/guide/documentacao/atendimento/gestao-de-grupos-no-atendimento.md)
+- [Criar Grupos (API Oficial)](https://docs.flw.chat/guide/documentacao/atendimento/gestao-de-grupos-no-atendimento/api-oficial.md): Guia completo para criação, gestão e centralização de conversas em grupos do WhatsApp diretamente pela plataforma.
+- [Criar Grupos (API Não Oficial)](https://docs.flw.chat/guide/documentacao/atendimento/gestao-de-grupos-no-atendimento/api-nao-oficial.md): Guia completo para criação, gestão e centralização de conversas em grupos do WhatsApp diretamente pela plataforma.
+- [Gerenciar Grupos (Arquivar, Bloquear, Sair, Excluir)](https://docs.flw.chat/guide/documentacao/atendimento/gestao-de-grupos-no-atendimento/gerenciar-grupos-arquivar-bloquear-sair-excluir.md): Guia detalhado sobre como utilizar as Ações de Arquivamento em grupos do WhatsApp.
+- [CRM](https://docs.flw.chat/guide/documentacao/crm.md)
+- [Contato](https://docs.flw.chat/guide/documentacao/crm/contato.md): Cadastre, importe, organize e encontre os contatos da sua base, com etiquetas e campos próprios.
+- [Gerenciar Etiquetas](https://docs.flw.chat/guide/documentacao/crm/contato/gerenciar-etiquetas.md): Crie, edite, vincule e exclua as etiquetas usadas para segmentar a sua base de contatos.
+- [Criar e Editar Etiquetas](https://docs.flw.chat/guide/documentacao/crm/contato/gerenciar-etiquetas/inserir-etiqueta.md): Saiba como criar novas etiquetas, personalizar cores e nomes, e manter sua biblioteca de etiquetas organizada na plataforma.
+- [Excluir Etiquetas](https://docs.flw.chat/guide/documentacao/crm/contato/gerenciar-etiquetas/excluir-etiquetas.md): Saiba como excluir etiquetas da sua base de contatos com segurança, entendendo o impacto da ação e quando uma validação adicional é solicitada.
+- [Vincular Etiqueta a um Contato](https://docs.flw.chat/guide/documentacao/crm/contato/gerenciar-etiquetas/inserir-etiqueta-1.md): Aprenda como associar etiquetas aos seus contatos para organizar e categorizar sua base de forma eficiente, seja pelo CRM ou diretamente durante um atendimento.
+- [Cadastrar contato](https://docs.flw.chat/guide/documentacao/crm/contato/cadastrar-contato.md): Cadastre um novo contato manualmente, com nome, telefone e campos adicionais.
+- [Importar Contatos em Lote](https://docs.flw.chat/guide/documentacao/crm/contato/importacao-de-contatos.md): Traga contatos de uma planilha, arquivo CSV ou vCard, mapeando as colunas para os campos da plataforma.
+- [Pesquisar contato](https://docs.flw.chat/guide/documentacao/crm/contato/pesquisar-contato.md): Encontre um contato pela barra de busca ou pelos filtros avançados, incluindo arquivados e bloqueados.
+- [Exportar Base de Contatos](https://docs.flw.chat/guide/documentacao/crm/contato/exportar-base-de-contatos.md): Gere um arquivo com os contatos da sua base, em planilha, PDF ou CSV, respeitando o filtro aplicado na tela.
+- [Bloquear ou Arquivar contato](https://docs.flw.chat/guide/documentacao/crm/contato/bloquear-ou-arquivar-contato.md): Entenda a diferença entre bloquear e arquivar, e como aplicar cada um pelo CRM ou pela tela de atendimento.
+- [Editar campos personalizados](https://docs.flw.chat/guide/documentacao/crm/contato/editar-campos-personalizados.md): Crie campos próprios no cadastro de contato para guardar as informações que a sua operação precisa.
+- [Painéis](https://docs.flw.chat/guide/documentacao/crm/paineis.md)
+- [Tipos de Painel](https://docs.flw.chat/guide/documentacao/crm/paineis/tipos-de-painel.md)
+- [Primeiros Passos](https://docs.flw.chat/guide/documentacao/crm/paineis/primeiros-passos.md): Guia de início rápido para quem está configurando o CRM Painéis pela primeira vez. Entenda os tipos disponíveis e siga o caminho para criar seu primeiro fluxo.
+- [Vendas](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas.md): Visão geral do módulo, benefícios, quando usar e índice de todos os artigos desta seção.
+- [Novo Painel](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas/configuracao-inicial.md)
+- [Visão Geral](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas/configuracao-inicial/configurando-seu-painel.md): Aprenda como acessar, visualizar e navegar pelo seu painel de CRM de Vendas pela primeira vez.
+- [Configuração](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas/configuracao-inicial/como-criar-e-configurar-um-painel-de-vendas.md): Passo a passo para criar um painel do tipo Vendas no CRM, configurar etapas do funil, motivos de perda e regras de encerramento automático.
+- [Novo card](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas/configuracao-inicial/como-criar-um-card.md): Aprenda como criar um novo card de negócio no painel de Vendas e entender os campos disponíveis ao registrar uma nova oportunidade.
+- [Migração](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas/configuracao-inicial/como-migrar-um-painel-de-gestao-para-vendas.md): Saiba como converter um painel do tipo Gestão para Vendas sem perder os dados já cadastrados, com mapeamento das etapas finais e opção de reversão por 5 dias.
+- [Duplicação](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas/configuracao-inicial/duplicacao-de-painel.md): Saiba como criar uma cópia da estrutura de um painel existente para agilizar a configuração de novos funis.
+- [Exclusão de Painel](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas/configuracao-inicial/como-excluir-e-restaurar-um-painel-no-crm.md): Saiba como excluir um painel com segurança, onde encontrá-lo após a exclusão e como restaurá-lo dentro do prazo de 30 dias.
+- [Funil e Etapas](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas/funil-e-etapas.md)
+- [Funil de vendas](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas/funil-e-etapas/o-que-e-o-funil-de-vendas-no-crm.md): Entenda o conceito de funil de vendas, como ele funciona na plataforma e como estruturá-lo para o seu processo.
+- [Configurar etapas](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas/funil-e-etapas/como-adicionar-e-reordenar-etapas.md): Saiba como personalizar as colunas do seu funil de vendas adicionando novas etapas e ajustando a ordem.
+- [Excluir etapa](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas/funil-e-etapas/exclusao-de-etapas.md): Saiba como excluir uma etapa do funil com segurança, escolher o destino dos cards e entender o que acontece com cada um após a confirmação.
+- [Motivos de Perda](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas/motivos-de-perda.md)
+- [Configurar](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas/motivos-de-perda/como-gerenciar-motivos-de-perda.md): Saiba como adicionar, excluir e personalizar os motivos de perda do seu painel de Vendas.
+- [Marcação automática](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas/motivos-de-perda/marcacao-automatica-de-perda-por-inatividade.md): Entenda como funciona a regra que marca cards como Perda automaticamente após um período de inatividade e como configurar o prazo no seu painel de Vendas.
+- [Ganho/Perda](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas/finalizando-negociacoes.md)
+- [Ciclo de vida](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas/finalizando-negociacoes/arquivamento-ganho-perda.md): Entenda quando usar cada estado de encerramento de card no CRM de Vendas e quais ações ficam disponíveis ou bloqueadas em cada situação.
+- [Marcar como Ganho](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas/finalizando-negociacoes/como-marcar-como-ganho.md): Saiba como registrar uma negociação concluída como Ganho no CRM, informar o valor da venda e entender o que acontece com o card após a confirmação
+- [Marcar como Perda](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas/finalizando-negociacoes/como-marcar-como-perda.md): Saiba como registrar uma negociação como Perda no CRM, escolher o motivo correto e entender o que acontece com o card após a confirmação.
+- [Arquivar](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas/finalizando-negociacoes/como-arquivar-um-card.md): Saiba quando e como arquivar um card no CRM de Vendas, o que acontece após o arquivamento e como acessar ou desarquivar um card arquivado.
+- [Arrastar e Soltar](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas/finalizando-negociacoes/arrastar-soltar-kanban.md): Encerre negociações de forma rápida e visual arrastando cards diretamente para as zonas de ação no Kanban, sem precisar abrir o card.
+- [Alterar a Data de Fechamento do Card](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas/finalizando-negociacoes/data-de-conclusao-do-card.md): Aprenda a definir, editar e usar a data em que uma negociação foi marcada como Ganho ou Perda, para deixar seus relatórios de Vendas mais precisos.
+- [Visão Lista](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas/visualizacoes.md)
+- [Estrutura](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas/visualizacoes/visao-lista.md): Saiba como usar a visualização Lista para acessar todos os cards do painel, incluindo negociações finalizadas e arquivadas.
+- [Pesquisa](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas/visualizacoes/como-filtrar-e-pesquisar-cards.md): Saiba como usar os filtros do CRM para localizar cards por campos do card e do contato vinculado, com opções expandidas na visão Lista.
+- [Edição/Ordenação](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas/visualizacoes/edicao-e-ordenacao-na-visao-lista.md): Saiba como editar campos diretamente na visão Lista sem abrir o card e como ordenar os registros por coluna.
+- [Relatório de Vendas](https://docs.flw.chat/guide/documentacao/crm/paineis/vendas/entendendo-o-relatorio-de-vendas-no-crm.md): Saiba como interpretar cada indicador do Relatório de Vendas, entender as regras de cálculo e usar os filtros para analisar a performance do seu funil comercial.
+- [Gestão](https://docs.flw.chat/guide/documentacao/crm/paineis/gestao.md): Visão geral do módulo, benefícios, quando usar e índice de todos os artigos desta seção.
+- [Novo Painel](https://docs.flw.chat/guide/documentacao/crm/paineis/gestao/configuracao-inicial.md)
+- [Visão Geral](https://docs.flw.chat/guide/documentacao/crm/paineis/gestao/configuracao-inicial/visao-geral-do-painel-de-gestao.md): Aprenda como acessar, visualizar e navegar pelo seu painel de CRM de Gestão pela primeira vez.
+- [Configuração](https://docs.flw.chat/guide/documentacao/crm/paineis/gestao/configuracao-inicial/como-criar-e-configurar-um-painel-de-gestao.md): Passo a passo para criar um painel do tipo Gestão no CRM, configurar etapas do fluxo e definir as permissões de visualização da equipe.
+- [Novo Card](https://docs.flw.chat/guide/documentacao/crm/paineis/gestao/configuracao-inicial/como-criar-um-card.md): Aprenda como criar um novo card no painel de Gestão e entender os campos disponíveis ao registrar um novo atendimento ou tarefa.
+- [Mover Cards Entre Etapas](https://docs.flw.chat/guide/documentacao/crm/paineis/gestao/configuracao-inicial/mover-cards-entre-etapas.md): Aprenda como mover um card entre as etapas do painel de Gestão pelo Kanban ou diretamente de dentro do card.
+- [Ciclo de Vida dos Cards](https://docs.flw.chat/guide/documentacao/crm/paineis/gestao/configuracao-inicial/ciclo-de-vida-dos-cards.md): Entenda os estados possíveis de um card no painel de Gestão — Andamento, Concluído e Arquivado — e o que fica disponível em cada situação.
+- [Arquivar Card](https://docs.flw.chat/guide/documentacao/crm/paineis/gestao/configuracao-inicial/como-arquivar-um-card.md): Saiba quando e como arquivar um card no painel de Gestão, o que acontece após o arquivamento e como acessar ou desarquivar um card arquivado.
+- [Duplicação do Painel](https://docs.flw.chat/guide/documentacao/crm/paineis/gestao/configuracao-inicial/duplicacao-de-painel.md): Saiba como criar uma cópia da estrutura de um painel existente para agilizar a configuração de novos fluxos.
+- [Exclusão de Painel](https://docs.flw.chat/guide/documentacao/crm/paineis/gestao/configuracao-inicial/como-excluir-e-restaurar-um-painel-no-crm.md): Saiba como excluir um painel com segurança, onde encontrá-lo após a exclusão e como restaurá-lo dentro do prazo de 30 dias.
+- [Funil e Etapas](https://docs.flw.chat/guide/documentacao/crm/paineis/gestao/funil-e-etapas.md)
+- [Funil de Gestão](https://docs.flw.chat/guide/documentacao/crm/paineis/gestao/funil-e-etapas/o-que-e-o-funil-no-painel-de-gestao.md): Entenda o conceito de funil no painel de Gestão, como ele funciona na plataforma e como estruturá-lo para o seu processo operacional.
+- [Configurar Etapas](https://docs.flw.chat/guide/documentacao/crm/paineis/gestao/funil-e-etapas/como-adicionar-e-reordenar-etapas.md): Saiba como personalizar as colunas do seu painel de Gestão adicionando novas etapas e ajustando a ordem.
+- [Excluir Etapa](https://docs.flw.chat/guide/documentacao/crm/paineis/gestao/funil-e-etapas/exclusao-de-etapas.md): Saiba como excluir uma etapa do fluxo com segurança, escolher o destino dos cards e entender o que acontece com cada um após a confirmação.
+- [Visão Lista](https://docs.flw.chat/guide/documentacao/crm/paineis/gestao/visualizacoes.md)
+- [Estrutura](https://docs.flw.chat/guide/documentacao/crm/paineis/gestao/visualizacoes/visao-lista.md): Saiba como usar a visualização Lista para acessar todos os cards do painel de Gestão, incluindo cards arquivados.
+- [Pesquisa](https://docs.flw.chat/guide/documentacao/crm/paineis/gestao/visualizacoes/como-filtrar-e-pesquisar-cards.md): Saiba como usar os filtros do CRM de Gestão para localizar cards por campos do card e do contato vinculado, com opções expandidas na visão Lista.
+- [Edição/Ordenação](https://docs.flw.chat/guide/documentacao/crm/paineis/gestao/visualizacoes/edicao-e-ordenacao-na-visao-lista.md): Saiba como editar campos diretamente na visão Lista sem abrir o card e como ordenar os registros por coluna.
+- [Carteiras](https://docs.flw.chat/guide/documentacao/crm/carteiras.md): Vincule contatos a uma equipe e a um atendente responsável para que o atendimento chegue sempre à pessoa certa.
+- [Funcionamento da Carteirização](https://docs.flw.chat/guide/documentacao/crm/carteiras/funcionamento-da-carteirizacao.md): Entenda como os atendimentos são direcionados conforme o modelo de carteira configurado, Atendente Único ou Múltiplos Atendentes, e como o comportamento se aplica via API.
+- [Atendente Único (Pré-venda)](https://docs.flw.chat/guide/documentacao/crm/carteiras/funcionamento-da-carteirizacao/atendente-unico-pre-venda.md): Entenda como funciona a carteirização no modelo de Atendente Único e como os atendimentos são direcionados na sua operação comercial.
+- [Múltiplos Atendentes (Pós-venda)](https://docs.flw.chat/guide/documentacao/crm/carteiras/funcionamento-da-carteirizacao/multiplos-atendentes-pos-venda.md): Entenda como funciona a carteirização no modelo de Múltiplos Atendentes e como os atendimentos são direcionados na sua operação de pós-venda.
+- [Carteirização via API](https://docs.flw.chat/guide/documentacao/crm/carteiras/funcionamento-da-carteirizacao/carteirizacao-via-api.md): Entenda como a carteirização se comporta ao criar atendimentos e gerenciar contatos em carteiras via API.
+- [Criar uma Nova Carteira](https://docs.flw.chat/guide/documentacao/crm/carteiras/criar-uma-nova-carteira.md): Guia detalhado sobre como criar e configurar carteiras na plataforma.
+- [Incluir e Remover Contatos da Carteira](https://docs.flw.chat/guide/documentacao/crm/carteiras/incluir-contato-na-carteira.md): Guia detalhado sobre como incluir e remover contatos de uma carteira na plataforma.
+- [Alterar ou Excluir uma Carteira](https://docs.flw.chat/guide/documentacao/crm/carteiras/alterar-ou-excluir-uma-carteira.md): Guia detalhado para editar as configurações ou excluir uma carteira de contatos na plataforma.
+- [Permissões por Perfil](https://docs.flw.chat/guide/documentacao/crm/carteiras/permissoes-por-perfil.md): Entenda como cada perfil de usuário interage com as carteiras e quais são as permissões de acesso a contatos na plataforma.
+- [Apps](https://docs.flw.chat/guide/documentacao/apps.md)
+- [Chamadas de Voz](https://docs.flw.chat/guide/documentacao/apps/chamadas-de-voz.md): Realize e receba chamadas de voz diretamente pelo WhatsApp sem sair da plataforma.
+- [Primeiros Passos](https://docs.flw.chat/guide/documentacao/apps/chamadas-de-voz/primeiros-passos.md): Veja o que precisa estar configurado para começar a realizar e receber chamadas de voz pelo WhatsApp.
+- [Tecnologia, Janela e Cobrança](https://docs.flw.chat/guide/documentacao/apps/chamadas-de-voz/cobranca.md): Entenda como as chamadas de voz são cobradas, a tecnologia utilizada, o impacto na janela de conversas do WhatsApp e como acompanhar o consumo.
+- [Configuração](https://docs.flw.chat/guide/documentacao/apps/chamadas-de-voz/configuracao.md): Configure o app de Chamada de Voz para começar a realizar e receber ligações.
+- [Habilitar o App](https://docs.flw.chat/guide/documentacao/apps/chamadas-de-voz/configuracao/habilitar-o-app.md): Saiba como habilitar o app de Chamada de Voz no WhatsApp e quem tem permissão para ativar ou desativar o recurso na conta.
+- [Configurar Canais](https://docs.flw.chat/guide/documentacao/apps/chamadas-de-voz/configuracao/configurar-canais.md): Defina quais equipes e canais oficiais do WhatsApp usam as chamadas de voz, ative a gravação e ajuste o comportamento das chamadas em cada canal.
+- [Menu de Voz](https://docs.flw.chat/guide/documentacao/apps/chamadas-de-voz/configuracao/menu-de-voz.md): Crie menus de voz (URA) com mensagens, opções de discagem e tempo limite, e escolha qual menu cada canal usa.
+- [Distribuição e Carteirização](https://docs.flw.chat/guide/documentacao/apps/chamadas-de-voz/configuracao/distribuicao-e-carteirizacao.md): Entenda como as chamadas de voz são distribuídas entre os atendentes e como a carteirização interfere nesse fluxo.
+- [Realizando Chamadas](https://docs.flw.chat/guide/documentacao/apps/chamadas-de-voz/realizando-chamadas.md): Aprenda a realizar e receber chamadas de voz, gerenciar transferências e acessar o histórico de ligações.
+- [Permissão para Chamadas](https://docs.flw.chat/guide/documentacao/apps/chamadas-de-voz/realizando-chamadas/permissao-para-chamadas.md): Entenda como funciona a solicitação de permissão de chamadas de voz, os tipos de autorização e os limites de ligações por contato.
+- [Iniciar e Receber Chamadas](https://docs.flw.chat/guide/documentacao/apps/chamadas-de-voz/realizando-chamadas/iniciar-e-receber-chamadas.md): Saiba como iniciar uma chamada de voz pelo WhatsApp e como receber chamadas de contatos na plataforma.
+- [Widget de Chamada](https://docs.flw.chat/guide/documentacao/apps/chamadas-de-voz/realizando-chamadas/widget-de-chamada.md): Entenda os estados do widget de chamada de voz e as ações disponíveis durante cada fase da ligação.
+- [Transferir e Concluir Chamadas](https://docs.flw.chat/guide/documentacao/apps/chamadas-de-voz/realizando-chamadas/transferir-e-concluir.md): Saiba como transferir uma chamada de voz para outro atendente ou equipe e como encerrar a ligação corretamente.
+- [Detalhes e Gravação](https://docs.flw.chat/guide/documentacao/apps/chamadas-de-voz/realizando-chamadas/detalhes-e-gravacao.md): Acesse o histórico completo das chamadas de voz, ouça as gravações e consulte a transcrição de cada ligação.
+- [Campanha](https://docs.flw.chat/guide/documentacao/apps/campanha.md)
+- [Permissões de Campanhas](https://docs.flw.chat/guide/documentacao/apps/campanha/gestao-de-permissoes-em-campanhas.md): Entenda os níveis de acesso disponíveis no módulo de Campanhas e saiba como definir o que cada usuário pode fazer.
+- [Arquivar campanha](https://docs.flw.chat/guide/documentacao/apps/campanha/arquivar-campanha.md)
+- [Criar modelo de mensagem para campanha](https://docs.flw.chat/guide/documentacao/apps/campanha/criar-modelo-de-mensagem-para-campanha.md)
+- [Criar nova campanha](https://docs.flw.chat/guide/documentacao/apps/campanha/criar-nova-campanha.md)
+- [Importar público via planilha](https://docs.flw.chat/guide/documentacao/apps/campanha/importar-publico-via-planilha.md): Saiba como importar uma lista de contatos via planilha para definir o público de uma campanha, com mapeamento de variáveis e metadados.
+- [Consultar campanha](https://docs.flw.chat/guide/documentacao/apps/campanha/consultar-campanha.md)
+- [Exportar campanha](https://docs.flw.chat/guide/documentacao/apps/campanha/exportar-campanha.md)
+- [Riscos e custos da campanha](https://docs.flw.chat/guide/documentacao/apps/campanha/riscos-e-custos-da-campanha.md)
+- [Chatbot](https://docs.flw.chat/guide/documentacao/apps/chatbot.md)
+- [Adicionar/Remover Etiquetas do Contato](https://docs.flw.chat/guide/documentacao/apps/chatbot/adicionar-remover-etiquetas-do-contato.md): Guia sobre como usar o bloco de etiquetas dentro do chatbot para organizar e categorizar contatos automaticamente durante o atendimento.
+- [Enviar Pergunta](https://docs.flw.chat/guide/documentacao/apps/chatbot/enviar-pergunta.md)
+- [Perguntas (Estáticas)](https://docs.flw.chat/guide/documentacao/apps/chatbot/enviar-pergunta/perguntas-estaticas.md)
+- [Pergunta Dinâmica](https://docs.flw.chat/guide/documentacao/apps/chatbot/enviar-pergunta/pergunta-dinamica.md): Gere opções de menu em tempo real integrando o seu chatbot a sistemas externos através de Webhooks.
+- [Enviar Mensagem](https://docs.flw.chat/guide/documentacao/apps/chatbot/enviar-mensagem.md)
+- [Rotacionamento de Mensagens](https://docs.flw.chat/guide/documentacao/apps/chatbot/enviar-mensagem/rotacionamento-de-mensagens.md): Como tornar o atendimento do chatbot mais dinâmico, humanizado e escalável com variações inteligentes de mensagens.
+- [Enviar Áudio](https://docs.flw.chat/guide/documentacao/apps/chatbot/enviar-mensagem/enviar-audio.md): Aprenda como configurar o envio de áudios no chatbot, entendendo como o formato de entrega varia conforme o tipo de canal configurado.
+- [Tipos de Chatbot](https://docs.flw.chat/guide/documentacao/apps/chatbot/tipos-de-chatbot.md)
+- [Criando um chatbot](https://docs.flw.chat/guide/documentacao/apps/chatbot/criando-um-chatbot.md)
+- [Copiar e Colar do Chatbot na plataforma](https://docs.flw.chat/guide/documentacao/apps/chatbot/copiar-e-colar-do-chatbot-na-plataforma.md)
+- [Duplicar Chatbot](https://docs.flw.chat/guide/documentacao/apps/chatbot/duplicar-chatbot.md)
+- [Gatilhos](https://docs.flw.chat/guide/documentacao/apps/chatbot/gatilhos.md): Guia completo sobre como adicionar e gerenciar gatilhos diretamente na estrutura do chatbot de atendimento, definindo quando e como ele será acionado.
+- [Pagamentos](https://docs.flw.chat/guide/documentacao/apps/pagamentos.md)
+- [Habilitar o App](https://docs.flw.chat/guide/documentacao/apps/pagamentos/ativar-app-de-pagamento.md): Guia detalhado sobre como ativar e configurar o aplicativo de pagamento na plataforma, para começar a gerenciar cobranças diretamente por ela.
+- [Cancelar e Estornar Pagamento](https://docs.flw.chat/guide/documentacao/apps/pagamentos/cancelar-estornar-pagamento.md): Guia sobre como cancelar uma solicitação de pagamento ou estornar um pagamento já pago diretamente na plataforma.
+- [Consultar Pagamento](https://docs.flw.chat/guide/documentacao/apps/pagamentos/consultar-pagamento.md): Guia sobre como acessar e revisar os pagamentos da sua conta na plataforma.
+- [Permissões de Pagamentos](https://docs.flw.chat/guide/documentacao/apps/pagamentos/permissoes-de-pagamentos.md): Entenda os níveis de acesso disponíveis no módulo de Pagamentos e saiba como definir o que cada usuário pode fazer.
+- [Sequências](https://docs.flw.chat/guide/documentacao/apps/sequencia.md): Visão geral do módulo, benefícios, quando usar e índice de todos os artigos desta seção.
+- [Primeiros passos](https://docs.flw.chat/guide/documentacao/apps/sequencia/primeiros-passos.md): Guia de início rápido para quem está configurando Sequências pela primeira vez. Entenda o conceito e siga o caminho para criar e ativar seu primeiro fluxo de nutrição.
+- [Criar](https://docs.flw.chat/guide/documentacao/apps/sequencia/criar-sequencia.md): Guia completo sobre como configurar, nomear e estruturar um fluxo automatizado de mensagens em etapas para acompanhar seus contatos de forma contínua.
+- [Adicionar/Desabilitar Etapa](https://docs.flw.chat/guide/documentacao/apps/sequencia/adicionar-etapa.md): Guia completo sobre como adicionar e configurar etapas de envio e etapas de controle em uma sequência.
+- [Desabilitar/Excluir](https://docs.flw.chat/guide/documentacao/apps/sequencia/desabilitar-excluir-sequencia.md): Guia completo sobre como desabilitar temporariamente ou excluir permanentemente uma sequência da plataforma.
+- [Incluir Contatos](https://docs.flw.chat/guide/documentacao/apps/sequencia/incluir-contato-na-sequencia.md): Guia completo sobre como adicionar contatos a uma sequência utilizando filtro por contato, lista de números ou todos os contatos.
+- [Remover Contatos](https://docs.flw.chat/guide/documentacao/apps/sequencia/remover-contatos.md): Guia completo sobre como remover contatos de uma sequência individualmente ou em massa.
+- [Contatos na Sequência](https://docs.flw.chat/guide/documentacao/apps/sequencia/contatos-na-sequencia.md): Guia completo sobre como visualizar, pesquisar e filtrar contatos em andamento em uma sequência.
+- [Concluídos](https://docs.flw.chat/guide/documentacao/apps/sequencia/concluidos.md): Guia completo sobre como visualizar e acompanhar os contatos que finalizaram o fluxo de uma sequência.
+- [Sequências via API](https://docs.flw.chat/guide/documentacao/apps/sequencia/sequencias-via-api.md): Entenda como gerenciar sequências e seus contatos via API.
+- [Pesquisa CSAT](https://docs.flw.chat/guide/documentacao/apps/pesquisa-csat.md): Avaliação de satisfação enviada ao contato ao final de cada atendimento.
+- [Primeiros Passos](https://docs.flw.chat/guide/documentacao/apps/pesquisa-csat/primeiros-passos.md): Da habilitação do app até o acompanhamento dos resultados nos relatórios.
+- [Habilitar o App](https://docs.flw.chat/guide/documentacao/apps/pesquisa-csat/habilitar-o-app.md): Como habilitar o aplicativo na conta e liberar a configuração das pesquisas.
+- [Como Configurar](https://docs.flw.chat/guide/documentacao/apps/pesquisa-csat/como-configurar.md): Como criar, editar e excluir pesquisas de satisfação em cada canal de atendimento.
+- [Resposta do Contato à Pesquisa CSAT](https://docs.flw.chat/guide/documentacao/apps/pesquisa-csat/resposta-do-contato-a-pesquisa-csat.md): Como o contato recebe e responde a pesquisa de satisfação.
+- [CSAT no Relatório de Atendimentos](https://docs.flw.chat/guide/documentacao/apps/pesquisa-csat/csat-no-relatorio-de-atendimentos.md): Onde consultar a avaliação de satisfação de um atendimento específico.
+- [IA - Agentes Inteligentes](https://docs.flw.chat/guide/documentacao/apps/agentes-inteligentes.md): Automatize e personalize seus atendimentos com inteligência.
+- [Novo Agente](https://docs.flw.chat/guide/documentacao/apps/agentes-inteligentes/novo-agente.md): Automatize e personalize seus atendimentos com inteligência.
+- [Aba Configurações](https://docs.flw.chat/guide/documentacao/apps/agentes-inteligentes/aba-configuracoes.md): Ajuste preferências avançadas que controlam o funcionamento e as respostas da IA.
+- [Habilidades](https://docs.flw.chat/guide/documentacao/apps/agentes-inteligentes/habilidades.md): Guia de Habilidades: Ensinando seu Agente a Agir
+- [Sequência](https://docs.flw.chat/guide/documentacao/apps/agentes-inteligentes/habilidades/habilidade-sequencia.md): Configure o Agente de IA para adicionar ou remover o contato de uma sequência durante a conversa. Veja quais sequências podem ser usadas, por que a habilidade falha e como acompanhar cada execução.
+- [Simular Tempo de Digitação](https://docs.flw.chat/guide/documentacao/apps/agentes-inteligentes/simular-tempo-de-digitacao.md): Humanizando as Respostas da IA
+- [Indicador de Digitando](https://docs.flw.chat/guide/documentacao/apps/agentes-inteligentes/indicador-de-digitando.md): Humanizando a Conversa com IA e Atendentes
+- [Versões dos Agentes](https://docs.flw.chat/guide/documentacao/apps/agentes-inteligentes/versoes-dos-agentes.md)
+- [V.05](https://docs.flw.chat/guide/documentacao/apps/agentes-inteligentes/versoes-dos-agentes/v.05.md)
+- [V.06](https://docs.flw.chat/guide/documentacao/apps/agentes-inteligentes/versoes-dos-agentes/v.06.md)
+- [V.07](https://docs.flw.chat/guide/documentacao/apps/agentes-inteligentes/versoes-dos-agentes/v.07.md)
+- [V.08](https://docs.flw.chat/guide/documentacao/apps/agentes-inteligentes/versoes-dos-agentes/v.08.md)
+- [Mensagens Agendadas](https://docs.flw.chat/guide/documentacao/apps/mensagens-agendadas.md)
+- [Modelo para Mensagens Agendadas](https://docs.flw.chat/guide/documentacao/apps/mensagens-agendadas/modelo-para-mensagens-agendadas.md): Aprenda a criar e organizar modelos de mensagem exclusivos para usar na funcionalidade de agendamento, facilitando a gestão das suas comunicações programadas.
+- [Gerenciar os Agendamentos](https://docs.flw.chat/guide/documentacao/apps/mensagens-agendadas/como-gerenciar-os-agendamentos.md): Programe, acompanhe e cancele o envio de mensagens automaticamente, com uma visão centralizada de todas as comunicações futuras da sua conta.
+- [Agendamentos pelo CRM](https://docs.flw.chat/guide/documentacao/apps/mensagens-agendadas/agendamentos-pelo-crm.md): Programe o envio de uma mensagem para o futuro diretamente pelo card do contato, sem sair da visualização do seu funil de negócios.
+- [Chat Interno](https://docs.flw.chat/guide/documentacao/apps/chat-interno.md)
+- [Habilitar o App](https://docs.flw.chat/guide/documentacao/apps/chat-interno/ativar-e-desativar-funcionalidade.md): Guia detalhado para ativar, desativar e gerenciar o Chat Interno na plataforma.
+- [Tipos de Conversa no Chat Interno](https://docs.flw.chat/guide/documentacao/apps/chat-interno/tipos-de-conversa-usuario-x-equipe-x-todos.md): Guia detalhado para iniciar conversas no Chat Interno e se comunicar de forma rápida e organizada dentro da plataforma.
+- [Grupos do WhatsApp](https://docs.flw.chat/guide/documentacao/apps/grupos-do-whatsapp.md)
+- [Habilitar o App](https://docs.flw.chat/guide/documentacao/apps/grupos-do-whatsapp/habilitar-o-app.md): Guia detalhado para ativar, desativar e gerenciar Grupos na plataforma.
+- [Tempo de Segurança](https://docs.flw.chat/guide/documentacao/apps/tempo-de-seguranca.md): Saiba como configurar um intervalo antes do envio das mensagens, que permite revisá-las, cancelá-las e agrupar os textos enviados em sequência.
+- [Corrigir a Contagem do Tempo de Segurança](https://docs.flw.chat/guide/documentacao/apps/tempo-de-seguranca/como-corrigir-problemas-com-a-sincronizacao-do-tempo-de-seguranca.md): Saiba como acertar o relógio do computador no Windows para que a contagem do Tempo de Segurança funcione corretamente.
+- [Distribuição de Atendimentos](https://docs.flw.chat/guide/documentacao/apps/distribuicao-de-atendimentos.md): Direcione as conversas de uma equipe automaticamente entre os usuários, seguindo uma ordem fixa.
+- [Como Funciona](https://docs.flw.chat/guide/documentacao/apps/distribuicao-de-atendimentos/como-funciona.md): Entenda a ordem do rodízio, quem participa dele e por que a carteirização tem precedência.
+- [Habilitar o App](https://docs.flw.chat/guide/documentacao/apps/distribuicao-de-atendimentos/habilitar-o-app.md): Habilite a Distribuição de Atendimentos e selecione as equipes que vão utilizá-la.
+- [Transbordo na Distribuição](https://docs.flw.chat/guide/documentacao/apps/distribuicao-de-atendimentos/transbordo-na-distribuicao.md): Entenda como o atendimento é repassado ao próximo usuário quando ninguém inicia a conversa.
+- [Como Configurar](https://docs.flw.chat/guide/documentacao/apps/distribuicao-de-atendimentos/como-configurar.md): Configure a distribuição e o transbordo por equipe e gerencie a disponibilidade dos usuários.
+- [Distribuição via API](https://docs.flw.chat/guide/documentacao/apps/distribuicao-de-atendimentos/distribuicao-via-api.md): Configure a distribuição pela API e entenda como o direcionamento muda ao criar um atendimento.
+- [Transcrição de audio com IA](https://docs.flw.chat/guide/documentacao/apps/transcricao-de-audio-com-ia.md)
+- [Degustação de Transcrição de Áudio](https://docs.flw.chat/guide/documentacao/apps/transcricao-de-audio-com-ia/degustacao-de-transcricao-de-audio.md)
+- [Carteirização de Contatos](https://docs.flw.chat/guide/documentacao/apps/carteirizacao-de-contatos.md)
+- [Habilitar o App](https://docs.flw.chat/guide/documentacao/apps/carteirizacao-de-contatos/habilitar-o-app.md)
+- [Relatórios](https://docs.flw.chat/guide/documentacao/relatorios.md): Acompanhe os indicadores da operação, o histórico de atendimentos e o consumo de infraestrutura da plataforma.
+- [Indicadores](https://docs.flw.chat/guide/documentacao/relatorios/indicadores.md): Métricas de volume, tempo de espera, duração e qualidade do atendimento, reunidas em um painel.
+- [Indicadores de Volume](https://docs.flw.chat/guide/documentacao/relatorios/indicadores/indicadores-de-volume.md): Guia completo sobre como interpretar e conferir os indicadores de Pendentes, Novos e Concluídos.
+- [Capacidade de Atendimento](https://docs.flw.chat/guide/documentacao/relatorios/indicadores/capacidade-de-atendimento.md): Entenda como interpretar o gráfico de capacidade de atendimento e o que o indicador de desempenho revela sobre a eficiência da sua equipe.
+- [Tempo de Espera](https://docs.flw.chat/guide/documentacao/relatorios/indicadores/tempo-de-espera.md): Entenda como o gráfico de Tempo de Espera mede a agilidade da sua equipe na primeira resposta ao cliente e como conferir os valores no relatório.
+- [Duração do Atendimento](https://docs.flw.chat/guide/documentacao/relatorios/indicadores/duracao-do-atendimento.md): Entenda como o gráfico de Duração do Atendimento mede o tempo total dos atendimentos concluídos e como conferir os valores no relatório.
+- [Atendimentos por Canal e Etiquetas](https://docs.flw.chat/guide/documentacao/relatorios/indicadores/atendimentos-por-canal-e-etiquetas.md): Entenda como interpretar os gráficos de Atendimentos por Canal e Etiquetas e como conferir os dados de distribuição da sua operação.
+- [Volume Diário de Atendimentos](https://docs.flw.chat/guide/documentacao/relatorios/indicadores/volume-diario-de-atendimentos.md): Entenda como ler o mapa de calor de volume diário e identificar os horários de maior e menor demanda da sua operação.
+- [Qualidade do Atendimento por Equipe e por Usuário](https://docs.flw.chat/guide/documentacao/relatorios/indicadores/qualidade-do-atendimento-por-equipe-e-por-usuario.md): Entenda como interpretar as tabelas de qualidade do atendimento e o que cada métrica revela sobre a performance da sua operação.
+- [Chamadas de Voz nos Indicadores](https://docs.flw.chat/guide/documentacao/relatorios/indicadores/chamadas-de-voz-nos-indicadores.md): Entenda como os atendimentos originados por chamada de voz são contabilizados em cada indicador do módulo Relatórios.
+- [Atendimentos](https://docs.flw.chat/guide/documentacao/relatorios/atendimento.md): Entenda a tela de atendimentos do módulo Relatórios, exporte dados e conclua atendimentos em massa.
+- [Entenda o Relatório de Atendimentos](https://docs.flw.chat/guide/documentacao/relatorios/atendimento/entenda-o-relatorio-de-atendimentos.md): Entenda o que é o Relatório de Atendimentos, quais informações ele reúne e como usar seus filtros e detalhes para acompanhar o desempenho do suporte.
+- [Chamadas de Voz no Relatório de Atendimentos](https://docs.flw.chat/guide/documentacao/relatorios/atendimento/chamadas-de-voz-no-relatorio.md): Entenda como os atendimentos gerados por chamada de voz aparecem no Relatório de Atendimentos e como os campos de tempo são calculados.
+- [Exportar Relatório](https://docs.flw.chat/guide/documentacao/relatorios/atendimento/como-exportar-relatorio-na-plataforma.md): Aprenda a filtrar e exportar um arquivo com o resumo dos atendimentos da sua plataforma.
+- [Exportar Mensagens](https://docs.flw.chat/guide/documentacao/relatorios/atendimento/como-exportar-mensagens-na-plataforma.md): Aprenda a filtrar e exportar o conteúdo completo das conversas dos seus atendimentos.
+- [Concluir Atendimentos em Massa](https://docs.flw.chat/guide/documentacao/relatorios/atendimento/como-concluir-atendimentos-em-massa.md): Aprenda a filtrar e finalizar vários atendimentos de uma só vez, com segurança.
+- [CSAT](https://docs.flw.chat/guide/documentacao/relatorios/csat.md): Métricas de satisfação, engajamento e desempenho por equipe, reunidas em um painel.
+- [Respostas e Engajamento](https://docs.flw.chat/guide/documentacao/relatorios/csat/visao-geral.md): Como interpretar e conferir os indicadores do painel de CSAT.
+- [CSAT Geral](https://docs.flw.chat/guide/documentacao/relatorios/csat/indicador-de-satisfacao.md): Percentual de satisfação geral dos clientes e a distribuição por faixa de pontuação.
+- [CSAT por Tempo](https://docs.flw.chat/guide/documentacao/relatorios/csat/csat-por-tempo.md): Evolução mensal da satisfação, com classificação por faixa de desempenho.
+- [CSAT por Equipes](https://docs.flw.chat/guide/documentacao/relatorios/csat/csat-por-equipes.md): Desempenho de satisfação por equipe, com detalhamento por usuário.
+- [Avaliações](https://docs.flw.chat/guide/documentacao/relatorios/csat/avaliacoes.md): Consulta individual de cada avaliação recebida, com detalhes do atendimento e exportação da conversa.
+- [Consumo de Infraestrutura](https://docs.flw.chat/guide/documentacao/relatorios/consumo-de-infraestrutura.md): Acompanhe o volume de conversas e contatos únicos (MAU) utilizados pela conta a cada mês.
+- [Ajustes](https://docs.flw.chat/guide/documentacao/ajustes.md)
+- [Consumo de conversas](https://docs.flw.chat/guide/documentacao/ajustes/consumo-de-conversas.md)
+- [Conta](https://docs.flw.chat/guide/documentacao/ajustes/conta.md)
+- [Dados da conta](https://docs.flw.chat/guide/documentacao/ajustes/conta/dados-da-conta.md)
+- [Horário de atendimento](https://docs.flw.chat/guide/documentacao/ajustes/conta/horario-de-atendimento.md)
+- [Processo de dar permissão para reconectar o número](https://docs.flw.chat/guide/documentacao/ajustes/conta/processo-de-dar-permissao-para-reconectar-o-numero.md)
+- [Remover Canal de Atendimento](https://docs.flw.chat/guide/documentacao/ajustes/conta/remover-canal-de-atendimento.md)
+- [Equipes](https://docs.flw.chat/guide/documentacao/ajustes/equipes.md)
+- [Cadastrar equipe](https://docs.flw.chat/guide/documentacao/ajustes/equipes/cadastrar-equipe.md)
+- [Distribuição e transbordo de atendimento](https://docs.flw.chat/guide/documentacao/ajustes/equipes/distribuicao-e-transbordo-de-atendimento.md)
+- [Relação de acessos x conversas](https://docs.flw.chat/guide/documentacao/ajustes/equipes/relacao-de-acessos-x-conversas.md)
+- [Tipo de associação usuário x supervisor](https://docs.flw.chat/guide/documentacao/ajustes/equipes/tipo-de-associacao-usuario-x-supervisor.md)
+- [Integrações](https://docs.flw.chat/guide/documentacao/ajustes/integracoes.md)
+- [Botão do WhatsApp e tag de rastreamento](https://docs.flw.chat/guide/documentacao/ajustes/integracoes/botao-do-whatsapp-e-tag-de-rastreamento.md)
+- [Widget de Atendimento](https://docs.flw.chat/guide/documentacao/ajustes/integracoes/widget-de-atendimento.md)
+- [Modelo de Mensagens](https://docs.flw.chat/guide/documentacao/ajustes/modelo-de-mensagens.md)
+- [Cadastrar modelos de mensagem](https://docs.flw.chat/guide/documentacao/ajustes/modelo-de-mensagens/cadastrar-modelos-de-mensagem.md)
+- [Como criar modelo de mensagem](https://docs.flw.chat/guide/documentacao/ajustes/modelo-de-mensagens/como-criar-modelo-de-mensagem.md)
+- [Conceito de janela de conversa (cobrança)](https://docs.flw.chat/guide/documentacao/ajustes/modelo-de-mensagens/conceito-de-janela-de-conversa-cobranca.md)
+- [Conceito de janela de troca de mensagem](https://docs.flw.chat/guide/documentacao/ajustes/modelo-de-mensagens/conceito-de-janela-de-troca-de-mensagem.md)
+- [Editar modelos de mensagem](https://docs.flw.chat/guide/documentacao/ajustes/modelo-de-mensagens/editar-modelos-de-mensagem.md)
+- [Franquia e custo de mensagem](https://docs.flw.chat/guide/documentacao/ajustes/modelo-de-mensagens/franquia-e-custo-de-mensagem.md)
+- [Mensagens com botões, imagem, vídeo e documento](https://docs.flw.chat/guide/documentacao/ajustes/modelo-de-mensagens/mensagens-com-botoes-imagem-video-e-documento.md)
+- [Mensagens de Marketing x Mensagens de Utilidade](https://docs.flw.chat/guide/documentacao/ajustes/modelo-de-mensagens/mensagens-de-marketing-x-mensagens-de-utilidade.md)
+- [Parâmetros e personalização de mensagens](https://docs.flw.chat/guide/documentacao/ajustes/modelo-de-mensagens/parametros-e-personalizacao-de-mensagens.md)
+- [Tipos de modelo de mensagem](https://docs.flw.chat/guide/documentacao/ajustes/modelo-de-mensagens/tipos-de-modelo-de-mensagem.md)
+- [Permissões de Modelos de Mensagem](https://docs.flw.chat/guide/documentacao/ajustes/modelo-de-mensagens/permissoes-de-modelos-de-mensagem.md): Entenda os níveis de acesso disponíveis no módulo de Modelos de Mensagem e saiba como definir o que cada usuário pode fazer.
+- [Usuários](https://docs.flw.chat/guide/documentacao/ajustes/usuarios.md)
+- [Cadastrar usuários](https://docs.flw.chat/guide/documentacao/ajustes/usuarios/cadastrar-usuarios.md)
+- [Editar foto do usuário](https://docs.flw.chat/guide/documentacao/ajustes/usuarios/editar-foto-do-usuario.md)
+- [Tipos de perfis de usuários](https://docs.flw.chat/guide/documentacao/ajustes/usuarios/tipos-de-perfis-de-usuarios.md)
+- [Outros](https://docs.flw.chat/guide/documentacao/outros.md)
+- [Alterar Informações do Meu Usuário](https://docs.flw.chat/guide/documentacao/outros/alterar-informacoes-do-meu-usuario.md)
+- [Como Alternar Entre Contas na plataforma](https://docs.flw.chat/guide/documentacao/outros/como-alternar-entre-contas-na-plataforma.md)
+- [Como Ativar as Notificações Web na Plataforma](https://docs.flw.chat/guide/documentacao/outros/como-ativar-as-notificacoes-web-na-plataforma.md)
+- [Sugerir Melhorias](https://docs.flw.chat/guide/documentacao/outros/sugerir-melhorias.md)
+- [Sobre as Novidades](https://docs.flw.chat/guide/novidades-do-sistema/novidades-do-sistema.md): Todos os lançamentos, melhorias e correções da plataforma, organizados por mês e sempre do mais recente para o mais antigo.
+- [Outubro de 2026](https://docs.flw.chat/guide/novidades-do-sistema/outubro-de-2026.md)
+- [14/10/2026 - Chamadas de Voz pelo WhatsApp](https://docs.flw.chat/guide/novidades-do-sistema/outubro-de-2026/14-10-2026-chamadas-de-voz-pelo-whatsapp.md)
+- [09/10/2026 - Novo padrão de datas em Webhooks e API](https://docs.flw.chat/guide/novidades-do-sistema/outubro-de-2026/09-10-2026-novo-padrao-de-datas-em-webhooks-e-api.md)
+- [08/10/2026](https://docs.flw.chat/guide/novidades-do-sistema/outubro-de-2026/08-10-2026.md)
+- [07/10/2026 - Webchat](https://docs.flw.chat/guide/novidades-do-sistema/outubro-de-2026/07-10-2026-webchat.md)
+- [07/10/2026 - Canais não oficiais: Recusar chamadas](https://docs.flw.chat/guide/novidades-do-sistema/outubro-de-2026/07-10-2026-canais-nao-oficiais-recusar-chamadas.md)
+- [06/10/2026 - Pagamentos em reais no WhatsApp](https://docs.flw.chat/guide/novidades-do-sistema/outubro-de-2026/06-10-2026-pagamentos-em-reais-no-whatsapp.md)
+- [Setembro de 2026](https://docs.flw.chat/guide/novidades-do-sistema/setembro-de-2026.md)
+- [30/09/2026 - Webchat](https://docs.flw.chat/guide/novidades-do-sistema/setembro-de-2026/30-09-2026-webchat.md)
+- [30/09/2026](https://docs.flw.chat/guide/novidades-do-sistema/setembro-de-2026/30-09-2026.md)
+- [24/09/2026 - WebChat](https://docs.flw.chat/guide/novidades-do-sistema/setembro-de-2026/24-09-2026-webchat.md)
+- [23/09/2026](https://docs.flw.chat/guide/novidades-do-sistema/setembro-de-2026/23-09-2026.md)
+- [22/09/2026](https://docs.flw.chat/guide/novidades-do-sistema/setembro-de-2026/22-09-2026.md)
+- [11/09/2026](https://docs.flw.chat/guide/novidades-do-sistema/setembro-de-2026/11-09-2026.md)
+- [02/09/2026](https://docs.flw.chat/guide/novidades-do-sistema/setembro-de-2026/02-09-2026.md)
+- [01/09/2026](https://docs.flw.chat/guide/novidades-do-sistema/setembro-de-2026/01-09-2026.md)
+- [Agosto de 2026](https://docs.flw.chat/guide/novidades-do-sistema/agosto-de-2026.md)
+- [27/08/2026](https://docs.flw.chat/guide/novidades-do-sistema/agosto-de-2026/27-08-2026.md)
+- [21/08/2026 - CRM](https://docs.flw.chat/guide/novidades-do-sistema/agosto-de-2026/21-08-2026-crm.md)
+- [20/08/2026 - App 2.1.42](https://docs.flw.chat/guide/novidades-do-sistema/agosto-de-2026/20-08-2026-app-2.1.42.md)
+- [19/08/2026](https://docs.flw.chat/guide/novidades-do-sistema/agosto-de-2026/19-08-2026.md)
+- [19/08/2026 - Campanhas](https://docs.flw.chat/guide/novidades-do-sistema/agosto-de-2026/19-08-2026-campanhas.md)
+- [17/08/2026](https://docs.flw.chat/guide/novidades-do-sistema/agosto-de-2026/17-08-2026.md)
+- [14/08/2026](https://docs.flw.chat/guide/novidades-do-sistema/agosto-de-2026/14-08-2026.md)
+- [13/08/2026](https://docs.flw.chat/guide/novidades-do-sistema/agosto-de-2026/13-08-2026.md)
+- [12/08/2026 - CSAT](https://docs.flw.chat/guide/novidades-do-sistema/agosto-de-2026/12-08-2026-csat.md)
+- [07/08/2026](https://docs.flw.chat/guide/novidades-do-sistema/agosto-de-2026/07-08-2026.md)
+- [06/08/2026](https://docs.flw.chat/guide/novidades-do-sistema/agosto-de-2026/06-08-2026.md)
+- [05/08/2026 - Permissão em Modelo de Mensagem](https://docs.flw.chat/guide/novidades-do-sistema/agosto-de-2026/05-08-2026-permissao-em-modelo-de-mensagem.md)
+- [05/08/2026](https://docs.flw.chat/guide/novidades-do-sistema/agosto-de-2026/05-08-2026.md)
+- [Julho de 2026](https://docs.flw.chat/guide/novidades-do-sistema/julho-de-2026.md)
+- [31/07/2026](https://docs.flw.chat/guide/novidades-do-sistema/julho-de-2026/31-07-2026.md)
+- [30/07/2026](https://docs.flw.chat/guide/novidades-do-sistema/julho-de-2026/30-07-2026.md)
+- [28/07/2026](https://docs.flw.chat/guide/novidades-do-sistema/julho-de-2026/28-07-2026.md)
+- [27/07/2026 - App 2.1.41](https://docs.flw.chat/guide/novidades-do-sistema/julho-de-2026/27-07-2026-app-2.1.41.md)
+- [24/07/2026](https://docs.flw.chat/guide/novidades-do-sistema/julho-de-2026/24-07-2026.md)
+- [23/07/2026](https://docs.flw.chat/guide/novidades-do-sistema/julho-de-2026/23-07-2026.md)
+- [20/07/2026 - Chatbot](https://docs.flw.chat/guide/novidades-do-sistema/julho-de-2026/20-07-2026-chatbot.md)
+- [20/07/2026](https://docs.flw.chat/guide/novidades-do-sistema/julho-de-2026/20-07-2026.md)
+- [17/07/2026 - Permissão de Pagamentos](https://docs.flw.chat/guide/novidades-do-sistema/julho-de-2026/17-07-2026-permissao-de-pagamentos.md)
+- [16/07/2026](https://docs.flw.chat/guide/novidades-do-sistema/julho-de-2026/16-07-2026.md)
+- [08/07/2026 - App 2.1.39](https://docs.flw.chat/guide/novidades-do-sistema/julho-de-2026/08-07-2026-app-2.1.39.md)
+- [08/07/2026](https://docs.flw.chat/guide/novidades-do-sistema/julho-de-2026/08-07-2026.md)
+- [02/07/2026 - Erro ao Responder Mensagens no Atendimento](https://docs.flw.chat/guide/novidades-do-sistema/julho-de-2026/02-07-2026-erro-ao-responder-mensagens-no-atendimento.md)
+- [02/07/2026 - Reserva de Nome de Usuário (Username) no WhatsApp Business](https://docs.flw.chat/guide/novidades-do-sistema/julho-de-2026/02-07-2026-reserva-de-nome-de-usuario-username-no-whatsapp-business.md)
+- [02/07/2026](https://docs.flw.chat/guide/novidades-do-sistema/julho-de-2026/02-07-2026.md)
+- [01/07/2026 - Z-API: Mudança na conexão via QRCode](https://docs.flw.chat/guide/novidades-do-sistema/julho-de-2026/01-07-2026-z-api-mudanca-na-conexao-via-qrcode.md)
+- [01/07/2026](https://docs.flw.chat/guide/novidades-do-sistema/julho-de-2026/01-07-2026.md)
+- [Junho de 2026](https://docs.flw.chat/guide/novidades-do-sistema/junho-de-2026.md)
+- [30/06/2026 - App 2.1.38](https://docs.flw.chat/guide/novidades-do-sistema/junho-de-2026/30-06-2026-app-2.1.38.md)
+- [26/06/2026 - IA](https://docs.flw.chat/guide/novidades-do-sistema/junho-de-2026/26-06-2026-ia.md)
+- [26/06/2026](https://docs.flw.chat/guide/novidades-do-sistema/junho-de-2026/26-06-2026.md)
+- [24/06/2026](https://docs.flw.chat/guide/novidades-do-sistema/junho-de-2026/24-06-2026.md)
+- [19/06/2026](https://docs.flw.chat/guide/novidades-do-sistema/junho-de-2026/19-06-2026.md)
+- [18/06/2026 - CRM](https://docs.flw.chat/guide/novidades-do-sistema/junho-de-2026/18-06-2026-crm.md)
+- [11/06/2026](https://docs.flw.chat/guide/novidades-do-sistema/junho-de-2026/11-06-2026.md)
+- [11/06/2026 - Sequências: novos recursos de adição, remoção e acompanhamento](https://docs.flw.chat/guide/novidades-do-sistema/junho-de-2026/11-06-2026-sequencias-novos-recursos-de-adicao-remocao-e-acompanhamento.md)
+- [10/06/2026 - Converta seu Painel de Gestão para Vendas](https://docs.flw.chat/guide/novidades-do-sistema/junho-de-2026/10-06-2026-converta-seu-painel-de-gestao-para-vendas.md)
+- [03/06/2026](https://docs.flw.chat/guide/novidades-do-sistema/junho-de-2026/03-06-2026.md)
+- [Maio de 2026](https://docs.flw.chat/guide/novidades-do-sistema/maio-de-2026.md)
+- [29/05/2026 - API CRM de Vendas](https://docs.flw.chat/guide/novidades-do-sistema/maio-de-2026/29-05-2026-api-crm-de-vendas.md)
+- [29/05/2026 - CRM de Vendas](https://docs.flw.chat/guide/novidades-do-sistema/maio-de-2026/29-05-2026-crm-de-vendas.md)
+- [27/05/2026](https://docs.flw.chat/guide/novidades-do-sistema/maio-de-2026/27-05-2026.md)
+- [22/05/2026 - Etiquetas no Chatbot](https://docs.flw.chat/guide/novidades-do-sistema/maio-de-2026/22-05-2026-etiquetas-no-chatbot.md)
+- [22/05/2026 - Gatilhos no Chatbot](https://docs.flw.chat/guide/novidades-do-sistema/maio-de-2026/22-05-2026-gatilhos-no-chatbot.md)
+- [20/05/2026](https://docs.flw.chat/guide/novidades-do-sistema/maio-de-2026/20-05-2026.md)
+- [14/05/2026 - Envio de áudios como mensagem de voz](https://docs.flw.chat/guide/novidades-do-sistema/maio-de-2026/14-05-2026-envio-de-audios-como-mensagem-de-voz.md)
+- [14/05/2026 - Permissão de Campanhas e Exclusão de Etiquetas](https://docs.flw.chat/guide/novidades-do-sistema/maio-de-2026/14-05-2026-permissao-de-campanhas-e-exclusao-de-etiquetas.md)
+- [13/05/2026](https://docs.flw.chat/guide/novidades-do-sistema/maio-de-2026/13-05-2026.md)
+- [12/05/2026](https://docs.flw.chat/guide/novidades-do-sistema/maio-de-2026/12-05-2026.md)
+- [06/05/2026](https://docs.flw.chat/guide/novidades-do-sistema/maio-de-2026/06-05-2026.md)
+- [Abril de 2026](https://docs.flw.chat/guide/novidades-do-sistema/abril-de-2026.md)
+- [17/04/2026 - App 2.1.34](https://docs.flw.chat/guide/novidades-do-sistema/abril-de-2026/17-04-2026-app-2.1.34.md)
+- [02/04/2026](https://docs.flw.chat/guide/novidades-do-sistema/abril-de-2026/02-04-2026.md)
+- [Março de 2026](https://docs.flw.chat/guide/novidades-do-sistema/marco-de-2026.md)
+- [25/03/2026](https://docs.flw.chat/guide/novidades-do-sistema/marco-de-2026/25-03-2026.md)
+- [18/03/2026](https://docs.flw.chat/guide/novidades-do-sistema/marco-de-2026/18-03-2026.md)
+- [12/03/2026 - Filtros de Webhooks](https://docs.flw.chat/guide/novidades-do-sistema/marco-de-2026/12-03-2026-filtros-de-webhooks.md)
+- [12/03/2026](https://docs.flw.chat/guide/novidades-do-sistema/marco-de-2026/12-03-2026.md)
+- [Fevereiro de 2026](https://docs.flw.chat/guide/novidades-do-sistema/fevereiro-de-2026.md)
+- [27/02/2026](https://docs.flw.chat/guide/novidades-do-sistema/fevereiro-de-2026/27-02-2026.md)
+- [26/02/2026](https://docs.flw.chat/guide/novidades-do-sistema/fevereiro-de-2026/26-02-2026.md)
+- [20/02/2026](https://docs.flw.chat/guide/novidades-do-sistema/fevereiro-de-2026/20-02-2026.md)
+- [12/02/2026](https://docs.flw.chat/guide/novidades-do-sistema/fevereiro-de-2026/12-02-2026.md)
+- [04/02/2026](https://docs.flw.chat/guide/novidades-do-sistema/fevereiro-de-2026/04-02-2026.md)
+- [Janeiro de 2026](https://docs.flw.chat/guide/novidades-do-sistema/janeiro-de-2026.md)
+- [28/01/2026](https://docs.flw.chat/guide/novidades-do-sistema/janeiro-de-2026/28-01-2026.md)
+- [22/01/2026](https://docs.flw.chat/guide/novidades-do-sistema/janeiro-de-2026/22-01-2026.md)
+- [21/01/2026 - API](https://docs.flw.chat/guide/novidades-do-sistema/janeiro-de-2026/21-01-2026-api.md)
+- [21/01/2026](https://docs.flw.chat/guide/novidades-do-sistema/janeiro-de-2026/21-01-2026.md)
+- [19/01/2026](https://docs.flw.chat/guide/novidades-do-sistema/janeiro-de-2026/19-01-2026.md)
+- [07/01/2026](https://docs.flw.chat/guide/novidades-do-sistema/janeiro-de-2026/07-01-2026.md)
+- [02/01/2026](https://docs.flw.chat/guide/novidades-do-sistema/janeiro-de-2026/02-01-2026.md)
+- [Sobre o FAQ](https://docs.flw.chat/guide/faq/faq.md): Respostas para as dúvidas mais frequentes de quem usa a plataforma.
+- [Regras Gerais de Aprovação: Por que a Meta rejeita seus modelos?](https://docs.flw.chat/guide/faq/regras-gerais-de-aprovacao-por-que-a-meta-rejeita-seus-modelos.md)
+- [Por que a Meta rejeita seus Modelos de Marketing?](https://docs.flw.chat/guide/faq/por-que-a-meta-rejeita-seus-modelos-de-marketing.md)
+- [Por que a Meta rejeita seus Modelos de Utilidade?](https://docs.flw.chat/guide/faq/por-que-a-meta-rejeita-seus-modelos-de-utilidade.md)
+- [Modelos de Autenticação (OTP): Regras, Criação e Envio](https://docs.flw.chat/guide/faq/modelos-de-autenticacao-otp-regras-criacao-e-envio.md)
+- [Número Privado (LID) e Unificação de Contatos](https://docs.flw.chat/guide/faq/numero-privado-lid-e-unificacao-de-contatos.md): Entenda o que é o identificador LID em canais não oficiais, por que ele gera contatos temporários e aprenda o fluxo correto para unificar esses registros com sua base de clientes existente.
+- [Status de Integridade do Canal](https://docs.flw.chat/guide/faq/status-de-integridade-do-canal.md)
+- [Mensagem "Aguardando Mensagem"](https://docs.flw.chat/guide/faq/mensagens-waiting-message.md)
+- [Rate Limit da API Não Oficial do WhatsApp](https://docs.flw.chat/guide/faq/rate-limit-api-nao-oficial.md)
+- [Por que o Asaas não reconhece meu Token de Integração?](https://docs.flw.chat/guide/faq/por-que-o-asaas-nao-reconhece-meu-token-de-integracao.md): Verifique se há restrições de IP na sua conta Asaas que possam estar impedindo a validação do Token de Integração.
+- [Cobrança de Mensagens de Serviço do WhatsApp a partir de Outubro de 2026](https://docs.flw.chat/guide/faq/cobranca-mensagens-servico-whatsapp-outubro-2026.md): Entenda o que muda nas mensagens de serviço do WhatsApp a partir de outubro de 2026 e como isso impacta a sua operação de atendimento.
+- [Pagamentos em Reais no WhatsApp](https://docs.flw.chat/guide/faq/pagamentos-em-reais-no-whatsapp.md): Entenda o que muda ao converter a cobrança do WhatsApp de dólar para reais (R$) e como fazer a migração pela plataforma.
+- [Muitas ações em pouco tempo](https://docs.flw.chat/guide/faq/muitas-acoes-em-pouco-tempo.md): Entenda por que a mensagem "Muitas ações em pouco tempo" aparece e o que acontece com as ações que você estava realizando.
+
+
+---
+
+# Agent Instructions
+This documentation is published with GitBook. GitBook is the documentation platform designed so that both humans and AI agents can read, navigate, and reason over technical content effectively. Learn more at gitbook.com.
+
+## Querying This Documentation
+This site has an agentic ask interface you may use to query the documentation dynamically by asking a question.
+
+Perform an HTTP GET request on the following URL with the `ask` and `goal` query parameters:
+
+```
+GET https://docs.flw.chat/index.md?ask=<question>&goal=<user_goal>
+```
+
+`ask` is the immediate question: it should be specific, self-contained, and written in natural language.
+`goal` is what the user is ultimately trying to achieve, the reason they need the answer. Sharing it helps GitBook give you a better, more relevant answer. A goal is most helpful when it describes the outcome the user wants rather than restating the question. For example, with `ask=how do I create an API token`, a goal like `automate deployments from our CI pipeline` lets GitBook tailor the answer to that use case.
+
+The response will contain a direct answer to the question and relevant excerpts and sources from the documentation.

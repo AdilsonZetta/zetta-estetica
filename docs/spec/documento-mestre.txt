@@ -1,0 +1,2430 @@
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+
+DOCUMENTO MESTRE
+
+
+
+
+Zetta Estética com FLW Chat e
+Supabase
+Arquitetura SaaS multiempresa e prompts de
+desenvolvimento para o Lovable
+Versão 3.0 • 14 de novembro de 2026
+
+
+
+O produto
+A Zetta entrega a gestão da clínica por um aplicativo web acessado pelo ícone Gestão
+Estética na FLW Chat. A equipe continua usando a FLW para atendimento, WhatsApp,
+agentes de IA e CRM. No módulo Zetta, ela agenda avaliações, aprova propostas, vende
+pacotes, registra sessões e acompanha recebimentos.
+
+O Supabase da Zetta é a base do novo aplicativo. PostgreSQL concentra dados e transações,
+Auth identifica usuários, Storage guarda arquivos privados e Edge Functions fazem a ponte
+com FLW, pagamentos e n8n. Cada clínica recebe usuários, unidades e módulos próprios
+dentro do mesmo produto.
+
+Por onde começar
+1. Cole a seção 24 Prompt Mestre no Lovable como contexto do projeto.
+
+2. Execute o Prompt 00 Discovery FLW, o primeiro da seção 25 Prompts de Implementação.
+   Valide o ícone, o modo de abertura e a autenticação em duas contas de teste.
+
+3. Use a evidência do Discovery para escolher o modo de abertura e as operações integradas.
+   Inicie a fundação no Supabase e avance até o piloto.
+
+Escopo do piloto. Agenda, proposta, pacote, sessão, recebível e painel básico. Vinculação
+manual ao CRM e tarefas internas permitem operar enquanto uma capacidade da FLW aguarda
+homologação.
+
+
+
+
+Documento mestre • Versão 3.0                                                          1 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+ÍNDICE
+
+
+Sumário
+Use os links para navegar pela arquitetura, pelos prompts e pelos critérios de
+lançamento.
+
+  Seções      Conteúdo                                                               Página
+
+    1a2       Produto e fontes de verdade                                              3
+
+              Arquitetura Supabase, entrada pela FLW, modelo SaaS e premissas do
+    3a6                                                                               4a7
+              piloto
+
+   7 a 10     Papéis e acesso, console Zetta, ativação e governança de módulos       8 a 11
+
+   11 a 12    Capacidades FLW e critérios de evidência                                 12
+
+   13 a 14    Modelo de dados Supabase, eventos e sincronização                      13 a 14
+
+   15 a 17    Clientes e CRM, recebíveis e pagamentos e automações                   15 a 17
+
+   18 a 22    Domínios, telas, transações, contratos e segurança                     18 a 22
+
+     23       Execução no Lovable e Supabase                                           23
+
+     24       Prompt Mestre                                                            24
+
+     25       Prompts de Implementação, a partir do Prompt 00                        25 a 41
+
+   26 a 27    O MVP e a decisão de lançamento                                          42
+
+   Anexos     Catálogo funcional, estados e métricas e homologação                   43 a 45
+
+     28       Referências oficiais                                                     46
+
+
+Leia as seções 13, 20 e 22 ao revisar migrations. Para conferir uma etapa do Lovable, use os
+testes do próprio prompt e a matriz do Anexo C.
+
+
+
+
+Documento mestre • Versão 3.0                                                               2 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+PRODUTO E ARQUITETURA
+
+
+1 Objetivo do negócio
+A Zetta cria uma linha de módulos de gestão por nicho. A primeira oferta atende clínicas de
+estética e transforma uma negociação já registrada na FLW em uma operação rastreável, da
+avaliação ao recebimento e à renovação. Cada nova clínica é provisionada no console Zetta.
+
+Proposta comercial. A clínica enxerga quais avaliações compareceram, quais propostas
+fecharam, quanto recebeu e quais clientes estão perto de consumir o pacote. A métrica
+principal é a evolução da conversão de avaliações em vendas por coorte. Comparecimento,
+renovação e ocupação são métricas complementares.
+
+
+2 Fontes de verdade
+                                Sistema
+ Domínio                                              O que o outro sistema recebe
+                                responsável
+
+ WhatsApp, inbox, IA e                                Zetta referencia contato, card e atalhos quando
+                                FLW Chat
+ campanhas                                            validados
+
+ Contatos comerciais,                                 Zetta mantém uma ficha operacional mínima e
+                                FLW Chat
+ carteiras e funil                                    vínculos externos
+
+ Agenda, catálogo, recursos                           FLW pode receber situação resumida e
+                                Zetta no Supabase
+ e avaliação comercial                                campos autorizados
+
+ Propostas, vendas, pacotes,
+                                                      FLW pode receber status comercial aprovado
+ sessões, estoque e             Zetta no Supabase
+                                                      sem conteúdo clínico
+ comissões
+
+                                Um provedor por       Zetta concilia recebíveis com referências,
+ Liquidação automatizada
+                                clínica               valores e eventos do provedor
+
+ Cobrança da assinatura do      Operação financeira   Console Zetta apresenta assinatura e situação
+ SaaS                           Zetta                 da clínica
+
+ Documentos e registros         Área clínica da       Conteúdo restrito aos profissionais autorizados
+ clínicos futuros               Zetta                 no módulo
+
+
+O piloto usa a agenda Zetta como escritora dos horários. Uma clínica com agenda anterior
+precisa de importação validada e data de corte antes de transferir a escrita. Cada operação
+externa deve declarar quais campos pertencem a cada sistema. Na FLW, valide quem modifica
+contatos e etapas para evitar que uma automação sobreponha mudanças da equipe.
+
+
+
+
+Documento mestre • Versão 3.0                                                                      3 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+PRODUTO E ARQUITETURA
+
+
+3 Arquitetura com Supabase
+Um projeto da Zetta por ambiente e o mesmo esquema para todas as clínicas daquele
+ambiente.
+
+ Componente               Responsabilidade                            Limite de acesso
+
+                          Interface web responsiva, rotas,            Chave publishable e sessão
+ Lovable
+                          formulários e painéis                       do usuário
+
+                          Convites, login, recuperação e MFA          Identidade em Auth e vínculos
+ Supabase Auth
+                          quando exigida                              em PostgreSQL
+
+ Supabase                 Dados, consistência, RLS, auditoria e       Escopo de clínica, papel,
+ PostgreSQL               transações                                  unidade e módulo
+
+                                                                      Política de bucket, vínculo
+                          Propostas, contratos comerciais e
+ Supabase Storage                                                     com o documento e
+                          evidências privadas
+                                                                      autorização
+
+                                                                      JWT de usuário ou
+ Supabase Edge            Integrações FLW e pagamentos, ingressos
+                                                                      autenticação própria verificada
+ Functions                externos e rotinas privilegiadas
+                                                                      por origem
+
+ Supabase Cron e          Expirar reservas, reconciliar e processar   Chamadas internas e lotes por
+ worker                   pendências                                  conexão
+
+                          Origem comercial e canal efetivo de         Capacidades autorizadas por
+ FLW Chat
+                          mensagens                                   conta
+
+                                                                      Contrato versionado,
+                          Orquestra ações quando a integração
+ n8n opcional                                                         credencial de escopo estreito
+                          exigir
+                                                                      e payload mínimo
+
+
+Caminho de uma operação. No Lovable, a recepção escolhe o horário. Com a sessão do
+Supabase, aciona uma operação transacional no PostgreSQL. O banco valida o escopo, grava
+a reserva e grava o evento na mesma transação. Depois, um worker entrega o evento à
+integração autorizada ou o converte em tarefa interna.
+
+Ambientes. Use instância local para migrations e testes, um projeto Supabase de
+homologação e outro de produção. O projeto Lovable em que você testa deve apontar para
+homologação. Mantenha credenciais, URLs e conteúdo de cada ambiente separados.
+
+Configuração mínima. Registre domínio do aplicativo, referência do projeto, origem da FLW,
+URL do ponto de entrada, responsável e credenciais configuradas. Use fixtures fictícias no
+ambiente de teste e defina permissões distintas para editar interface, aplicar migrations e
+acompanhar produção.
+
+
+
+
+Documento mestre • Versão 3.0                                                                       4 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+PRODUTO E ARQUITETURA
+
+
+4 Abertura do módulo pela FLW
+Use um link estável por clínica, como /launch/clinica-aurora. O slug indica o destino do
+ícone. O aplicativo primeiro identifica o usuário com Supabase Auth e, em seguida, valida o
+vínculo ativo com a clínica indicada. Se houver mais de um vínculo e o link for genérico,
+apresente um seletor. Com link específico sem vínculo, mostre acesso indisponível e ofereça
+voltar à FLW.
+
+ Abertura            Quando usar                        Evidências exigidas
+
+                     Padrão do piloto, se a FLW         Login, recarregamento, retorno e logout
+ Aba externa
+                     disponibilizar esse modo           em desktop e mobile
+
+                     Quando esse for o comportamento    Retorno previsível e preservação de
+ Mesma aba
+                     da FLW                             formulários em andamento
+
+                                                        Origens aprovadas, sessão, upload,
+ Iframe ou           Quando a FLW oferecer suporte e
+                                                        impressão e fallback para abrir
+ webview             os testes passarem
+                                                        externamente
+
+
+Login inicial. Use convite e código por e-mail no Supabase Auth. Configure SMTP do
+ambiente, domínios de redirecionamento e limites. A autenticação prova identidade. A clínica
+ativa vem da combinação de destino e vínculo no banco. Ao trocar de clínica, limpe dados em
+cache, cancele consultas e encerre assinaturas anteriores.
+
+Federação futura. Habilite SSO FLW apenas com contrato oficial aplicável e prova em duas
+contas. Valide assinatura ou troca de código no servidor, emissor, audiência, validade, nonce
+quando aplicável e vínculo local. Para o iframe, limite frame-ancestors às origens exatas
+observadas. Trate autenticação e persistência em mobile concretamente no Discovery.
+
+Instalação do ícone. No console registre a URL, nome, conta FLW, modo, evidência e estado
+pendente → instalado → testado. A instalação inicial é manual. Guarde só evidência
+redigida e um destino de retorno autorizado.
+
+Falhas de sessão. Mostre ações para voltar à FLW, abrir em aba externa ou retomar login.
+Documente se sair da FLW encerra sua sessão ou se o usuário precisa sair da Zetta. Exija
+sessão válida em operações de segundo plano iniciadas pelo navegador.
+
+
+
+
+Documento mestre • Versão 3.0                                                                 5 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+PRODUTO E ARQUITETURA
+
+
+5 SaaS multiempresa e expansão
+Modele como núcleo compartilhado a identidade, empresas, unidades, usuários, planos,
+módulos, convites, integrações, auditoria e assinaturas. A vertical Estética adiciona catálogo,
+agenda, propostas, pacotes e recebíveis a esse núcleo. Um futuro nicho entra como conjunto
+de módulos, permissões e templates versionados. Cada clínica escolhe configuração, com a
+mesma base de código do ambiente.
+
+ Oferta sugerida       Entrega                                     Condição da oferta
+
+                       Agenda, avaliações, propostas e visão       CRM pela FLW, com acesso por
+ Comercial
+                       comercial                                   link ou vínculo de referência
+
+                       Tudo do Comercial, pacotes, sessões,        Conciliação manual auditada ou
+ Gestão
+                       contas a receber e tarefas                  integração homologada
+
+                       Estoque, comissões, gestão multiunidade e   Ativação após validar
+ Avançado
+                       integrações adicionais                      capacidade, preço e obrigações
+
+                       Anamnese, evolução e arquivos clínicos      Contrato, controles e validação
+ Clínico opcional
+                       restritos                                   específica por clínica
+
+
+Limites de plano. Controle usuários ativos, número de unidades, profissionais,
+armazenamento e módulos. Valide quotas no banco ou no serviço responsável, com uma
+transação quando duas ativações concorrentes puderem ultrapassar o limite. Guarde datas e
+histórico de mudanças.
+
+Personalização. Logo, nome visível, cores e parâmetros operacionais podem variar. Domínio
+personalizado é opcional em fase futura. O módulo aparece no menu quando está contratado,
+provisionado e autorizado para aquele papel. Configurações podem ser copiadas de um
+template aprovado, com revisão antes da ativação.
+
+Implantação comercial. Forme preço por implantação e recorrência, com adicionais claros por
+unidade, integrações e profundidade de suporte. Faça o piloto com uma operação
+acompanhada e registre o tempo gasto no treinamento, na importação e na conciliação para
+estimar a margem.
+
+Indicadores da Zetta. Monitore tempo de implantação, adoção semanal por função, incidentes
+por clínica, jobs atrasados, custo de suporte, receita recorrente e cancelamentos. Trate como
+meta de implantação, com linha de base definida no piloto.
+
+
+
+
+Documento mestre • Versão 3.0                                                                   6 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+PRODUTO E ARQUITETURA
+
+
+6 Premissas e limites do piloto
+O Discovery define o modo de entrada e o nível de integração que o piloto consegue
+demonstrar.
+
+ Capacidade                     Estado inicial                Decisão de produto
+
+ CRM, atendimento e             Funções descritas nos guias   Mantê-las como referência de
+ pagamentos na interface FLW    públicos                      operação comercial
+
+                                Capacidade relatada na        Provar com gravação redigida e
+ Ícone configurável por conta
+                                versão anterior               duas contas de teste
+
+ Abertura externa ou            Depende da configuração e     Usar modo observado com login
+ incorporada                    do dispositivo                próprio como base
+
+                                Pendentes por operação e      Começar com vínculos e tarefas
+ Operações reais de API
+                                por conta                     manuais se preciso
+
+                                Pendente de contrato,         Liberar só a regra homologada e
+ Disparo de fluxo existente
+                                escopo e teste                registrar uso
+
+                                                              Piloto com fichas operacionais e
+ Dados clínicos sensíveis       Módulo futuro condicionado
+                                                              avaliações comerciais
+
+
+Primeira entrega vendável. Uma recepcionista abre a agenda pelo ícone da FLW, associa
+uma pessoa a um card de referência, registra avaliação e proposta. A clínica aceita a proposta,
+gera recebíveis e concede sessões conforme sua política. O profissional conclui uma sessão e
+o financeiro confere o extrato. Duas empresas testam os mesmos passos com dados fictícios e
+permissões diferentes.
+
+Decisão depois do Discovery. Se o ícone abrir em aba externa, ofereça entrada por ela. Se a
+FLW confirmar apenas o cadastro manual do ícone, inclua essa ação no onboarding. Se a
+abertura pelo ícone ainda estiver pendente, a equipe pode homologar o módulo por URL direta
+e registra que a abertura pela FLW segue em validação antes de vender essa experiência.
+
+Prova comercial. Na demonstração, identifique quais cliques ocorrem na FLW e quais ocorrem
+na Zetta, se a cobrança é manual ou integrada, e como a equipe retorna ao atendimento.
+
+Perguntas para a FLW. Quem pode instalar o ícone por conta? A URL aceita um destino por
+empresa? Quais navegadores abrem a página externamente? Há escopos de leitura, escrita,
+webhooks e execução de fluxos na conta de teste? Que ambiente, limites e suporte técnico
+existem?
+
+
+
+
+Documento mestre • Versão 3.0                                                                    7 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+ADMINISTRAÇÃO MULTIEMPRESA
+
+
+7 Papéis e autorização
+ Papel                      Escopo padrão                        Operações típicas
+
+                                                                 Planos, provisionamento,
+ Superadmin Zetta           Plataforma e metadados dos tenants
+                                                                 entitlements, saúde e auditoria
+
+                            Clínicas delegadas e escopo          Ícones, teste de conexão e
+ Implantação Zetta
+                            temporário                           onboarding
+
+                                                                 Equipe, catálogo, regras
+                            Clínica própria e unidades
+ Admin da clínica                                                operacionais e permissões
+                            autorizadas
+                                                                 delegáveis
+
+                                                                 Agenda, propostas, alçadas e
+ Gerente                    Unidades atribuídas
+                                                                 indicadores
+
+                                                                 Cadastro mínimo, avaliações
+ Recepção e comercial       Unidades atribuídas                  comerciais, agendamento e
+                                                                 propostas
+
+                                                                 Agenda própria e conclusão de
+ Profissional               Unidades e atendimentos atribuídos
+                                                                 sessões autorizadas
+
+                                                                 Recebíveis, comprovantes,
+ Financeiro                 Escopo financeiro da clínica
+                                                                 conciliação e estornos permitidos
+
+                                                                 Evidências de tratamento, trilhas e
+ Privacidade e auditoria    Solicitação e escopo aprovados
+                                                                 exportações autorizadas
+
+
+Verificação de acesso. Para uma operação normal, valide identidade autenticada, estado do
+tenant, vínculo ativo, permissão, unidade e módulo habilitado. O papel global fica em registro
+privado da plataforma e passa por verificação separada. A recepção tem acesso ao fluxo
+comercial, e o acesso clínico futuro exige permissão própria, atendimento atribuído e MFA
+quando definido pela política.
+
+Admin e suporte. Registre motivo, escopo, aprovador e expiração para suporte excepcional. O
+console da Zetta mostra metadados, telemetria redigida e configurações sob autorização global.
+Consulta a dados operacionais exige vínculo normal ou uma concessão específica e auditada.
+Conteúdo clínico fica fora do suporte rotineiro.
+
+Usuário em duas clínicas. Uma conta Auth pode ter mais de um vínculo. Exiba o tenant e a
+unidade ativos na interface e use as permissões daquele contexto em cada consulta.
+
+
+
+
+Documento mestre • Versão 3.0                                                                      8 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+ADMINISTRAÇÃO MULTIEMPRESA
+
+
+8 Console administrativo da Zetta
+ Tela                     Operações                                        Evidência persistida
+
+                          Buscar por status, plano, última atividade e
+ Empresas                 integração. Criar, suspender, reativar e abrir   Ator, transição e motivo
+                          histórico
+
+                          Nome, responsável, e-mail, plano, unidade        Referência da ativação,
+ Onboarding
+                          inicial, fuso, marca e checklist                 estado e convite
+
+                          Dependências, defaults por plano, limites,       Entitlements, mudanças e
+ Módulos
+                          versão e ativação seletiva                       alcance
+
+                          Nome, URL copiável, conta, modo de               Instalação manual,
+ Ícones FLW
+                          abertura, retorno e teste                        instalador e data
+
+                          Conectar, testar, ver capacidades, erros, fila   Estado, versão, ID
+ Integrações
+                          e reprocessamento autorizado                     mascarado e último sucesso
+
+                          Trial, plano, add-ons, carência, suspensão e     Referências do provedor da
+ Assinaturas SaaS
+                          histórico de cobrança Zetta                      Zetta e vigência
+
+                          Jobs, erros por conexão, falhas, status de       Correlação, incidente e
+ Suporte
+                          backups e concessões                             escopo temporário
+
+
+Provisionamento idempotente. Uma operação com chave de idempotência cria a empresa, a
+unidade, a configuração inicial e os entitlements. O convite é uma pendência de envio
+separada, pois e-mail e Auth são efeitos externos à transação de negócio. Se falhar, a tela
+permite retomar pelo mesmo cadastro.
+
+Integração visível. Diferencie credencial configurada, conexão testada, capacidade disponível
+e feature ativa. Exiba erro de credencial, falta de escopo e indisponibilidade transitória de forma
+acionável. Apresente só a referência da credencial para quem opera o console.
+
+Suspensão. Aplique a restrição na API e nos jobs da clínica. A política contratual define janela
+de exportação e quem a pode solicitar. Registre o estado e a data efetiva para retomar quando
+houver reativação.
+
+Ações pendentes. Separe marcações manuais de resultado automático. Mostre convite
+pendente, origem da importação, bloqueios da integração, testes do ícone e dados necessários
+para concluir a ativação por clínica.
+
+
+
+
+Documento mestre • Versão 3.0                                                                         9 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+ADMINISTRAÇÃO MULTIEMPRESA
+
+
+9 Ativação de uma clínica
+1. Cadastre empresa, plano, unidade inicial, fuso e responsável no console. Gere uma
+   referência de implantação e o checklist.
+
+2. Envie convite transacional ao responsável. Associe o vínculo somente após verificar a
+   identidade e o destinatário. Use expiração, revogação e consumo único.
+
+3. Configure vínculo da conta FLW. Onde a credencial ou o identificador de workspace ainda
+   estiver pendente, salve a referência manual validada pelo implantador.
+
+4. Teste a conexão em homologação e selecione as capacidades permitidas. Importe
+   amostras fictícias antes de importar dados operacionais autorizados.
+
+5. Habilite módulos e importe unidades, horários, serviços, preços, profissionais, salas e
+   equipamentos. Revise duplicidades e origem da agenda.
+
+6. Copie o link do tenant e configure o ícone na conta FLW. Valide abertura e retorno com
+   recepção e administrador, em desktop e celular.
+
+7. Simule avaliação, proposta, recebível, pacote e sessão. Decida por clínica se cobrança e
+   atualização da FLW estarão em integração ou execução manual.
+
+8. Treine os perfis, registre o aceite, ative os jobs comprovados e acompanhe a primeira
+   semana.
+
+ Estado                         Entrada                            Próximo passo
+
+                                Solicitação e responsável
+ Rascunho                                                          Provisionar tenant e unidade
+                                definidos
+
+                                Tenant criado e primeiro convite   Catálogo, regras, conexão e modo
+ Configuração
+                                aberto                             FLW
+
+                                Fluxo base pronto em dados         Rodar roteiro, revisar falhas e anotar
+ Homologação
+                                fictícios                          pendências
+
+                                Aprovação de escopo e equipe       Monitorar uso, conciliação e
+ Piloto
+                                treinada                           atendimento
+
+ Ativa                          Aceite e operação estável          Suporte, revisão de uso e expansão
+
+
+Guarde a última transição, responsável, data e evidência. Use estados excepcionais para
+bloqueio, suspensão e cancelamento. Retome pelo estágio válido registrado.
+
+Importação e corte. Mapeie colunas, confira totais por unidade, corrija referências rejeitadas e
+congele a origem no momento combinado. Registre versão do lote, operador, totais e
+divergências para repetir ou desfazer o procedimento de maneira controlada.
+
+
+
+
+Documento mestre • Versão 3.0                                                                       10 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+ADMINISTRAÇÃO MULTIEMPRESA
+
+
+10 Módulos planos e configurações
+Registre no catálogo a chave estável do módulo, versão, descrição, rota interna, permissões,
+dependências, estado operacional, set de dados e limites. As chaves habilitam recursos
+existentes no código. Um novo recurso entra por desenvolvimento, homologação e publicação
+no catálogo.
+
+ Controle                 Onde é decidido               Efeito
+
+ Plano base               Console Zetta e assinatura    Define direitos padrão e limites da empresa
+
+                          Tenant entitlement com        Ativa ou restringe recurso específico e
+ Override contratado
+                          vigência                      registra motivo
+
+                                                        Impede ativar pacote sem os componentes
+ Dependência              Catálogo do produto
+                                                        exigidos
+
+                                                        Restringe leitura e escrita no escopo
+ Papel e unidade          Vínculo e permissões atuais
+                                                        daquela pessoa
+
+                                                        Define execução automatizada, somente
+ Modo de integração       Conexão e escopo por conta
+                                                        leitura ou tarefa manual
+
+                                                        Controla operação, jobs, suporte e
+ Status da clínica        Registro do tenant
+                                                        exportação autorizada
+
+
+Menu e API. Gere menu e rotas a partir do catálogo autorizado. Reaplique a regra na operação
+transacional e na leitura protegida. Desligar um módulo preserva histórico. Relatórios históricos
+e exportação obedecem à política contratada.
+
+Configurações reutilizáveis. Versione templates de serviços, documentos, alçadas, horários e
+políticas de pacote de cada vertical. Aplicar um template registra sua versão, faz prévia do que
+será criado e permite ajustar regras específicas da clínica. Alterações de configuração devem
+refletir só a partir da vigência definida.
+
+Exemplo de aceite. Clínica Aurora tem Agenda e Pacotes. Clínica Horizonte tem apenas
+Agenda. A primeira opera os dois módulos com seus papéis autorizados. Na segunda, menu,
+rota, RPC e exportação respeitam o entitlement vigente.
+
+Evolução do núcleo. Use permissões como agenda.book e package.adjust, com papéis
+como agrupadores. Cada novo vertical declara módulos, permissões, chaves de eventos e
+templates. Mantenha status e nomes configuráveis na apresentação com identificadores
+estáveis para as regras.
+
+
+
+
+Documento mestre • Versão 3.0                                                                     11 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+INTEGRAÇÃO COM FLW CHAT
+
+
+11 O que está documentado na FLW
+Os guias públicos descrevem CRM, contatos, painéis, carteiras e o aplicativo Pagamentos. A
+página de integrações menciona API, webhooks, n8n e Make. O contrato específico de
+endpoints, escopos, SSO e configuração de ícone fica para o Discovery com acesso de
+homologação. Referências oficiais
+
+
+12 Matriz de capacidades e prova
+ Operação desejada              Evidência mínima                       Operação manual disponível
+
+ Ícone por conta e modo         Captura redigida em duas contas,       Configuração do ícone pela equipe,
+ de abertura                    navegador e dispositivo                se observada
+
+ SSO ou token de                Contrato oficial e validação com
+                                                                       Supabase Auth por convite
+ lançamento                     duas identidades
+
+                                URL e escopo oficiais, teste com       Cadastro local mínimo e vínculo
+ Ler ou gravar contato
+                                conta de sandbox                       manual
+
+                                IDs de painel e etapas e teste         Abrir CRM ou enfileirar tarefa com
+ Consultar ou mover card
+                                autorizado de leitura/escrita          referência
+
+                                Acesso a valor, moeda,                 Conciliação auditada ou PSP
+ Consultar pagamento
+                                referência e status verificáveis       homologado
+
+                                Origem verificável, tipo, ID, retry,   Consulta autenticada permitida ou
+ Receber webhook
+                                ordem e teste de duplicidade           revisão humana
+
+ Disparar mensagem ou           Escopo, fluxo aprovado e               Tarefa para a equipe, respeitando
+ fluxo                          evidência de parada e de erro          regras de canal
+
+ Agente FLW chamar a            Contrato para ação estruturada,        Recepção consulta disponibilidade
+ Zetta                          identidade e teste de escopo           e confirma na Zetta
+
+
+Ficha por operação. Registre fornecedor, link oficial, conta/escopo, verbo, rota, parâmetros,
+amostra redigida, limites, autenticação, resultado, data, responsável e alternativa manual. Use
+evidência de documentação e teste em campos separados.
+
+Estados. pending para pendente, read_only para leitura comprovada, supported para a
+operação exata comprovada, unsupported quando a restrição foi verificada e error para falha
+temporária ou de configuração. Uma simulação tem indicação própria de ambiente de teste.
+
+
+
+
+Documento mestre • Versão 3.0                                                                         12 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+IMPLEMENTAÇÃO COM SUPABASE
+
+
+13 Modelo de dados e isolamento
+ Domínio                  Tabelas de referência          Regras no banco
+
+                          tenants, units, profiles,
+                          tenant_memberships,            Usuário Auth associado por UUID.
+ Núcleo
+                          membership_units,              Vínculo único por clínica e usuário
+                          tenant_invitations
+
+                          module_catalog, plans,
+                          plan_modules,
+ Produto                                                 Vigência, estado e chaves estáveis
+                          tenant_entitlements,
+                          billing_subscriptions
+
+                          platform_memberships,
+ Administração            support_grants, audit_logs,    Acesso controlado por escopo e função
+                          launch_links
+
+                          tenant_integrations,
+                          integration_capabilities,      Vínculos tipados, conta comprovada e
+ Integrações
+                          flw_contact_links,             segredos referenciados
+                          flw_card_links
+
+                          webhook_inbox,
+                          outbox_events,                 Deduplicação, tentativas, lease, estados
+ Processamento
+                          integration_deliveries,        e correlação
+                          sync_cursors
+
+                          documents,                     Metadados no Postgres e objetos
+ Documentos
+                          document_versions              privados no Storage
+
+
+Integridade. Toda tabela operacional tem tenant_id obrigatório. Garanta unicidade em
+(tenant_id, id) para relações e use chaves estrangeiras compostas, como (tenant_id,
+unit_id) para units(tenant_id, id). Aplique a mesma ideia em clientes, vendas, sessões
+e reservas. Indexe tenant, filtros de data e colunas usadas pelas políticas.
+
+Exposição. Publique na Data API apenas tabelas, views e RPCs de uso do aplicativo. Isole
+credenciais, inbox, outbox e estruturas administrativas em esquema privado, com privilégios
+explícitos. O acesso via usuário autenticado leva a verificação para RLS e para a operação de
+negócio. Evite autorização baseada em metadados que o usuário pode editar. Retire escrita
+direta de tabelas de reserva, aceite, ledger e liquidação para que a operação passe pela RPC
+autorizada.
+
+Migrações. Use supabase/migrations/ como histórico. Adicione cada recurso em etapas,
+com defaults e backfill controlado quando já houver dados. Seeds sintéticos alimentam testes
+de clínica, papel, unidade e módulo.
+
+
+
+
+Documento mestre • Versão 3.0                                                                  13 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+IMPLEMENTAÇÃO COM SUPABASE
+
+
+14 Eventos sincronização e falhas
+Entrada. Uma Edge Function identifica a conexão com referência opaca e valida a autenticação
+conforme o contrato do fornecedor. Quando houver assinatura documentada, valide os bytes
+originais e aplique a janela de validade prevista pelo provedor. Derive a clínica da conexão
+verificada, grave o evento em webhook_inbox e confirme o recebimento após commit. Use a
+chave única (tenant_id, integration_id, provider_event_id) ou um identificador
+estável homologado. A consulta periódica por API exige leitura autorizada e cursor rastreável.
+
+Saída. A mesma RPC que confirma uma ação grava seu evento na outbox_events dentro da
+transação. Worker lê em lotes, reivindica o trabalho com lease e registra em
+integration_deliveries cada destino e tentativa. Emita eventos do tipo
+appointment.rescheduled.v1 e proposal.accepted.v1 com IDs internos, event_id,
+occurred_at, versão da entidade e número de correlação.
+
+ Cenário                        Política
+
+ Evento repetido                Unicidade da chave de evento e da ação por destino
+
+                                Use versão ou sequência do provedor quando disponível. Em caso
+ Eventos fora de ordem
+                                ambíguo, busque o estado atual e reconcilie
+
+                                Retry com atraso progressivo, jitter e limite por conexão. Respeite
+ Falha temporária
+                                Retry-After quando disponível
+
+                                Marque como resultado desconhecido. Consulte por referência ou
+ Timeout após envio
+                                reenvie com a mesma chave só se o destino oferecer idempotência
+
+ Falha permanente               Mostre causa redigida e permita replay autorizado ou tarefa humana
+
+                                Suspenda o destino, sinalize reconexão e conserve os eventos
+ Credencial expirada
+                                pendentes
+
+
+Operação no Supabase. Use Cron para acionar o worker e jobs leves. Uma RPC pode
+reivindicar lotes com FOR UPDATE SKIP LOCKED e recuperar leases vencidos. A agenda e as
+vendas continuam gravadas se um destino externo falhar.
+
+Evolução das integrações. Guarde cursor, horário do último sucesso, versão do mapeamento
+e IDs de origem. Se o fornecedor substituir o contrato da API, compare o mapeamento em
+homologação e ative a nova versão somente após reconciliação amostral.
+
+Minimização. Prefira referências locais, valores necessários e metadados operacionais.
+Restrinja retenção e leitura dos payloads recebidos. Exclua conteúdo clínico e segredos de
+logs, eventos e tarefas.
+
+
+
+
+Documento mestre • Versão 3.0                                                                         14 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+INTEGRAÇÃO COM FLW CHAT
+
+
+15 Clientes fichas e oportunidades
+A ficha operacional Zetta agrega agenda, proposta, pacotes, sessões, recebíveis autorizados e
+tarefas para um cliente da clínica. A FLW organiza negócio, card, carteira, etapas, mensagens
+e histórico de conversa. Na tela Zetta, ofereça Abrir no CRM FLW quando o endereço for
+validado. Com link indisponível, exiba referência do card e como localizá-lo.
+
+ Informação                     Direção e regra                                   Dono
+
+ Nome, telefone, e-mail,        FLW para Zetta quando permitido. Cache mínimo
+                                                                                  FLW vinculada
+ origem                         e carimbo de sincronização
+
+ Cadastro manual mínimo         Zetta até que exista correspondência confirmada   Zetta
+
+ flw_contact_id,                Mapeie por conexão, tenant e ID externo
+                                                                                  Identidade externa
+ flw_card_id e painel           comprovado
+
+ Próxima avaliação e            Zetta para FLW somente em campos autorizados
+                                                                                  Zetta
+ situação de proposta           e testados
+
+ Etapa, responsável e           FLW. A escrita Zetta depende de mapeamento
+                                                                                  FLW
+ carteira                       explícito e regra homologada
+
+ Anamnese, fotos e              Acesso restrito somente no módulo clínico
+                                                                                  Zetta clínica
+ evolução                       condicionado
+
+
+Identidade e merge. Use UUID interno para clientes. Normalize telefone em E.164 quando
+houver informação suficiente e trate telefone compartilhado ou e-mail divergente como
+candidato à revisão. Vincule IDs externos por tenant e integração, com unicidade por tipo. Use
+chaves estrangeiras tipadas para impedir relações com clientes ou cards de outra clínica.
+Mantenha histórico e autoria do merge, redirecione referências e conserve eventos já
+auditados.
+
+Mudança de card. A partir de avaliação marcada, proposta aceita ou nova venda, avalie o
+mapeamento vigente e o estado do card antes de alterar etapa. O gatilho, a transição permitida
+e a ação manual são configurados por clínica. Estorno e cancelamento geram tarefas por
+padrão até validar uma regra comercial própria.
+
+Importação. Faça ensaio com amostra, prévia de correspondências, limites e relatório de
+rejeições. A clínica aprova o lote antes do corte. No piloto, vincule cada conta FLW verificada a
+uma clínica por ambiente. Contas compartilhadas exigem desenho específico de escopo e
+homologação antes do uso.
+
+
+
+
+Documento mestre • Versão 3.0                                                                     15 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+INTEGRAÇÃO COM FLW CHAT
+
+
+16 Recebíveis e conciliação
+O Supabase guarda venda, parcelas, vencimentos, alocações e movimentos financeiros. O
+provedor homologado informa a liquidação automática. Cada clínica configura um caminho de
+cobrança ativo para a transação. O cadastro de assinatura da Zetta fica na administração
+SaaS, em domínio separado dos pagamentos da clínica.
+
+ Modo                       Quando usar                      Evidência de recebimento
+
+                            Piloto ou operação sem           Lançamento com valor, data, método,
+ Manual                     integração de cobrança           referência, responsável e comprovante
+                            comprovada                       opcional privado
+
+                            API da conta comprovada para o   ID externo e confirmação por
+ FLW Pagamentos
+                            fluxo necessário                 mecanismo autenticado
+
+                            Provedor escolhido e             Webhook verificado e/ou consulta
+ PSP externo
+                            homologado pela clínica          autenticada ao provedor
+
+
+Criação da cobrança. Grave uma intenção única por obrigação antes da chamada externa.
+Reuse a chave de idempotência do provedor. Havendo resposta ambígua, consulte pela
+referência e encaminhe para conciliação quando necessário. O link de checkout e o retorno do
+navegador informam progresso para a operação.
+
+Liquidação. Confira conta, transação, referência, valor, moeda e status. Lance recebimentos
+parciais, duplicidades detectadas, excedentes pendentes de alocação e estornos de forma
+rastreável. Use valores inteiros em centavos e regras de arredondamento para parcelas,
+descontos e total. Registre BRL no piloto e trate moeda explicitamente. Quando houver entrada
+manual para uma cobrança do provedor, faça a correspondência das evidências antes de
+reconciliar para preservar um único efeito de caixa.
+
+Pacotes e estorno. A clínica escolhe liberação no aceite ou após confirmação de sinal. Se o
+sinal for exigido, o pacote fica pendente e seu saldo é indisponível até confirmação manual
+autorizada ou do provedor, conforme configurado. Reembolso confirmado gera movimentos
+compensatórios e revisão do saldo restante segundo política comercial. Sessões já concluídas
+preservam seu histórico.
+
+Indicadores. Separe contratado, recebido bruto, estornos, recebido líquido e saldo a vencer ou
+em atraso.
+
+
+
+
+Documento mestre • Versão 3.0                                                                   16 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+INTEGRAÇÃO COM FLW CHAT
+
+
+17 Automações operacionais com FLW e n8n
+O Supabase registra eventos e executa as regras de elegibilidade. A FLW é o canal de
+comunicação. O n8n, quando necessário, recebe um pedido versionado por integração,
+orquestra o fluxo homologado e devolve a referência ou o erro para acompanhar a execução.
+
+ Evento Zetta                   Ação quando comprovada          Continuidade manual
+
+ Avaliação marcada ou           Acionar lembrete no horário     Tarefa com data, referência e
+ reagendada                     definido                        responsável
+
+ Cancelamento com lista de
+                                Sinalizar encaixe compatível    Lista priorizada na agenda
+ espera
+
+                                Criar follow-up no card, se
+ Ausência confirmada                                            Tarefa para reagendamento
+                                autorizado
+
+ Proposta aguardando            Acionar acompanhamento em
+                                                                Fila de propostas por vencimento
+ aceite                         janela definida
+
+                                Criar ação de renovação com
+ Pacote com saldo baixo                                         Fila de renovação
+                                regra de parada
+
+                                Acionar lembrete apropriado e
+ Recebível em atraso                                            Tarefa financeira
+                                autorizado
+
+                                Ativar fluxo aprovado para      Lista para revisão pelo
+ Reativação de cliente
+                                elegíveis                       responsável
+
+ Sessão concluída ou            Pós-serviço administrativo ou   Tarefa operacional ou painel de
+ estoque baixo                  alerta interno                  compras
+
+
+Configuração de regra. Registre objetivo, dono, evento ou agendamento, unidade, horário
+silencioso, limite, autorização de comunicação, templates e condição de parada. Diferencie
+comunicação operacional de marketing. Reavalie opt-out, elegibilidade e estado da
+proposta/agendamento antes de cada tentativa de entrega.
+
+Publicação. Comece com simulação, mostre quantos seriam elegíveis, teste em destino de
+homologação e registre aprovação em operação. Preserve deduplicação por evento, destino e
+regra. Exiba entregas confirmadas, falhas, pendências e tarefas em estados distintos.
+
+Expansão do agente FLW. Se a FLW aceitar chamadas de ferramentas externas, comece
+com consulta de disponibilidade. Reservar ou cancelar requer ação dedicada, escopo mínimo
+por clínica e unidade, confirmação, transação no Supabase e registro da referência de
+atendimento.
+
+
+
+
+Documento mestre • Versão 3.0                                                                17 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+OPERAÇÃO DAS CLÍNICAS
+
+
+18 Domínios do produto e dependências
+ Domínio                 Registros de referência                 Sequência
+
+                         customers, flw_contact_links,
+ Cadastro                                                        Após o núcleo
+                         flw_card_links
+
+                         services, service_versions,             Antes da agenda e das
+ Catálogo
+                         professionals, service_professionals    propostas
+
+                         schedule_resources, working_hours,
+ Recursos                                                        Antes de abrir reservas
+                         schedule_exceptions
+
+                         appointments, resource_reservations,    Catálogo, capacidade e
+ Agenda
+                         waiting_list                            unidades
+
+                         evaluations, proposals,
+ Comercial               proposal_versions, proposal_items,      Cliente, catálogo e alçadas
+                         sales
+
+ Pacotes                 packages, package_ledger, sessions      Venda e política de ativação
+
+                         receivables, payment_intents,
+ Financeiro                                                      Vendido e conciliação
+                         payment_movements
+
+                         operational_tasks, regras e leituras    Eventos estáveis dos demais
+ Tarefas e BI
+                         agregadas por escopo                    domínios
+
+                         stock_lots, stock_movements,            Depois do piloto e das regras
+ Expansão
+                         commission_rules, commission_entries    validadas
+
+                         Anamnese, evolução, termos, arquivos    Avaliações próprias de
+ Clínica e portal
+                         clínicos e acesso do cliente            autorização e privacidade
+
+
+Versionamento. Após publicar serviço ou regra comercial, registre uma nova versão quando
+preço, duração, buffer, política ou alçada mudar. Proposta enviada e agendamento confirmado
+usam snapshots. Configure unidade, categoria, equipamentos e habilitação profissional até a
+granularidade da operação.
+
+Auditoria. Registre criação e mudança de estado para operações relevantes com ator, tenant,
+ação, referência, horário e resultado. Correções sensíveis ou financeiras usam movimentos e
+justificativas. Exportações exigem autorização e trilha próprias.
+
+
+
+
+Documento mestre • Versão 3.0                                                              18 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+OPERAÇÃO DAS CLÍNICAS
+
+
+19 Telas e percursos de trabalho
+ Tela                  Percurso principal                              Controle
+
+                       Ver avaliações do dia, agenda, propostas,
+                                                                       Filtros por período e unidade,
+ Início                saldo baixo, recebimentos e tarefas
+                                                                       com status de sincronização
+                       autorizadas
+
+                       Dia e semana, grade de recursos,
+                                                                       Conflitos explicados e
+ Agenda                disponibilidade, reserva, retorno, presença e
+                                                                       reagendamento protegido
+                       encaixe
+
+                       Cadastro mínimo e linha do tempo do             Visão por papel, dados
+ Clientes
+                       módulo, com referência ao CRM                   clínicos segregados
+
+ Avaliações e          Criar avaliação comercial, montar versão,
+                                                                       Validade, alçada e histórico
+ propostas             aprovar desconto, exportar e confirmar aceite
+
+                       Exibir crédito concedido, saldo, validade e
+                                                                       Saldo derivado e ação
+ Pacotes e execução    sessões. Recepção faz check-in e
+                                                                       governada por perfil
+                       profissional conclui
+
+                       Ver parcelas, recebimentos, diferenças,         Ações auditadas e autorização
+ Financeiro
+                       reembolsos e comprovantes privados              financeira
+
+                       Editar catálogo, recursos, turnos, feriados,    Escopo por unidade e estados
+ Configurações
+                       políticas e equipe                              de publicação
+
+                       Filtrar, abrir registros de origem e exportar   Fórmulas explícitas e
+ Relatórios
+                       quando autorizado                               visibilidade por função
+
+
+Uso em campo. Priorize agenda, pesquisa e atalhos de confirmação em celular. Use campos
+com rótulos, navegação por teclado, foco visível, estados com texto e visões de carregamento,
+vazio, falha e acesso restrito. Preserve formulários em andamento onde possível. Nas
+operações de maior impacto, confirme a ação com o objeto e dados relevantes visíveis.
+
+Fila de encaixe. Registre cliente, serviço, dias, janelas, profissionais aceitos e prioridade. Ao
+liberar horário, filtre por compatibilidade e ordene pela prioridade validada. A oferta de encaixe
+tem prazo e a confirmação passa pela mesma reserva transacional da agenda.
+
+Fluxo de exemplo. A recepção abre a clínica no ícone, localiza Mariana, reserva avaliação e
+gera proposta. O profissional consulta a agenda e conclui a sessão. O financeiro concilia o
+sinal. Cada perfil vê apenas as ações autorizadas.
+
+
+
+
+Documento mestre • Versão 3.0                                                                    19 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+OPERAÇÃO DAS CLÍNICAS
+
+
+20 Transações e invariantes do PostgreSQL
+Agenda. Represente profissional, sala e equipamento como recursos reserváveis. O
+profissional tem um único recurso na clínica, usado nas unidades onde atende. Cada alocação
+ativa guarda tstzrange no formato [), incluindo buffers. Use uma restrição de exclusão GiST
+com btree_gist para impedir interseção de intervalos do mesmo (tenant_id,
+resource_id). Faça ensaio da extensão e da migration antes do piloto.
+
+Bloqueios e reagendamento. Inclua bloqueios rígidos na mesma regra de ocupação. A RPC
+verifica jornada, exceções, habilitação, recursos, versão e duração. Em uma transação,
+bloqueie o agendamento e os recursos em ordem consistente, trate holds vencidos e substitua
+as alocações. Se uma inserção falhar, o rollback preserva o original. Um conflito vira resposta
+de negócio. O job de expiração ajuda a limpeza, e a RPC também resolve vencimentos sob
+lock.
+
+Aceite. Persista o aceite da versão vigente, a venda, as parcelas, os direitos de sessão
+aplicáveis e o evento de saída em uma operação. Use unicidade da venda pela versão e
+proteja a própria proposta contra novo aceite indevido. Idempotência deve devolver o mesmo
+resultado com a mesma chave e rejeitar a reutilização da chave com conteúdo diferente.
+
+Sessões. Trave o pacote antes da baixa e derive saldo do ledger por escopo de procedimento.
+Finalizar a sessão e inserir o movimento correspondente acontecem juntos. Trate estornos e
+ajustes com movimentos compensatórios e permissões. Verifique que duas sessões
+concorrentes disputando o último crédito produzam apenas um consumo.
+
+Pagamentos. Processe a mudança com o identificador do provedor, estado observado, valor e
+movimentos na mesma transação após verificar a evidência externa. Atualize estado e
+alocação no banco, incluindo eventos de liberação segundo a política. O fluxo manual registra
+origem distinta e autoria.
+
+Horário e valores. Grave instantes como timestamptz e converta para o fuso IANA da
+unidade na exibição. Use centavos, moeda e quantidade de sessões inteiras. Teste limites de
+intervalos contíguos e casos em que preços ou configurações mudam depois da venda.
+
+Disponibilidade calculada. Mostre opções pela interseção da jornada, profissional habilitado,
+unidade, sala, equipamento, buffers, bloqueios e reservas ativas. A consulta é informativa até
+confirmar a RPC de reserva. Em caso de conflito, ofereça horários atualizados sem conservar
+alterações parciais.
+
+Chaves de negócio. Em idempotência use escopo de tenant e operação para chaves de
+entrada, hash de parâmetros e unicidade no efeito final. Ações assíncronas preservam uma
+referência estável para reconciliação. Ledger e auditoria preservam o histórico ao corrigir um
+lançamento.
+
+
+
+
+Documento mestre • Versão 3.0                                                              20 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+IMPLEMENTAÇÃO COM SUPABASE
+
+
+21 Contratos internos e interfaces
+Os nomes são sugestões do aplicativo Zetta. O código deve documentar entradas, retornos,
+escopo, erros, versão do contrato e testes. As operações transacionais de usuário recebem
+contexto de negócio e a sessão segue até o PostgreSQL. Uma Edge Function pode envelopar
+a RPC para a interface quando precisar validar entrada ou traduzir erros.
+
+ Interface                      Tipo                         Verificação principal
+
+ /launch/:slug?                 Rota do app                  Sessão e vínculo ativo com destino
+
+                                                             Papel global, chave idempotente e
+ admin-provision-tenant         Edge + operação no banco
+                                                             trilha
+
+                                                             Unidade, serviço, recursos e
+ get_availability               RPC de leitura
+                                                             intervalo
+
+                                                             Conflito de recursos, SLA do hold e
+ reserve_appointment            RPC de escrita
+                                                             chave
+
+ reschedule_appointment         RPC de escrita               Versão, locks e troca atômica
+
+                                                             Versão, expiração, aceite e venda
+ accept_proposal                RPC de escrita
+                                                             única
+
+                                                             Papel, execução autorizada e saldo
+ complete_session               RPC de escrita
+                                                             disponível
+
+                                                             Alçada, estados e origem da
+ record_manual_payment          RPC de escrita
+                                                             evidência
+
+ flw-webhook e payment-                                      Autenticação do provedor e
+                                Edge separadas
+ webhook                                                     conexão
+
+ process-integration-                                        Identidade de serviço, lease e
+                                Worker interno
+ jobs                                                        replay auditado
+
+
+Contrato de falhas. Em HTTP, 401 indica sessão ausente ou inválida, 403 falta de permissão
+na ação, 404 referência indisponível, 409 conflito de reserva ou versão, 422 entrada inválida,
+429 excesso e 503 indisponibilidade transitória. Respostas protegem existência de registros de
+outra clínica. Use código de erro de negócio e ID de correlação sem conteúdo pessoal.
+
+Autenticação das Functions. Em user flows, valide o JWT do usuário pelo mecanismo
+aplicável do Supabase e opere no seu contexto. Em webhooks externos, autentique pela regra
+comprovada do provedor e restrinja essa configuração à função de ingresso. Em worker, use
+identidade de serviço e privilégios mínimos.
+
+
+
+
+Documento mestre • Versão 3.0                                                                 21 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+IMPLEMENTAÇÃO COM SUPABASE
+
+
+22 Segurança privacidade e recuperação
+RLS e grants. Habilite RLS nas tabelas expostas e defina privilégio por operação. A identidade
+vem de auth.uid() e as permissões vêm de vínculos vigentes no banco. Use condições
+compatíveis com leitura e escrita, inclusive WITH CHECK. Faça views no contexto do chamador
+quando expostas e explicitamente autorizadas. Restrinja RPCs por EXECUTE. Quando houver
+SECURITY DEFINER, fixe search_path vazio, qualifique nomes e valide escopo antes de
+acessar dados.
+
+Segredos e HTML. A chave publishable e a sessão do usuário pertencem à interface. Chave
+secreta ou service_role tem acesso privilegiado e permanece no servidor. Credenciais FLW e
+PSP são por conexão, guardadas em cofre privado. Limite quem lê o Vault, use referências em
+tabelas operacionais e rode rotação/revogação. Adote MFA para superadmin e operações
+sensíveis conforme política.
+
+Storage. Buckets privados com objeto prefixado por tenant e vinculado a metadados
+autorizados. Valide arquivo, tamanho e tipo. Use URL assinada curta só após autorizar o
+acesso ao objeto. Para arquivo clínico que exige trilha de leitura ou revogação imediata,
+intermedie o download a cada requisição. Registre acessos e mantenha dados clínicos fora de
+exportações genéricas, logs e ferramentas de automação.
+
+LGPD e governança clínica. Documente finalidade, base legal por tratamento, retenção e
+papéis da Zetta e da clínica. Dado referente à saúde é sensível, com hipóteses próprias no art.
+11. Distinga tratamento clínico, aceite de contrato, autorização de imagem e comunicação de
+marketing. Classifique agenda, serviço e proposta conforme o conteúdo e o potencial de revelar
+saúde. Registre solicitações do titular, verificação da identidade, decisão do controlador e
+execução autorizada. Valide requisitos profissionais e sanitários locais antes de habilitar o
+módulo clínico. Referências
+
+Recuperação. Separe backup do banco e dos objetos do Storage. Teste restauração em
+ambiente isolado, consistência dos arquivos e políticas, rotação de segredos e isolamento após
+recuperar. Defina objetivos de recuperação e responsáveis antes do piloto.
+
+Telemetria. Monitore latência das operações de agenda, falhas de autenticação, tentativas
+externas, idade da fila, conexões indisponíveis e divergências de saldo. Configure alerta com
+responsável e horizonte de resposta. Retenha apenas dados necessários para operação e
+investigação autorizada.
+
+
+
+
+Documento mestre • Versão 3.0                                                             22 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+EXECUÇÃO DO PROJETO
+
+
+23 Método de execução no Lovable
+1. No Lovable, selecione o projeto Supabase de homologação nas opções de banco ao criar
+   o projeto. Em um projeto sem backend, use Settings → General → External Supabase.
+   Se o projeto já estiver no Lovable Cloud, trate a migração como tarefa separada: inventarie
+   dados, Auth, Storage, funções, segredos e dependências, e valide a migração em
+   homologação.
+
+2. Registre referência de projeto, ambiente e branch. No repositório, mantenha SQL em
+   supabase/migrations/, funções em supabase/functions/, testes em
+   supabase/tests/database/ e fixtures fictícias para duas clínicas.
+
+3. Cole o Prompt Mestre como contexto. Execute o Prompt 00 para descobrir a integração. Em
+   seguida, aplique uma fase de implementação por vez e guarde o relatório de resultado.
+
+4. Revise migrations e tipos gerados. Rode ensaio local, recriação do banco de teste e
+   supabase test db. Rode também testes da API com sessões reais de teste e testes de
+   concorrência com duas conexões.
+
+5. Promova mudanças versionadas só após evidência em homologação. Para mudanças de
+   esquema com dados existentes, prefira mudança aditiva, backfill em lotes, validação,
+   mudança de leitura e limpeza em fase posterior. Prepare reversão da aplicação que consiga
+   operar com o esquema aditivo.
+
+Resposta de cada prompt. Contexto encontrado, arquivos e migrations, comportamento
+entregue, telas ou contratos alterados, testes executados com resultado, pendências,
+instruções de homologação e próximo passo. Distinguir resultado comprovado de mock. Se
+faltar credencial ou acesso FLW, registre o passo manual e avance no trabalho local
+autorizado.
+
+Ordem de release. Piloto com 00 a 12, seguido de 15. Os prompts 13 e 14 entram em releases
+específicas com seus próprios critérios. Migrations, testes e gates continuam versionados no
+repositório.
+
+Preparação técnica. Use o painel do Supabase para configurar Auth, SMTP, URLs permitidas
+e credenciais do ambiente. No Lovable, aprove a migration exibida só depois de conferir o
+projeto de destino.
+
+
+
+
+Documento mestre • Versão 3.0                                                            23 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+PROMPTS PARA O LOVABLE
+
+
+24 Prompt Mestre
+Cole este bloco como contexto do projeto e execute em seguida apenas o Prompt 00.
+
+Você é responsável pela arquitetura e pela implementação do Zetta Estética, primeiro
+módulo vertical do SaaS da Zetta. Trabalhe no projeto externo do Lovable. A clínica abre o
+módulo pelo ícone Gestão Estética da FLW Chat, quando esse modo estiver homologado.
+FLW é a fonte comercial de contatos, conversas, WhatsApp, IA, campanhas e CRM. A
+Zetta implementa administração multiempresa, agenda, catálogo, avaliações comerciais,
+propostas, pacotes, sessões, contas a receber e indicadores. Estoque, comissões, portal e
+área clínica seguem etapas próprias.
+
+Use o projeto Supabase externo da Zetta como backend. Trabalhe primeiro em
+homologação e confirme a referência do ambiente. Use PostgreSQL para dados e
+transações, Auth para identidade, Storage privado para arquivos e Edge Functions para
+integrações ou operações privilegiadas. Use Cron e worker quando houver processamento
+assíncrono. Na interface use a chave publishable com a sessão do usuário. Guarde
+credenciais de integração e chaves privilegiadas em cofre no servidor.
+
+Modele um SaaS com vários tenants por ambiente. Valide vínculo ativo, escopo de
+unidade, permissão e módulo no banco. Use tenant_id obrigatório, referências compostas,
+RLS e grants estritos. O slug só indica o destino. Separe papéis globais dos papéis da
+clínica. Estruture o núcleo para receber outros nichos por módulo, configuração e templates
+versionados.
+
+Implemente reservas, aceite, consumo e conciliação com transações, restrições e
+idempotência. Grave eventos com a operação no PostgreSQL. O adaptador FLW habilita
+somente operações autenticadas e demonstradas. Use vínculos e tarefas manuais para as
+demais operações. Para abrir o aplicativo, comece com Supabase Auth. SSO, iframe e
+envio automático dependem dos testes do Discovery.
+
+Mantenha migrations e funções versionadas e valide cada entrega com dados sintéticos de
+duas clínicas. Use pgTAP mais testes de API/Storage e concorrência conforme a etapa.
+Registre arquivos, migrations, evidência, pendências e passos de homologação. Execute
+uma etapa por vez. Comece com o Prompt 00 e aguarde a decisão de homologação antes
+de passar à seguinte.
+
+
+
+
+Documento mestre • Versão 3.0                                                         24 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+PROMPTS PARA O LOVABLE
+
+
+25 Prompts de Implementação
+Execute o Discovery antes de criar os módulos. Cada prompt traz um resultado
+verificável.
+
+  Prompt      Entrega                                                          Página
+
+     00       Discovery FLW e prova de abertura                                  26
+
+     01       Fundação SaaS com Supabase                                         27
+
+     02       Console Zetta e catálogo de módulos                                28
+
+     03       Abertura pela FLW e Supabase Auth                                  29
+
+     04       Adaptador FLW por capacidades                                      30
+
+     05       Cadastro e identidade do cliente                                   31
+
+     06       Catálogo profissionais e recursos                                  32
+
+     07       Agenda e reservas transacionais                                    33
+
+     08       Avaliações propostas e aceite                                      34
+
+     09       Pacotes sessões e extrato                                          35
+
+     10       Recebíveis pagamentos e conciliação                                36
+
+     11       Automações e tarefas com FLW                                       37
+
+     12       Indicadores e painel gerencial                                     38
+
+     13       Estoque e comissões                                                39
+
+     14       Área clínica condicionada                                          40
+
+     15       Homologação e lançamento piloto                                    41
+
+
+Sequência do piloto. Execute 00 a 12 e depois 15. Estoque, comissões e área clínica têm
+escopo e homologação próprios.
+
+
+
+
+Documento mestre • Versão 3.0                                                           25 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+PROMPTS PARA O LOVABLE
+
+
+Prompt 00 Discovery FLW e prova de abertura
+Objetivo da etapa • provar o caminho de entrada e levantar as operações disponíveis
+por conta.
+
+Execute apenas o Discovery do Zetta Estética neste momento. Audite o projeto Lovable,
+repos, backend atual e referência do Supabase de homologação. Confira se o Lovable está
+ligado ao projeto Supabase externo correto. Se houver um backend anterior, descreva o
+inventário e proponha migração em homologação como atividade própria.
+
+Consulte https://docs.flw.chat/ e construa uma matriz por operação. Verifique ícone por
+conta, modo de abertura, SSO ou token formal, consulta de contato, leitura e atualização de
+card, tarefas, pagamento, webhooks, disparo de fluxo ou mensagem e suporte para
+agentes FLW chamarem ferramentas externas. Registre documentação, rota e escopo
+oficiais quando disponíveis, evidência de teste, ambiente, resultado, alternativa manual e
+responsável. Separe presença na interface de acesso por API. Trate exemplos como
+simulação até haver prova.
+
+Prepare uma página /integration-lab em homologação, protegida para o teste e com dados
+sintéticos. Teste o ícone Gestão Estética em duas contas FLW e documente desktop,
+Android e iOS, destino correto, comportamento em aba/iframe, login e logout, expiração,
+volta à FLW e, se incorporado, upload, impressão e persistência da sessão. Sem
+identidade real do Zetta disponível nesta etapa, descreva o cenário e deixe a validação final
+de vínculo para o Prompt 03.
+
+Use somente conta e credencial de homologação autorizadas e mantenha os valores no
+cofre. Registre quais operações requerem teste humano e como realizá-lo. Em caso de
+documentação ou acesso indisponível, conclua o laboratório local e deixe explicitamente
+pendentes as hipóteses que ainda precisam ser testadas.
+
+Entregue a matriz FLW, lista de evidências redigidas, decisão recomendada para abertura
+e login, modo manual de cada operação pendente e critérios para iniciar o Prompt 01.
+Restrinja a execução a homologação, sem migração de negócio ou escrita em produção.
+
+Aceite do Discovery. A equipe consegue reproduzir o teste do ícone. Cada operação está
+comprovada, pendente ou indisponível com a respectiva evidência.
+
+
+
+
+Documento mestre • Versão 3.0                                                          26 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+PROMPTS PARA O LOVABLE
+
+
+Prompt 01 Fundação SaaS com Supabase
+Dependência • Discovery registrado e projeto Supabase de homologação identificado.
+
+Implemente a fundação multiempresa no projeto Supabase externo da Zetta. Crie
+migrations aditivas para tenants, units, profiles, tenant_memberships, membership_units,
+tenant_invitations, papéis globais e auditoria. Inclua duas clínicas fictícias com usuários de
+teste distintos e um usuário com dois vínculos. Use auth.users para identidade e tabelas
+privadas para autoridade administrativa. Confirme se o ambiente é homologação antes de
+aplicar.
+
+Implemente membros ativos e revogáveis, autorização por tenant e unidade, RBAC e a
+base de entitlements usada no Prompt 02. Defina políticas RLS de consulta e escrita, WITH
+CHECK, grants explícitos, escopos mínimos para views e RPCs, e referências compostas
+por tenant para relações operacionais. Use validação por coluna ou rotinas autorizadas
+para impedir mudanças diretas de papéis, vínculo ou estado da plataforma.
+
+Separe papéis Zetta de papéis da clínica. Use auth.uid() e memberships atuais. Se uma
+função SECURITY DEFINER for necessária, valide o escopo em seu corpo, fixe
+search_path vazio, qualifique nomes e restrinja execução. Evite recursão de políticas.
+Aplique autenticação ao shell web e às rotas de administração. Use Auth por convite como
+ponto de partida.
+
+Prepare um bucket privado de teste e regras que só autorizem objetos do escopo permitido.
+Teste SELECT, INSERT, UPDATE, DELETE, RPC e download usando identidades A e B e
+um usuário revogado. Inclua unidade, rota e objeto de outro tenant na suíte. Para testes de
+APIs e Storage, use sessões de usuário, pois a chave de serviço tem acesso privilegiado.
+
+Entregue diagrama ou descrição curta do esquema, migrations e testes. Demonstre que
+conhecer o ID de uma linha em outra clínica é insuficiente para acessá-la e que remover o
+vínculo bloqueia novas operações.
+
+Aceite. Testes de política e API verificam clínica, unidade, revogação e escopo de
+leitura/escrita com a aplicação conectada à base de homologação.
+
+
+
+
+Documento mestre • Versão 3.0                                                            27 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+PROMPTS PARA O LOVABLE
+
+
+Prompt 02 Console Zetta e catálogo de módulos
+Dependência • identidade, memberships e base de RLS verificadas.
+
+Implemente o console Zetta com telas de empresas, onboarding, catálogo de módulos,
+instalações de ícone, conexões, assinaturas SaaS e suporte. Registre plano, unidades,
+marca, limites, último teste da integração e trilha. Apresente estados de conexão e ícone
+com evidências e mensagens úteis.
+
+Modele module_catalog, plans, plan_modules e tenant_entitlements com dependências,
+vigência e overrides. Aplique entitlements tanto às telas quanto a RLS e RPCs. A clínica
+pode configurar módulos habilitados dentro da alçada de administrador. Use estado
+temporário para teste de módulo e revisão antes de publicar uma ativação.
+
+Crie provisionamento idempotente que grave tenant, primeira unidade e configuração numa
+transação. Convite via Auth/e-mail é uma ação separada com estado e retry. Na ativação
+de membro, valide e-mail verificado e convite vigente, associando o vínculo de forma única.
+Audite suspensão, reativação, plano, mudança de escopo e concessão de suporte.
+
+Adicione política de suspensão que bloqueie ações operacionais e jobs, com canal de
+exportação autorizada conforme contrato. Permita a implantação com credenciais FLW
+pendentes, distinguindo teste da conexão, estado da capacidade e estado da configuração
+do ícone. Restrinja diagnósticos de suporte a dados redigidos e grants temporários.
+
+Mostre com a clínica A que Agenda e Pacotes serão autorizados e com a B que apenas
+Agenda será autorizada. Se a vertical ainda não tiver a tela de Pacotes, use uma permissão
+de teste e cubra também a RPC protegida. Teste tentativa de escalada pelo admin da
+clínica, quota concorrente e retry de convite.
+
+Aceite. O superadmin provisiona e configura duas empresas com escopos distintos. Rotas e
+operações seguem as permissões exibidas.
+
+
+
+
+Documento mestre • Versão 3.0                                                          28 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+PROMPTS PARA O LOVABLE
+
+
+Prompt 03 Abertura pela FLW e Supabase Auth
+Dependência • Discovery e console Zetta disponíveis em homologação.
+
+Implemente /launch e /launch/:slug no aplicativo. O link da clínica aponta para o tenant de
+destino e o Supabase Auth autentica o usuário. Valide membership ativa no servidor/banco
+e navegue para a clínica autorizada. No link genérico com vários vínculos, abra o seletor.
+No link específico sem vínculo, mostre acesso indisponível e a ação de retorno apropriada.
+
+Implemente convite e acesso por código de e-mail com Supabase Auth. Controle criação de
+conta pelo fluxo de convite e desabilite criação automática no login OTP. Valide o destino
+após login e configure template de e-mail, SMTP, domínios e redirects por ambiente. Trate
+convites expirados, reutilizados e revogados. Use URLs de retorno derivadas de
+configuração aprovada. Ao trocar contexto ou sair, limpe cache, previews de documentos e
+subscriptions do tenant anterior.
+
+No console, permita copiar o link, registrar nome do ícone, conta FLW, modo desejado,
+instalador, evidência redigida e status. Instale manualmente nos ambientes de teste
+disponíveis. Comece em aba externa quando comprovada. Adapte a interface a iframe
+apenas após verificação de sessão e origens exatas, com ação de abertura externa. SSO
+fica condicionado a contrato oficial e prova formal, registráveis como evolução.
+
+Teste desktop, Android e iOS, recarregar, logout, token expirado, convite encaminhado,
+trocar slug e cruzar vínculo entre duas contas FLW. Teste usuário que realmente pertence
+a duas clínicas e mudança de acesso após revogação. Documente o que foi observado em
+cada dispositivo e a opção de abertura em caso de falha.
+
+Aceite. O ícone chega à clínica correta para o usuário autorizado. A autenticação e o
+isolamento continuam válidos ao copiar ou editar a URL.
+
+
+
+
+Documento mestre • Versão 3.0                                                           29 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+PROMPTS PARA O LOVABLE
+
+
+Prompt 04 Adaptador FLW por capacidades
+Dependência • matriz FLW, autenticação e fluxo de abertura.
+
+Implemente o adaptador FLW com interfaces de contato, card, cobrança e automação.
+Separe o contrato interno Zetta do transporte do fornecedor. Configure tenant_integrations,
+integration_capabilities, webhook_inbox, outbox_events e integration_deliveries com
+acesso privado, estados, correlação e chaves únicas fixadas pelo contrato.
+
+Conecte endpoints somente com documentação autorizada e prova em homologação.
+Registre conta, escopo, limites, amostra redigida, capability e data do teste. Retorne
+CAPABILITY_NOT_VERIFIED para operação pendente e disponibilize tarefa ou vínculo
+manual. Use fixtures claramente marcadas para o modo simulação.
+
+Use Edge Functions para segredos em cofre, mapeamento da conta, timeout, limites por
+conexão e logs redigidos. Propague o contexto nas integrações de usuário. Nas
+privilegiadas, valide a autoridade antes de usar o cliente de serviço. Em webhook
+verificado, confirme origem e vínculo da conexão antes de gravar inbox. Se o mecanismo
+de webhook não for comprovado, conserve o caminho manual ou a sincronização periódica
+autorizada.
+
+Modele worker e entrega com lease, retry, deduplicação e estado para resultado
+desconhecido. Aplique replay por operador autorizado. Trate 429, interrupção, credencial
+expirada, evento repetido e mudança de ordem. Implemente chamadas externas apenas da
+capacidade disponível nesta etapa.
+
+Entregue relatório do que foi realmente testado, operações pendentes, comportamento
+manual e testes automatizados de roteamento e falhas. A equipe deve conseguir identificar
+a clínica de um erro sem expor token ou conteúdo privado.
+
+Aceite. A mesma operação tem estado e resultado rastreáveis tanto quando a capacidade FLW
+está disponível quanto quando segue por tarefa manual.
+
+
+
+
+Documento mestre • Versão 3.0                                                         30 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+PROMPTS PARA O LOVABLE
+
+
+Prompt 05 Cadastro e identidade do cliente
+Dependência • fundação multiempresa e comportamento do adaptador FLW definidos.
+
+Implemente o cadastro operacional de clientes no Supabase com UUID interno, tenant_id e
+campos mínimos de contato. Modele vínculos tipados para contato e card FLW por
+conexão. Inclua estado do vínculo, modo manual ou sincronizado, carimbo de atualização e
+referência do registro de origem. Controle leitura por papel e unidade onde a clínica exigir.
+
+Crie tela com pesquisa por nome e telefone, ficha resumida, referência do CRM e abas de
+histórico operacional ligadas aos módulos instalados. Mostre ação Abrir no CRM FLW com
+deep link verificado. Onde não houver URL comprovada, apresente identificador e instrução
+para localizar o card na FLW.
+
+Se a leitura de contatos estiver homologada, sincronize só os atributos previstos no
+mapeamento, com paginador/cursor e carimbo de origem. Caso contrário, use cadastro
+mínimo com vínculo manual revisável. Normalize telefone em E.164 quando possível, trate
+homônimos e telefone compartilhado, e exija revisão para correspondência ambígua.
+
+Implemente merge supervisionado por RPC. Trave registros em ordem consistente,
+preserve o histórico de vínculos, mova apenas referências autorizadas, registre os efeitos e
+deixe o registro anterior arquivado com referência ao sobrevivente. Valide integridade e
+isolamento por tenant em toda referência.
+
+Teste clientes com mesmo nome, telefone repetido em duas clínicas, dados incompletos,
+mudança de número, vínculo duplicado, merge que falha e link FLW indisponível. Entregue
+prévia de importação com amostra e relatório de rejeições, além das telas.
+
+Aceite. A recepção encontra o cliente, registra atendimento no módulo e localiza o card de
+referência com integridade de dados.
+
+
+
+
+Documento mestre • Versão 3.0                                                            31 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+PROMPTS PARA O LOVABLE
+
+
+Prompt 06 Catálogo profissionais e recursos
+Dependência • unidades, equipe e autorização multiempresa ativas.
+
+Implemente serviços versionados com categoria, duração em minutos, buffers antes e
+depois, preço em centavos, moeda, unidades disponíveis, profissionais habilitados e
+exigências de sala/equipamento. O formulário registra preparo administrativo e estado
+publicado/inativo. Mantenha referências históricas ao publicar nova versão.
+
+Crie cadastro de profissionais ligado à equipe quando aplicável, unidades de atuação,
+qualificação operacional, turnos, folgas, feriados e exceções. Modele profissional como
+recurso único da clínica para compartilhar ocupação entre unidades. Salas e equipamentos
+têm localização e capacidades. Se um item físico for compartilhado, use identidade única e
+configure janelas e unidade de uso coerentes.
+
+Implemente CRUD com RLS, alçada, paginação, auditoria e regras de integridade para
+vínculos serviço/unidade/profissional/recurso. Use o fuso IANA de cada unidade para
+configurar jornadas. Valide intervalos e sobreposição de turnos onde forem conflitantes. Um
+serviço inativado continua disponível para leitura em registros históricos.
+
+Na UI, priorize criar e publicar serviço, ver profissionais elegíveis, configurar jornada e
+encontrar recursos livres. Inclua uma prévia de preço, duração e buffer associados à
+versão. Separe a configuração do catálogo da concessão de permissões de acesso.
+
+Teste inconsistência de preço, duração inválida, equipe sem escopo, vínculo cruzado de
+recursos, mudança de versão e profissional atuando em duas unidades. Entregue dados de
+exemplo com avaliação, sala e equipamento para usar na etapa de agenda.
+
+Aceite. Uma recepcionista só consegue agendar combinações de serviço, profissional e
+unidade publicadas e autorizadas.
+
+
+
+
+Documento mestre • Versão 3.0                                                                 32 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+PROMPTS PARA O LOVABLE
+
+
+Prompt 07 Agenda e reservas transacionais
+Dependência • catálogo versionado, jornadas, recursos, clientes e unidades.
+
+Implemente agenda por dia/semana, grade de profissionais, salas e equipamentos, seleção
+por unidade, disponibilidade, reserva temporária, confirmação, check-in, reagendamento,
+cancelamento, no-show e lista de espera. Armazene instantes em timestamptz e converta
+conforme o fuso da unidade.
+
+Modele reservas de recurso em PostgreSQL. Use tstzrange [) com buffers e btree_gist para
+restrição de exclusão GiST por tenant, recurso e intervalo ativo. Utilize o mesmo recurso
+global do profissional para todas as unidades dele. Aplique a ocupação também a
+bloqueios rígidos de agenda. Confirme suporte à extensão em homologação.
+
+Crie RPCs com autorização, estado, versão, validação da jornada, recursos, duração e
+chave idempotente. No reagendamento, bloqueie o agendamento e recursos, substitua os
+intervalos atomicamente e trate erro de exclusão como conflito de negócio. Preserve o
+horário original se a nova alocação falhar. Trate holds vencidos na RPC com locks e
+programe limpeza de apoio em Cron. Defina quais transições liberam a alocação. Retire da
+interface a escrita direta nas reservas. Use a mesma operação de reserva para um encaixe
+aceito.
+
+Inclua mensagens de erro úteis, retorno do horário atualizado, explicação de conflito e
+seleção de novo horário. Grave eventos operacionais na outbox na mesma transação.
+Vincule execução e prompts seguintes por IDs estáveis.
+
+Rode testes com dois clientes e conexões simultâneas. Cubra concorrência por profissional
+multiunidade, disputa por sala/equipamento, intervalos contíguos com e sem buffer,
+expiração de hold, fuso, cancelamento, reagendamento inválido e duplo clique.
+
+Aceite. Apenas uma das requisições concorrentes ocupa o recurso, e a falha ao reagendar
+mantém o agendamento anterior.
+
+
+
+
+Documento mestre • Versão 3.0                                                             33 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+PROMPTS PARA O LOVABLE
+
+
+Prompt 08 Avaliações propostas e aceite
+Dependência • clientes, catálogo e agenda operacionais.
+
+Implemente avaliação comercial com referência ao cliente e agendamento opcionais,
+profissional responsável, objetivos de contratação e próximo passo. Limite campos a
+conteúdo comercial. Vincule à proposta, ao card FLW quando houver e à unidade, com
+histórico de mudanças.
+
+Implemente propostas em versões, itens com preço contratado em centavos, número de
+sessões, validade, desconto e alçada. Grave snapshots de catálogo, política, modelo do
+documento e condições de contratação. Permita prévia e PDF privado. Use aceite interno
+autenticado e auditado como padrão, com registro de quem aceitou e por qual canal. Se
+houver compartilhamento externo de proposta, use entrega autorizada com token opaco de
+curta validade, escopo só daquela versão e opção de revogação.
+
+Na RPC de aceite, valide status, validade e versão, aplique alçada e idempotência, crie
+uma venda única, parcelas mínimas e direitos contratados por item. Escreva o evento
+proposal.accepted.v1 na mesma transação. Antes do módulo de pacotes, preserve os
+direitos da venda como pendências de ativação rastreáveis. Registre o desenho para o
+Prompt 09 materializá-los uma única vez.
+
+Se a mudança de etapa FLW estiver comprovada e mapeada, enfileire a ação pelo
+adaptador. Disponibilize tarefa manual para os demais casos. Mantenha versionamento
+mesmo quando o preço de catálogo mudar depois da emissão.
+
+Teste aceite duplicado e concorrente, prazo vencido, alteração de preço, mudança
+simultânea de versão, chave reutilizada com outro conteúdo, limite de desconto e
+isolamento do arquivo. Entregue leitura da proposta aceita, venda gerada e evidência de
+autoria.
+
+Aceite. Aceitar a versão vigente gera uma venda e uma trilha coerente, mesmo quando o
+usuário repete a ação.
+
+
+
+
+Documento mestre • Versão 3.0                                                           34 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+PROMPTS PARA O LOVABLE
+
+
+Prompt 09 Pacotes sessões e extrato
+Dependência • venda idempotente e direitos contratados por item.
+
+Implemente packages, package_ledger e sessions, com vínculos compostos a tenant,
+venda, cliente, procedimento, unidade e agendamento. Modele elegibilidade, validade e
+política para ativação no aceite ou após sinal. Distinga direito contratado, crédito concedido,
+saldo disponível, saldo consumido e ajuste. Materialize os direitos históricos uma única vez
+por origem e conecte as novas concessões à transação de venda ou de confirmação do
+sinal, conforme regra.
+
+Implemente ledger de créditos, consumo, expiração e ajuste compensatório. Bloqueie o
+pacote em ajustes e consumos. Use chave de negócio única por origem/evento. Finalize
+sessão e anexe débito na mesma transação, com validação do profissional autorizado,
+sessão em estado correto e saldo suficiente por procedimento. Registre estorno por
+movimento compensatório e justificativa, com aprovação adicional se a política da clínica
+exigir.
+
+Na interface, exiba saldo, validade, lista de sessões e extrato. A recepção faz check-in
+dentro do escopo. O profissional autorizado registra conclusão. A operação trata
+cancelamento, falta e ajustes com regras versionadas. Dê preferência a uma tarefa de
+renovação quando o saldo cruza o limiar configurado. Emita eventos administrativos de
+saldo baixo, pacote esgotado e expiração.
+
+Teste retry e consumo duplicado, duas sessões disputando o último crédito, pacote
+vencido, pacote pendente de sinal, estorno e reversão de movimento, profissional de outra
+unidade e migração de vendas aceitas antes do ledger. Compare a carteira ao total do
+extrato.
+
+Aceite. Uma sessão concluída gera um único consumo e cada saldo é explicável pelos
+movimentos daquele pacote.
+
+
+
+
+Documento mestre • Versão 3.0                                                            35 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+PROMPTS PARA O LOVABLE
+
+
+Prompt 10 Recebíveis pagamentos e conciliação
+Dependência • vendas, parcelas mínimas e política de ativação de pacotes.
+
+Implemente receivables, payment_intents, payment_movements e alocações, com valores
+em centavos e moeda explícita. Exiba vencimento, contratado, valor pago, saldo, estorno e
+referência de origem. Escolha um modo de cobrança por clínica e intenção: manual, FLW
+Pagamentos por API comprovada ou PSP homologado. O faturamento da assinatura da
+Zetta usa domínio administrativo próprio.
+
+Em cobrança integrada, persista intenção local única e use referência/idempotência do
+provedor. Após resultado desconhecido, reconcilie antes de criar nova cobrança. Verifique
+webhook ou consulte o provedor autenticado e confira conta, referência, moeda, valor e
+status antes de liquidar. Grave processamento e movimento em transação. Use redirect do
+navegador só para acompanhar o andamento.
+
+No modo manual, registre evidência, data, forma, valor e responsável, com comprovante
+opcional em Storage privado. Diferencie visualmente origem e status da conciliação. Trate
+parcial, excedente e estorno, registrando compensação. Ao conciliar registro manual com
+evento do provedor, vincule evidências sem lançar caixa novamente. Habilite pacote
+condicionado ao sinal na mesma operação que confirma a regra, com efeito único.
+
+Teste callbacks repetidos e fora de ordem, timeout, pagamento parcial, diferença de valor,
+reembolso parcial ou total, alocação, concorrência, origem manual e pacote liberado uma
+vez. Em ambiente de teste, use PSP sandbox ou fixtures marcadas. Entregue tela de
+diferenças e roteiro de conciliação.
+
+Aceite. Cada recebimento tem origem e referência verificáveis. Reprocessamento mantém o
+mesmo saldo e a mesma liberação de pacote.
+
+
+
+
+Documento mestre • Versão 3.0                                                         36 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+PROMPTS PARA O LOVABLE
+
+
+Prompt 11 Automações e tarefas com FLW
+Dependência • eventos de agenda, propostas, pacotes e pagamentos disponíveis.
+
+Implemente catálogo de regras para lembrete, reagendamento, no-show, proposta
+pendente, renovação, inadimplência e reativação. Mantenha o estado da regra, seleção da
+unidade, evento ou periodicidade, dono, janela, limite de frequência, autorização de
+comunicação, condição de parada e política de retry.
+
+Crie tarefa local como saída de operação manual. Para um destino habilitado, consuma a
+outbox com worker em lotes e chaves únicas por evento, regra e destino. Reavalie a
+situação recente antes da entrega, incluindo proposta aceita, agendamento cancelado, opt-
+out e limite de horário. Use o adaptador FLW para fluxos comprovados ou n8n autorizado
+como orquestrador de passos, com autenticação e payload mínimo.
+
+Adicione simulação que mostra volume, motivos de exclusão, ação e destino, sem
+chamadas de envio. Exija ativação explícita do gestor autorizado. Registre processamento,
+resultado, métricas, desligamento por regra e alternativa manual. Trate timeout com
+resultado desconhecido antes de decidir entre consultar e retry.
+
+Ao aprovar um novo fluxo, documente origem, destinatário, modelo, tipo de ação, retorno e
+custo ou limite quando aplicável. Dê à recepção uma fila por unidade, prazo, prioridade e
+dono. Permita assumir a tarefa, registrar a ação humana e encerrá-la com motivo.
+
+Teste regra desativada, janela silenciosa, opt-out depois de enfileirar, chave repetida, limite
+de frequência, cancelamento antes do lembrete, provedor indisponível e replay. Registre
+contagens de elegíveis, tarefas geradas, pendências, entregas confirmadas e erros.
+
+Aceite. A equipe consegue simular uma regra, ativar uma capacidade comprovada e
+acompanhar a alternativa manual sem duplicidade.
+
+
+
+
+Documento mestre • Versão 3.0                                                             37 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+PROMPTS PARA O LOVABLE
+
+
+Prompt 12 Indicadores e painel gerencial
+Dependência • dados operacionais com estados e timestamps estáveis.
+
+Implemente painéis por perfil para agenda, comparecimento, no-show, propostas,
+conversão, saldo de pacotes, ocupação de recursos, recebido bruto e líquido, contratado,
+inadimplência e falhas de integração. Acrescente agrupamentos por unidade, profissional,
+procedimento e período quando houver permissão.
+
+Defina dicionário de métricas com origem, campos, fórmula, coorte, timezone, período e
+exclusões. Mostre zero quando a contagem é zero e indisponível quando não houver dado
+ou o denominador for zero. Exiba referência de atualização da FLW quando o indicador
+incluir dado sincronizado. Use snapshots comerciais e movimentos financeiros para
+reconciliar valores históricos.
+
+Use RPCs de leitura ou views com autorização equivalente à origem, filtro e paginação nos
+detalhamentos e índices nas consultas frequentes. Views expostas devem operar com
+escopo correto, incluindo security_invoker quando aplicável. Controle exportação por papel
+e escopo, com trilha e limites de volume. Use geração assíncrona e entrega privada para
+relatórios que excedam o limite interativo.
+
+Para recepção, priorize encaixes, avaliações do dia e propostas sem retorno. Para
+gerência, mostre ocupação, conversão, renovação e alertas. Para financeiro, priorize
+vencimentos, diferenças de conciliação e estornos. Inclua filtragem do período e um recorte
+comparável ao período anterior para a gestão.
+
+Teste cálculo com base sintética de duas clínicas e compare cada agregado a registros de
+referência. Valide filtros de unidade, período local, reembolso, cancelamento, taxa com
+base vazia, exclusões e usuário sem acesso financeiro. Demonstre o caminho do card de
+resumo até o registro de origem.
+
+Aceite. Gestão e financeiro conseguem reproduzir os números do painel com os dados
+autorizados e suas fórmulas.
+
+
+
+
+Documento mestre • Versão 3.0                                                         38 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+PROMPTS PARA O LOVABLE
+
+
+Prompt 13 Estoque e comissões
+Evolução • executar depois do piloto, conforme oferta e regras aprovadas pela clínica.
+
+Implemente estoque por unidade, item, lote, validade e unidade de medida. Controle
+entrada, ajuste, transferência, consumo e estorno com ledger. Vincule insumos ao serviço
+por versão e valide disponibilidade por lote, validade e unidade. Use quantidade decimal
+quando a unidade exigir e ajuste autorizado caso exista diferença física.
+
+Implemente comissões por profissional, regra e vigência. A clínica escolhe o evento de
+venda, execução ou pagamento que gera o direito. Grave base de cálculo, percentual,
+versão da regra, evento e dimensão de unidade. Calcule efeitos de estornos com
+movimentos compensatórios e mantenha aprovação de fechamento.
+
+Proteja as operações por alçada e escopo. Reutilize eventos idempotentes e bloqueios do
+PostgreSQL. Aplique chaves por origem para impedir dupla entrada de estoque ou
+comissão repetida. Planeje alertas de vencimento, saldo mínimo e divergências com tarefas
+que a gestão possa acompanhar.
+
+Na saída de estoque, use lote selecionado pelo usuário autorizado ou sugira o de validade
+mais próxima conforme política. Registre origem quando o consumo estiver ligado a uma
+sessão. Na comissão, registre equipe, desconto, base líquida ou bruta aprovada e estado
+de repasse. Use política única de arredondamento.
+
+Teste consumo concorrente por lote, itens vencidos, devolução, transferência entre
+unidades, profissional multiunidade, reembolso parcial, mudança de regra e replay.
+Entregue relatório que reconcilie estoque e cálculo individual de comissão sem incluir
+valores de terceiros fora da permissão.
+
+Aceite. Operações e correções permanecem consultáveis e nenhum evento reprocessado
+altera saldo ou comissão duas vezes.
+
+
+
+
+Documento mestre • Versão 3.0                                                            39 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+PROMPTS PARA O LOVABLE
+
+
+Prompt 14 Área clínica condicionada
+Evolução • fazer a implementação clínica após validar governança e segurança
+específicas.
+
+Verifique se há decisão documentada da Zetta e da clínica para a área clínica. Confirme
+responsável, finalidades e bases legais, retenção, dados necessários, normas aplicáveis,
+modelos revisados, autorização de acesso, incidentes e exercício de direitos do titular. Se a
+aprovação estiver pendente, entregue o checklist e mantenha o módulo indisponível em
+produção.
+
+Com aprovação, implemente formulários de anamnese versionados, evolução com
+fechamento e adendos, documentos e fotos privadas. Separe permissões clínicas das
+comerciais e da administração geral. Restrinja por clínica, unidade, vínculo profissional e
+atendimento, com MFA onde exigido. As operações clínicas usam controles próprios no
+banco e no Storage.
+
+Registre leitura, alteração, exportação e download autorizados. Use política de retenção por
+classe e processo de descarte com evidência. Quando houver exigência de revogação ou
+auditoria de leitura a cada acesso, use entrega intermediada e checagem da sessão em
+cada requisição. Use autorização de imagem e assinatura conforme finalidade aprovada e
+vincule o termo à versão correspondente.
+
+Aceite somente payload operacional mínimo em eventos comerciais. Envie conteúdo clínico
+exclusivamente aos fluxos autorizados do módulo. Use dados sintéticos para testar
+permissões, exportação e descarte, revogação e recuperação de arquivos. Teste recepção,
+financeiro, profissional não vinculado, usuário de outra clínica e operador de suporte.
+
+Entregue resultado do checklist, evidência de testes negativos, plano de restauração e
+trilha de acesso. A ativação é individual por clínica e exige homologação funcional e de
+segurança.
+
+Aceite. A equipe consegue demonstrar isolamento e autorização clínica com dados sintéticos e
+aprovação por clínica.
+
+
+
+
+Documento mestre • Versão 3.0                                                           40 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+PROMPTS PARA O LOVABLE
+
+
+Prompt 15 Homologação e lançamento piloto
+Dependência • 00 a 12 homologados para o escopo do piloto Zetta.
+
+Execute a homologação ponta a ponta com duas clínicas fictícias, usuários de recepção,
+profissional, gerente, financeiro e Zetta. Valide ícone FLW, login, troca de clínica, logout,
+acesso negado, catálogo, agenda, cliente, proposta, venda, recebíveis, pacote, sessão,
+indicadores e tarefas.
+
+Rode testes de política SQL e requisições reais de teste para Auth, RLS, RPC e Storage.
+Valide concorrência para horário, aceite, último crédito e cobrança, além de eventos
+duplicados, falha da integração e reprocessamento. Confirme responsividade e
+acessibilidade em desktop, Android e iOS. Registre o que foi comprovado em cada conta
+FLW.
+
+Ensaie deploy da versão, recuperação de banco e arquivos em ambiente isolado, segredos
+por ambiente, correlação de logs e resposta a incidentes. Registre objetivos de tempo e
+perda tolerada de dados. Use plano de reversão da aplicação e migrations compatíveis.
+Preserve a rastreabilidade dos registros já gravados caso uma integração precise ser
+temporariamente desativada. Meça latência, tempo de fila e duração da reconciliação sob
+carga sintética próxima à esperada no piloto.
+
+Produza GO/NO-GO com cenário, evidência, resultado, responsável e pendência. Registre
+modos manuais aceitos pela clínica, condições de monitoramento e responsáveis pela
+primeira semana. Defina rollout progressivo para a primeira clínica e critérios de pausa por
+integridade de reserva, saldo, financeiro ou isolamento.
+
+Antes da virada, confira totais de clientes, serviços, agenda futura, pacotes e recebíveis
+importados. Compare fluxos críticos em uma amostra com a clínica. Repita o roteiro depois
+de aplicar a migration em homologação e preserve a versão validada.
+
+Aceite. A Zetta tem um roteiro reproduzível, resultado por teste e decisão registrada para
+liberar ou pausar o piloto.
+
+
+
+
+Documento mestre • Versão 3.0                                                                41 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+PILOTO E LANÇAMENTO
+
+
+26 Etapas de lançamento
+ Etapa                 Entrega                                         Critério de passagem
+
+                                                                       Decisão de entrada
+ Discovery             Ícone, login, API e caminho manual              documentada e casos
+                                                                       pendentes identificados
+
+                       Console, onboarding, catálogo, clientes e       Isolamento, adesão do perfil
+ Operação básica
+                       agenda                                          e ausência de conflitos
+
+                                                                       Saldo explicável, registros
+ Venda e entrega       Proposta, pacote, sessão, recebível e tarefas
+                                                                       únicos e tarefa alternativa
+
+                                                                       Treinamento, roteiro
+ Piloto da clínica     Indicadores, acompanhamento e suporte           completo e critérios de
+                                                                       recuperação
+
+                       Estoque, comissões, multiunidade avançada e     Escopo comercial e teste
+ Expansão
+                       portal                                          dedicado
+
+                                                                       Aprovação específica e
+ Clínica               Anamnese, evolução e arquivos sensíveis         homologação de segurança e
+                                                                       privacidade
+
+
+
+27 Decisão de piloto
+Confirmações. Duas clínicas acessam destinos corretos e dados próprios. Uma equipe piloto
+executa o fluxo completo com treinamento. Toda cobrança tem modo de lançamento definido e
+evidência. Reserva, aceite, saldo e webhook passam pelos testes concorrentes e de replay.
+Cada automação tem simulação, dono, desligamento e ação manual.
+
+Bloqueios. Qualquer acesso cruzado, reserva conflitante, venda ou cobrança repetida, saldo
+de pacote incorreto ou falta de recuperação testada impede a liberação. Capacidade FLW
+pendente pode entrar em modo manual quando a clínica aprovar o fluxo resultante. A abertura
+por ícone só entra na demonstração comercial após prova na FLW.
+
+Primeira semana. A implantação registra responsáveis por operações, integração e suporte.
+Acompanhe renovações, falhas, tempo de atendimento, eventos pendentes e diferenças de
+saldo ou caixa. Classifique incidentes pela consequência operacional e registre ação, prazo e
+encerramento.
+
+
+
+
+Documento mestre • Versão 3.0                                                                     42 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+ANEXOS OPERACIONAIS
+
+
+Anexo A Catálogo funcional
+ Módulo                         Entrega e alcance                                   Fase
+
+ Onboarding e                   Empresa, unidade, equipe, plano, permissões,
+                                                                                    Piloto
+ administração                  ícone, suporte e auditoria
+
+                                Ficha mínima, busca, timeline operacional,
+ Cadastro e CRM FLW                                                                 Piloto
+                                origem e vínculos aprovados
+
+                                Serviços e preços versionados, equipe,
+ Catálogo e recursos                                                                Piloto
+                                jornada, feriados, salas e equipamentos
+
+                                Disponibilidade, reserva, confirmação,
+ Agenda                                                                             Piloto
+                                reagendamento, presença e espera
+
+                                Avaliação comercial, orçamento, versões,
+ Propostas e documentos                                                             Piloto
+                                alçada, aceite e PDF privado
+
+                                Direitos, carteira, validade, check-in, sessão,
+ Pacotes e execução                                                                 Piloto
+                                consumo e estorno
+
+                                Parcelas, conciliação, comprovante, reembolso
+ Financeiro                                                                         Piloto
+                                e recebido líquido
+
+ Automações e relatórios        Gatilhos, tarefas, fila, indicadores e exportação   Piloto
+
+                                Modelos aprovados, evidências de aceite,
+ Termos e assinatura            versões e integração com assinador quando           Evolução
+                                contratado
+
+                                Lotes, validade, movimentações, regra de
+ Estoque e comissões                                                                Evolução
+                                repasse, ajustes e fechamento
+
+                                Gestão de recursos compartilhados e
+ Multiunidade avançada                                                              Evolução
+                                consolidação por escopo
+
+                                Anamnese, evolução, prontuário, termos
+ Área clínica                                                                       Condicionada
+                                clínicos e fotos
+
+                                Acesso próprio a agenda, saldo, documentos
+ Portal do cliente                                                                  Futuro
+                                comerciais e recebíveis do cliente
+
+
+Histórias prioritárias. Como recepcionista, quero encontrar o primeiro horário que atende aos
+recursos exigidos. Como profissional, quero concluir uma sessão e conferir o consumo. Como
+financeira, quero localizar a origem de cada parcela. Como gerente, quero abrir os registros que
+explicam um indicador. Como implantação, quero ativar outra clínica aplicando um template
+versionado.
+
+
+
+
+Documento mestre • Versão 3.0                                                                      43 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+ANEXOS OPERACIONAIS
+
+
+Anexo B Estados e métricas
+ Objeto                 Estados de referência
+
+                        Hold → confirmada → check-in → concluída. Pode expirar, ser cancelada ou
+ Agenda
+                        terminar em no-show
+
+ Proposta               Rascunho → enviada → aceita. Pode ser rejeitada, expirar ou ser substituída
+
+                        Direito contratado → pendente ou ativo → esgotado ou encerrado. Outros
+ Pacote
+                        estados: suspenso e expirado
+
+                        Aberto → parcial → liquidado. Vencido calculado pela data e pelo saldo.
+ Recebível
+                        Estorno por movimento
+
+                        Pendente → em processamento → entregue. Pode ir para retry, resultado
+ Entrega externa
+                        desconhecido, falha ou tarefa manual
+
+
+ Indicador                      Fórmula e recorte sugeridos
+
+                                Comparecidos ÷ atendimentos elegíveis com horário passado. Mostre
+ Comparecimento
+                                pendências de baixa em separado
+
+                                Ausências confirmadas ÷ (comparecidos + ausências confirmadas).
+ No-show
+                                Exclua cancelamentos e reagendamentos
+
+                                Propostas aceitas da coorte ÷ propostas enviadas da coorte. Use data de
+ Conversão de propostas
+                                envio e informe janela de maturação
+
+                                Minutos ocupados confirmados ÷ minutos ofertados, por recurso.
+ Ocupação
+                                Considere buffers conforme política e retire bloqueios da oferta
+
+                                Soma dos snapshots de vendas aceitas no período, ajustada conforme
+ Receita contratada
+                                política de cancelamento exibida
+
+                                Recebimentos efetivos no período menos estornos confirmados na
+ Receita recebida líquida
+                                mesma janela de caixa
+
+                                Pacotes elegíveis renovados ÷ pacotes elegíveis encerrados na coorte,
+ Renovação
+                                com janela configurável
+
+
+As métricas registram data de referência, fuso, escopo, filtros e fonte. O detalhe de cada
+indicador abre os registros autorizados usados no cálculo.
+
+Fórmulas de apoio. Inadimplência considera saldo vencido sobre o saldo em aberto no corte.
+Evolução de caixa agrupa recebimentos líquidos pelo momento da liquidação. A carteira calcula
+créditos concedidos menos consumos e expirações, com ajustes rastreáveis. Apresente o
+denominador da taxa e indique quando o histórico é insuficiente.
+
+
+
+
+Documento mestre • Versão 3.0                                                                      44 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+ANEXOS OPERACIONAIS
+
+
+Anexo C Roteiro de homologação
+Dados sugeridos. Clínica Aurora e Clínica Horizonte, uma unidade por clínica e uma segunda
+unidade de teste para disputas de agenda, usuários fictícios por função, dois profissionais, sala
+e equipamento. Cadastre Mariana e uma pessoa com mesmo telefone normalizado em outro
+tenant.
+
+ Cenário                 Procedimento                                 Resultado registrado
+
+                         Abrir ícone de A e de B com logins           Destino, navegador e evidência
+ Abertura FLW
+                         correspondentes, expirar sessão e voltar     por conta
+
+                         Solicitar registro, RPC ou arquivo da        Acesso restrito pela camada
+ Isolamento
+                         clínica vizinha com um usuário de teste      responsável
+
+                         Duas reservas no mesmo horário e
+ Agenda                                                               Uma reserva e um conflito tratado
+                         recurso, inclusive entre unidades
+
+                         Vender 8 sessões por R$ 1.600 de             Uma venda, preço histórico e
+ Proposta
+                         exemplo, repetir aceite e alterar catálogo   parcelas coerentes
+
+                         Confirmar sinal quando exigido, realizar
+ Pacote                                                               Saldo 7, trilha e efeito único
+                         1 de 8 sessões e repetir a execução
+
+                         Registrar sinal de R$ 400, repetir o         Recebido líquido de R$ 300 e
+ Caixa
+                         evento e estornar R$ 100                     origem rastreável
+
+                         Simular API indisponível, webhook            Tarefa ou reconciliação com
+ Integração
+                         repetido e resultado desconhecido            estado auditado
+
+                         Restaurar base e objetos em ambiente         Aplicação recuperada e dados
+ Recuperação
+                         isolado, revalidar permissões                coerentes por tenant
+
+
+Treinamento. Recepção pratica a ida do CRM à agenda. Gerência revisa desconto, encaixe e
+conversão. Profissional registra conclusão e confere a carteira. Financeiro valida recebível e
+estorno. A implantação registra os resultados, os responsáveis e a rota de suporte.
+
+Cortes de teste. Registre versão do app, referência do Supabase, versão da migration, IDs
+sintéticos, perfil, ambiente, data e resultado esperado. Registre falhas com efeito operacional e
+prioridade. Repita os testes afetados depois da correção.
+
+
+
+
+Documento mestre • Versão 3.0                                                                          45 / 46
+ZETTA ESTÉTICA / FLW CHAT E SUPABASE
+
+
+
+REFERÊNCIAS
+
+
+28 Referências oficiais
+Referências consultadas para a arquitetura. A homologação FLW por conta é um item
+do Prompt 00.
+
+•   FLW Chat • documentação geral e CRM. Escopo da plataforma, contato, painéis e carteira.
+
+•   FLW Chat • integrações e aplicativo Pagamentos. Capacidades descritas nos guias
+    públicos.
+
+•   Lovable • conectar Supabase externo. Configuração de projeto e limitações de migração.
+
+•   Supabase • RLS, chaves de API e políticas do Storage. Autorização de dados e arquivos.
+
+•   Supabase • Edge Functions e autenticação, Vault e Cron. Execução privilegiada, segredos e
+    rotinas.
+
+•   Supabase • SMTP, migrations e testes do banco. Preparação de ambiente e trilha de
+    mudanças.
+
+•   Supabase • backup e PostgreSQL • tipos de intervalo. Recuperação do banco e restrição de
+    agenda.
+
+•   LGPD • Lei nº 13.709 de 2018, ANPD • guia de segurança e Anvisa • serviços de
+    embelezamento.
+
+Vocabulário. Tenant é a empresa contratante isolada. RLS é o controle de acesso a linhas do
+banco. RPC é uma função de banco chamada pelo aplicativo. Hold é uma reserva temporária.
+Ledger é o histórico de movimentos. Outbox guarda eventos gravados com a transação. PSP é
+o provedor de serviços de pagamento.
+
+Termos de homologação. RBAC controla acesso por papel. Entitlement é a habilitação de
+módulo ou direito de uso. Idempotência evita repetir o efeito de uma operação. Coorte é um
+conjunto de registros definido por origem ou período. SLA é o nível de serviço acordado. RPO e
+RTO registram a perda máxima de dados e o tempo-alvo de recuperação.
+
+
+
+
+Documento mestre • Versão 3.0                                                           46 / 46
+
