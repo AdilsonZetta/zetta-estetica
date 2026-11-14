@@ -16,7 +16,7 @@ export default defineConfig({
   projects: [
     { name: 'desktop', testMatch: ['lab.spec.ts', 'shell-offline.spec.ts'], use: { ...devices['Desktop Chrome'], baseURL: 'http://127.0.0.1:42730' } },
     { name: 'mobile-chromium', testMatch: ['lab.spec.ts', 'shell-offline.spec.ts'], use: { ...devices['Pixel 7'], baseURL: 'http://127.0.0.1:42730' } },
-    ...(local ? [{ name: 'auth-local', testMatch: ['auth.spec.ts', 'shell.spec.ts'], use: { ...devices['Desktop Chrome'], baseURL: 'http://127.0.0.1:42731' } },
-    { name: 'auth-mobile-chromium', testMatch: ['auth.spec.ts', 'shell.spec.ts'], use: { ...devices['Pixel 7'], baseURL: 'http://127.0.0.1:42731' } }] : []),
+    ...(local ? [{ name: 'auth-local', testMatch: ['auth.spec.ts', 'shell.spec.ts', 'console.spec.ts'], use: { ...devices['Desktop Chrome'], baseURL: 'http://127.0.0.1:42731' } },
+    { name: 'auth-mobile-chromium', testMatch: ['auth.spec.ts', 'shell.spec.ts', 'console.spec.ts'], use: { ...devices['Pixel 7'], baseURL: 'http://127.0.0.1:42731' } }] : []),
   ],
 })

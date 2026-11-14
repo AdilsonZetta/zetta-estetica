@@ -102,7 +102,7 @@ test('falhas nas consultas de clínicas e permissões apresentam estado final',a
   // O SDK repete GETs após falha de transporte com backoff de 1, 2 e 4 segundos.
   await expect(page.getByText('Falha ao carregar clínicas.')).toBeVisible({timeout:15000})
   await page.unroute('**/rest/v1/tenants?*')
-  await page.route('**/rest/v1/rpc/platform_tenants',route=>route.abort('failed'))
+  await page.route('**/rest/v1/rpc/console_snapshot',route=>route.abort('failed'))
   await page.goto(`${root}admin`)
   await expect(page.getByText('Acesso restrito à administração Zetta.')).toBeVisible()
   await page.route('**/rest/v1/rpc/check_access',route=>route.abort('failed'))

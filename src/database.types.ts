@@ -6,14 +6,14 @@ export type Database = {
           Tables: {
             "audit_logs": {
                   Row: {
-                    "action": string,"actor_id": string | null,"created_at": string,"entity": string,"entity_id": string,"id": number,"scope_unit_ids": (string)[],"tenant_id": string | null,"unit_id": string | null
+                    "action": string,"actor_id": string | null,"created_at": string,"details": NonNullable<Json>,"entity": string,"entity_id": string,"id": number,"scope_unit_ids": (string)[],"tenant_id": string | null,"unit_id": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "action": string,"actor_id"?: string | null,"created_at"?: string,"entity": string,"entity_id": string,"id"?: never,"scope_unit_ids"?: (string)[],"tenant_id"?: string | null,"unit_id"?: string | null
+                    "action": string,"actor_id"?: string | null,"created_at"?: string,"details"?: NonNullable<Json>,"entity": string,"entity_id": string,"id"?: never,"scope_unit_ids"?: (string)[],"tenant_id"?: string | null,"unit_id"?: string | null
                   }
                   Update: {
-                    "action"?: string,"actor_id"?: string | null,"created_at"?: string,"entity"?: string,"entity_id"?: string,"id"?: never,"scope_unit_ids"?: (string)[],"tenant_id"?: string | null,"unit_id"?: string | null
+                    "action"?: string,"actor_id"?: string | null,"created_at"?: string,"details"?: NonNullable<Json>,"entity"?: string,"entity_id"?: string,"id"?: never,"scope_unit_ids"?: (string)[],"tenant_id"?: string | null,"unit_id"?: string | null
                   }
                   Relationships: [
 
@@ -44,6 +44,112 @@ isOneToOne: false
       referencedColumns: ["tenant_id","id"]
     }
                   ]
+                },"module_catalog": {
+                  Row: {
+                    "configurable": boolean,"dependencies": (string)[],"description": string,"key": string,"name": string,"permission": string,"route": string,"version": number
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "configurable"?: boolean,"dependencies"?: (string)[],"description": string,"key": string,"name": string,"permission": string,"route": string,"version": number
+                  }
+                  Update: {
+                    "configurable"?: boolean,"dependencies"?: (string)[],"description"?: string,"key"?: string,"name"?: string,"permission"?: string,"route"?: string,"version"?: number
+                  }
+                  Relationships: [
+
+                  ]
+                },"module_changes": {
+                  Row: {
+                    "actor_id": string,"enabled": boolean,"expires_at": string,"id": string,"module_key": string,"published_at": string | null,"tenant_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "actor_id": string,"enabled": boolean,"expires_at"?: string,"id"?: string,"module_key": string,"published_at"?: string | null,"tenant_id": string
+                  }
+                  Update: {
+                    "actor_id"?: string,"enabled"?: boolean,"expires_at"?: string,"id"?: string,"module_key"?: string,"published_at"?: string | null,"tenant_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "module_changes_module_key_fkey"
+      columns: ["module_key"]
+isOneToOne: false
+      referencedRelation: "module_catalog"
+      referencedColumns: ["key"]
+    },{
+      foreignKeyName: "module_changes_tenant_id_fkey"
+      columns: ["tenant_id"]
+isOneToOne: false
+      referencedRelation: "tenants"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"module_test_records": {
+                  Row: {
+                    "label": string,"module_key": string,"tenant_id": string,"unit_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "label"?: string,"module_key": string,"tenant_id": string,"unit_id": string
+                  }
+                  Update: {
+                    "label"?: string,"module_key"?: string,"tenant_id"?: string,"unit_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "module_test_records_module_key_fkey"
+      columns: ["module_key"]
+isOneToOne: false
+      referencedRelation: "module_catalog"
+      referencedColumns: ["key"]
+    },{
+      foreignKeyName: "module_test_records_tenant_id_unit_id_fkey"
+      columns: ["tenant_id","unit_id"]
+isOneToOne: false
+      referencedRelation: "units"
+      referencedColumns: ["tenant_id","id"]
+    }
+                  ]
+                },"plan_modules": {
+                  Row: {
+                    "module_key": string,"plan_key": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "module_key": string,"plan_key": string
+                  }
+                  Update: {
+                    "module_key"?: string,"plan_key"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "plan_modules_module_key_fkey"
+      columns: ["module_key"]
+isOneToOne: false
+      referencedRelation: "module_catalog"
+      referencedColumns: ["key"]
+    },{
+      foreignKeyName: "plan_modules_plan_key_fkey"
+      columns: ["plan_key"]
+isOneToOne: false
+      referencedRelation: "plans"
+      referencedColumns: ["key"]
+    }
+                  ]
+                },"plans": {
+                  Row: {
+                    "key": string,"monthly_cents": number,"name": string,"unit_limit": number,"version": number
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "key": string,"monthly_cents": number,"name": string,"unit_limit": number,"version"?: number
+                  }
+                  Update: {
+                    "key"?: string,"monthly_cents"?: number,"name"?: string,"unit_limit"?: number,"version"?: number
+                  }
+                  Relationships: [
+
+                  ]
                 },"profiles": {
                   Row: {
                     "display_name": string,"id": string
@@ -58,19 +164,85 @@ isOneToOne: false
                   Relationships: [
 
                   ]
-                },"tenant_entitlements": {
+                },"support_grants": {
                   Row: {
-                    "enabled": boolean,"module_key": string,"tenant_id": string,"valid_from": string,"valid_until": string | null
+                    "approver": string,"expires_at": string,"grantee": string,"id": string,"reason": string,"revoked_at": string | null,"scope": string,"tenant_id": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "enabled"?: boolean,"module_key": string,"tenant_id": string,"valid_from"?: string,"valid_until"?: string | null
+                    "approver": string,"expires_at": string,"grantee": string,"id"?: string,"reason": string,"revoked_at"?: string | null,"scope": string,"tenant_id": string
                   }
                   Update: {
-                    "enabled"?: boolean,"module_key"?: string,"tenant_id"?: string,"valid_from"?: string,"valid_until"?: string | null
+                    "approver"?: string,"expires_at"?: string,"grantee"?: string,"id"?: string,"reason"?: string,"revoked_at"?: string | null,"scope"?: string,"tenant_id"?: string
                   }
                   Relationships: [
                     {
+      foreignKeyName: "support_grants_tenant_id_fkey"
+      columns: ["tenant_id"]
+isOneToOne: false
+      referencedRelation: "tenants"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"tenant_configuration": {
+                  Row: {
+                    "brand": string,"export_until": string | null,"onboarding_state": string,"responsible_name": string,"suspended_at": string | null,"tenant_id": string,"timezone": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "brand": string,"export_until"?: string | null,"onboarding_state"?: string,"responsible_name": string,"suspended_at"?: string | null,"tenant_id": string,"timezone"?: string
+                  }
+                  Update: {
+                    "brand"?: string,"export_until"?: string | null,"onboarding_state"?: string,"responsible_name"?: string,"suspended_at"?: string | null,"tenant_id"?: string,"timezone"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "tenant_configuration_tenant_id_fkey"
+      columns: ["tenant_id"]
+isOneToOne: true
+      referencedRelation: "tenants"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"tenant_connections": {
+                  Row: {
+                    "capability_state": string,"credential_state": string,"evidence": string,"icon_account_label": string,"icon_installer": string | null,"icon_state": string,"icon_updated_at": string | null,"last_test_at": string | null,"opening_mode": string,"return_url": string,"tenant_id": string,"test_state": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "capability_state"?: string,"credential_state"?: string,"evidence"?: string,"icon_account_label"?: string,"icon_installer"?: string | null,"icon_state"?: string,"icon_updated_at"?: string | null,"last_test_at"?: string | null,"opening_mode"?: string,"return_url"?: string,"tenant_id": string,"test_state"?: string
+                  }
+                  Update: {
+                    "capability_state"?: string,"credential_state"?: string,"evidence"?: string,"icon_account_label"?: string,"icon_installer"?: string | null,"icon_state"?: string,"icon_updated_at"?: string | null,"last_test_at"?: string | null,"opening_mode"?: string,"return_url"?: string,"tenant_id"?: string,"test_state"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "tenant_connections_tenant_id_fkey"
+      columns: ["tenant_id"]
+isOneToOne: true
+      referencedRelation: "tenants"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"tenant_entitlements": {
+                  Row: {
+                    "configured": boolean,"enabled": boolean,"module_key": string,"reason": string,"source": string,"tenant_id": string,"valid_from": string,"valid_until": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "configured"?: boolean,"enabled"?: boolean,"module_key": string,"reason"?: string,"source"?: string,"tenant_id": string,"valid_from"?: string,"valid_until"?: string | null
+                  }
+                  Update: {
+                    "configured"?: boolean,"enabled"?: boolean,"module_key"?: string,"reason"?: string,"source"?: string,"tenant_id"?: string,"valid_from"?: string,"valid_until"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "tenant_entitlements_module_key_fkey"
+      columns: ["module_key"]
+isOneToOne: false
+      referencedRelation: "module_catalog"
+      referencedColumns: ["key"]
+    },{
       foreignKeyName: "tenant_entitlements_tenant_id_fkey"
       columns: ["tenant_id"]
 isOneToOne: false
@@ -118,6 +290,32 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"tenant_subscriptions": {
+                  Row: {
+                    "plan_key": string,"state": string,"tenant_id": string,"unit_limit_override": number | null,"valid_from": string,"valid_until": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "plan_key": string,"state"?: string,"tenant_id": string,"unit_limit_override"?: number | null,"valid_from"?: string,"valid_until"?: string | null
+                  }
+                  Update: {
+                    "plan_key"?: string,"state"?: string,"tenant_id"?: string,"unit_limit_override"?: number | null,"valid_from"?: string,"valid_until"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "tenant_subscriptions_plan_key_fkey"
+      columns: ["plan_key"]
+isOneToOne: false
+      referencedRelation: "plans"
+      referencedColumns: ["key"]
+    },{
+      foreignKeyName: "tenant_subscriptions_tenant_id_fkey"
+      columns: ["tenant_id"]
+isOneToOne: true
+      referencedRelation: "tenants"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"tenants": {
                   Row: {
                     "created_at": string,"id": string,"name": string,"slug": string,"status": string
@@ -161,11 +359,35 @@ isOneToOne: false
             "accept_invitation":
 { Args: { "invitation": string }; Returns: string
                            },
+"add_tenant_unit":
+{ Args: { "name": string,"tenant": string }; Returns: string
+                           },
 "check_access":
 { Args: { "module"?: string,"permission": string,"tenant": string,"unit": string }; Returns: boolean
                            },
+"claim_invitation_delivery":
+{ Args: { "invitation": string }; Returns: Json
+                           },
+"configure_icon":
+{ Args: { "account_label": string,"return_url": string,"tenant": string }; Returns: undefined
+                           },
+"console_snapshot":
+{ Args: Record<PropertyKey, never>; Returns: Json
+                           },
+"export_tenant_metadata":
+{ Args: { "tenant": string }; Returns: Json
+                           },
+"finish_invitation_delivery":
+{ Args: { "invitation": string,"lease": string,"success": boolean }; Returns: undefined
+                           },
+"grant_support":
+{ Args: { "grantee": string,"minutes": number,"reason": string,"scope": string,"tenant": string }; Returns: string
+                           },
 "invite_member":
 { Args: { "clinic_role": string,"email": string,"tenant": string,"unit": string }; Returns: string
+                           },
+"module_probe":
+{ Args: { "module": string,"tenant": string,"unit": string }; Returns: string
                            },
 "platform_context":
 { Args: Record<PropertyKey, never>; Returns: string
@@ -175,11 +397,53 @@ isOneToOne: false
               "id": string,"name": string,"slug": string,"status": string
             }[]
                            },
+"preview_module":
+{ Args: { "enabled": boolean,"module": string,"tenant": string }; Returns: string
+                           },
+"provision_tenant":
+{ Args: { "brand": string,"email": string,"name": string,"plan": string,"request": string,"responsible": string,"slug": string,"timezone"?: string,"unit_name": string }; Returns: string
+                           },
+"publish_module":
+{ Args: { "change": string }; Returns: undefined
+                           },
+"request_invitation_delivery":
+{ Args: { "invitation": string }; Returns: string
+                           },
 "revoke_invitation":
 { Args: { "invitation": string,"tenant": string }; Returns: undefined
                            },
 "revoke_membership":
 { Args: { "membership": string,"tenant": string }; Returns: undefined
+                           },
+"revoke_support":
+{ Args: { "grant_id": string }; Returns: undefined
+                           },
+"set_member_scope":
+{ Args: { "membership": string,"reason": string,"tenant": string,"units": (string)[] }; Returns: undefined
+                           },
+"set_module_override":
+{ Args: { "enabled": boolean,"module": string,"reason": string,"tenant": string,"until_at": string }; Returns: undefined
+                           },
+"set_tenant_plan":
+{ Args: { "plan": string,"reason": string,"tenant": string,"valid_until"?: string }; Returns: undefined
+                           },
+"set_tenant_status":
+{ Args: { "export_until"?: string,"reason": string,"suspended": boolean,"tenant": string }; Returns: undefined
+                           },
+"support_diagnostics":
+{ Args: { "tenant": string }; Returns: Json
+                           },
+"test_connection":
+{ Args: { "tenant": string }; Returns: undefined
+                           },
+"test_module_change":
+{ Args: { "change": string,"unit": string }; Returns: Json
+                           },
+"update_onboarding":
+{ Args: { "brand": string,"reason": string,"responsible": string,"state": string,"tenant": string }; Returns: undefined
+                           },
+"update_subscription":
+{ Args: { "reason"?: string,"state": string,"tenant": string,"unit_limit"?: number }; Returns: undefined
                            }
           }
           Enums: {

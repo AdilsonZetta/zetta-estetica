@@ -1,6 +1,6 @@
 # Zetta Estética
 
-Fundação SaaS multiempresa (Prompt 01). React 19, TypeScript, Vite, Tailwind 4, Supabase Auth, PostgreSQL/RLS e Storage privado. A FLW continua sem integração autenticada comprovada; o laboratório do Discovery está em `/zetta-estetica/integration-lab`.
+Console Zetta e catálogo de módulos (Prompt 02), sobre a fundação SaaS multiempresa. React 19, TypeScript, Vite, Tailwind 4, Supabase Auth, PostgreSQL/RLS e Storage privado. A FLW continua sem integração autenticada comprovada; o laboratório do Discovery está em `/zetta-estetica/integration-lab`.
 
 ## Inicialização local sem Docker
 
@@ -29,6 +29,7 @@ Acesse `http://localhost:5173/zetta-estetica/`. Senha de todas as contas sintét
 | b@example.com | Horizonte | Admin clínica, Centro |
 | multi@example.com | Aurora e Horizonte | Gerente, Centro de cada clínica |
 | revogado@example.com | Aurora revogado | Sem acesso operacional |
+| zetta@example.com | Plataforma Zetta | Superadmin sintético, sem acesso operacional |
 
 A segunda unidade Aurora existe para provar que pertencer ao tenant não autoriza todas as unidades. Esses dados são sintéticos; não são contas FLW. O e-mail administrativo real não é cadastrado pelo seed.
 
@@ -36,7 +37,7 @@ A segunda unidade Aurora existe para provar que pertencer ao tenant não autoriz
 
 `auth.users` é a identidade. `profiles` permite editar somente o próprio nome. `tenant_memberships` mantém um vínculo por tenant/usuário, papel e estado; `membership_units` atribui unidades por referência composta. Papéis de clínica: `clinic_admin`, `manager`, `reception`, `professional`, `finance`, `auditor`. A matriz privada `private.role_permissions` concede somente permissões desta fundação; futuros módulos precisarão de permissões próprias.
 
-`private.is_allowed` consulta `auth.uid()`, vínculo atual ativo, tenant ativo, permissão, unidade atribuída/ativa e entitlement vigente. A base de entitlements contém apenas `core`; módulos desconhecidos são negados. Catálogo, planos, provisionamento e overrides ficam para o Prompt 02. Helpers privados eliminam recursão das políticas. Não há views expostas. SELECT é filtrado por RLS; UPDATE de `units.name` e `profiles.display_name` tem grants por coluna, USING e WITH CHECK. INSERT/UPDATE/DELETE de autoridade são negados ao cliente. Leitura administrativa de equipe exige escopo de todas as unidades do vínculo; eventos de unidade na auditoria são filtrados por unidade atribuída. Eventos de equipe guardam um snapshot das unidades e exigem permissão de auditoria em todas elas; eventos antigos ou sem escopo exigem todas as unidades do tenant. UUIDs históricos de auditoria não possuem FK para entidades removíveis. Escritas permitidas em convites/vínculos ocorrem por RPC auditada.
+`private.is_allowed` consulta `auth.uid()`, vínculo atual ativo, tenant ativo, permissão, unidade atribuída/ativa e entitlement vigente. O catálogo contém `core`, `agenda` e `packages`. Plano, vigência, override, configuração publicada e dependências determinam os entitlements. Permissões de módulo não podem ser exercidas passando `core`. Helpers privados eliminam recursão das políticas. Não há views expostas. SELECT é filtrado por RLS; UPDATE de `units.name` e `profiles.display_name` tem grants por coluna, USING e WITH CHECK. INSERT/UPDATE/DELETE de autoridade são negados ao cliente. Leitura administrativa de equipe exige escopo de todas as unidades do vínculo; eventos de unidade na auditoria são filtrados por unidade atribuída. Eventos de equipe guardam um snapshot das unidades e exigem permissão de auditoria em todas elas; eventos antigos ou sem escopo exigem todas as unidades do tenant. UUIDs históricos de auditoria não possuem FK para entidades removíveis. Escritas permitidas em convites/vínculos ocorrem por RPC auditada.
 
 | RPC pública (sessão authenticated) | Autorização |
 | --- | --- |
@@ -48,7 +49,7 @@ A segunda unidade Aurora existe para provar que pertencer ao tenant não autoriz
 | `platform_context()` | Retorna somente papel global do próprio usuário |
 | `platform_tenants()` | Somente superadmin Zetta, retorna id/nome/slug/estado dos tenants |
 
-Não existe RPC pública para promover papel global, reativar vínculo ou alterar estado/entitlements. Papéis globais `superadmin` e `implementation` ficam em tabela privada, sem acesso direto pelo navegador; `implementation` não recebe poderes implícitos nesta etapa. Superadmin não tem bypass dos dados operacionais. A whitelist privada inclui o e-mail solicitado pelo ambiente: trigger concede o papel inicial **após confirmação do e-mail**, sem criar conta nem senha para ele. Atualizações Auth não reativam nem promovem novamente um papel já existente. Metadados Auth não concedem papéis. Bootstrap e alterações de autoridade/estado são auditados na mesma transação, sem conteúdo clínico, tokens ou senhas nos eventos.
+Não existe RPC pública para promover papel global ou reativar vínculo. No Prompt 02, estado, plano, override e escopo são alterados somente por RPCs auditadas de superadmin. Papéis globais `superadmin` e `implementation` ficam em tabela privada, sem acesso direto pelo navegador; `implementation` recebe somente diagnóstico redigido quando possuir concessão temporária explícita; não administra o console nem acessa dados operacionais. Superadmin não tem bypass dos dados operacionais. A whitelist privada inclui o e-mail solicitado pelo ambiente: trigger concede o papel inicial **após confirmação do e-mail**, sem criar conta nem senha para ele. Atualizações Auth não reativam nem promovem novamente um papel já existente. Metadados Auth não concedem papéis. Bootstrap e alterações de autoridade/estado são auditados na mesma transação, sem conteúdo clínico, tokens ou senhas nos eventos.
 
 O slug só seleciona a clínica. Shell e rotas `/clinicas/:slug`, `/clinicas/:slug/admin` e `/admin` exigem Auth; consultas/RPCs validam a autorização no banco. A interface não substitui RLS. Um JWT ainda válido identifica o usuário após revogação do vínculo, mas novas consultas e operações nesse tenant são negadas. Operações já em andamento seguem a semântica transacional do PostgreSQL. Não implementamos `/launch`, SSO ou iframe nesta etapa.
 
@@ -56,7 +57,7 @@ O slug só seleciona a clínica. Shell e rotas `/clinicas/:slug`, `/clinicas/:sl
 
 Não há cadastro público. Admin registra o convite para unidade/papel no shell. A interface indica **envio pendente**. No ambiente local sem SMTP, os testes geram um link Auth `type: invite` pela API Admin, validam seu token pelo GoTrue e usam a sessão resultante para aceitar; não simulam autenticação nem enviam e-mails.
 
-Na homologação com SMTP e projeto confirmado, um operador autorizado deve enviar o convite pelo Auth no servidor, conferindo e-mail/ID/unidade do registro, com `inviteUserByEmail(email, { redirectTo: APP_URL + '/convites/' + invitationId })`, usando origem configurada e allowlist de redirects. Service role permanece no servidor. Ao abrir o link Auth, o usuário pode definir senha e confirma o vínculo em `/convites/:id`. Não derive a URL externa de parâmetros livres. A senha é opcional no aceite para preservar a credencial de quem já tem conta. Convite para conta que já tem vínculo no mesmo tenant é recusado com erro 42501, sem mudar papel nem reativar acesso; exige revisão administrativa. Reaceite só retorna sucesso enquanto convite, vínculo, atribuição, emissor e acesso continuam vigentes; a expiração do convite pendente não desfaz um aceite concluído. A edição de papéis/atribuições e envio automático não fazem parte deste shell inicial.
+Na homologação com SMTP e projeto confirmado, um operador autorizado deve enviar o convite pelo Auth no servidor, conferindo e-mail/ID/unidade do registro, com `inviteUserByEmail(email, { redirectTo: APP_URL + '/convites/' + invitationId })`, usando origem configurada e allowlist de redirects. Service role permanece no servidor. Ao abrir o link Auth, o usuário pode definir senha e confirma o vínculo em `/convites/:id`. Não derive a URL externa de parâmetros livres. A senha é opcional no aceite para preservar a credencial de quem já tem conta. Convite para conta que já tem vínculo no mesmo tenant é recusado com erro 42501, sem mudar papel nem reativar acesso; exige revisão administrativa. Reaceite só retorna sucesso enquanto convite, vínculo, atribuição, emissor e acesso continuam vigentes; a expiração do convite pendente não desfaz um aceite concluído. A edição de papéis/reativação de vínculo continua fora deste fluxo. O console permite mudar atribuições por RPC global auditada e acionar o envio separado pela Edge Function `invitation-delivery`.
 
 ## Storage e testes
 
@@ -66,7 +67,8 @@ Bucket privado `foundation-test`, 1 MiB, `text/plain`; objetos seguem `<tenant U
 npm test                   # Regressões unitárias do Discovery
 npm run test:db            # pgTAP real, transação com rollback; inclui políticas Storage
 npm run test:api           # Auth/PostgREST reais com sessões públicas A/B e revogados
-npm run test:concurrency   # 12 aceites simultâneos, 6 revogações e tentativas pós-revogação
+npm run test:concurrency   # Aceites/revogações e 12 disputas pela última unidade
+npm run test:edge          # Deno: autorização, falha redigida, lease e retry do remetente
 npm run build
 npm run lint
 npm run test:e2e           # Executar suíte completa ao concluir alterações
@@ -78,6 +80,20 @@ O Playwright preserva os projetos anteriores e acrescenta shell desktop/mobile. 
 
 ## Portabilidade e homologação
 
-Supabase padrão: `supabase/config.toml`, migrations aditivas e tipos gerados do esquema local em `src/database.types.ts`. Funções de autorização são SQL versionadas nas migrations; nenhuma Edge Function é necessária no Prompt 01 (integrações futuras em `supabase/functions`). Não aplique `scripts/local-stack/bootstrap.sql` em ambiente hospedado. O seed pressupõe as identidades demo criadas pelo script Node e deve ser usado somente no desenvolvimento.
+Supabase padrão: `supabase/config.toml`, migrations aditivas e tipos gerados do esquema local em `src/database.types.ts`. Funções de autorização são SQL versionadas nas migrations; o Prompt 02 adiciona a Edge Function `supabase/functions/invitation-delivery` para envio separado de convite Auth. Não aplique `scripts/local-stack/bootstrap.sql` em ambiente hospedado. O seed pressupõe as identidades demo criadas pelo script Node e deve ser usado somente no desenvolvimento.
 
 Antes de operação remota, confirmar explicitamente projeto/ref, ambiente, URL e autorização. Aplicar migrations sem fixtures reais, conferir signup desabilitado/SMTP/redirects, criar convites de homologação, validar a matriz RLS/API e repetir a matriz HTTP Storage. O relatório [Prompt 01](docs/etapas/prompt-01.md) contém resultados locais e pendências. Nenhuma publicação, `supabase link`, push remoto, commit ou push Git foi executado. A atualização do ambiente liberou Pages público; o workflow aceita push em main e acionamento manual, com lint/unitários/build sem dependência da stack local; base `/zetta-estetica/`, BrowserRouter e fallback `404.html` estão preparados.
+
+## Console e módulos (Prompt 02)
+
+Entre com `zetta@example.com` / `Demo@123456` (somente seed local) e abra **Administração Zetta**. As sete telas cobrem empresas, onboarding, catálogo, ícone, conexão, assinatura e suporte. Esse usuário global não tem vínculo com as clínicas. O provisionamento recebe uma referência UUID estável: repetir os mesmos dados retorna a mesma empresa; mudar o payload com a mesma referência é recusado. Empresa, unidade, configuração, direitos e convite são gravados juntos. O envio continua separado e pode ser retomado em Conexões.
+
+Aurora usa Completo (Agenda e Pacotes); Horizonte usa Essencial (Agenda). São planos de referência para homologação, inclusive preços e limites, sem cobrança automática. `module_test_records` guarda exclusivamente dados sintéticos para provar RLS. As rotas `/clinicas/:slug/modulos/agenda` e `/modulos/packages` usam uma permissão de teste e a RPC `module_probe`; a implementação operacional pertence às próximas etapas. O admin clínico prepara uma configuração válida por 15 minutos, testa o candidato, revisa e publica. A prévia nunca altera a autorização operacional. Desligar um módulo mantém seus dados e nega novas operações; dependências são verificadas novamente na publicação.
+
+Overrides exigem superadmin, motivo e término. Um override expirado nega o direito até revisão explícita; não há renovação automática nem fallback implícito para direitos expirados. Mudanças de plano preservam overrides e reavaliam os padrões do novo plano. Cancelamento/expiração da assinatura bloqueia os módulos contratados. Suspensão bloqueia também o núcleo, RLS, RPCs, aceite de convite e a elegibilidade de jobs (`private.job_allowed`). Futuros workers devem chamar esse helper antes de executar; não há scheduler operacional no Prompt 02.
+
+O console registra janela contratual de exportação e concessão nominal por até 60 minutos. `/exportacao` permite ao admin designado baixar somente metadados da empresa e das suas unidades atribuídas, mesmo durante suspensão; contrato, grant, vínculo e prazo são revalidados. Não exporta dados clínicos nem antecipa exportadores de módulos futuros. Diagnósticos de suporte exigem papel global ativo e grant `diagnostics`; contêm apenas UUID do tenant, estados, data de teste e contagem de envios pendentes. Não concedem acesso às tabelas operacionais.
+
+Para enviar convite, configurar **no servidor** `APP_URL`, `APP_ORIGIN` e as variáveis padrão Supabase documentadas em `.env.example`. A Edge Function valida o JWT do chamador pela RPC de autorização, usa um lease de 2 minutos e só então chama Auth Admin. A chave privilegiada nunca vai ao navegador. `sent` significa que o Auth aceitou a solicitação, não confirmação de entrega. Falhas recebem código redigido e retry; lease vencido pode ser retomado. Não existe garantia de envio exatamente uma vez se o processo cair entre o efeito externo e a confirmação no PostgreSQL. Para identidade já existente, o Auth pode recusar novo convite: o operador deve orientar login pelo Supabase Auth e abertura da rota do convite vigente, sem recriar a conta nem alterar seu papel.
+
+Não há SMTP nem Edge HTTP em execução nesta stack. Os testes verificam o handler Deno com transportes controlados e a máquina de estados no PostgreSQL real; não comprovam entrega de e-mail. A implantação FLW continua possível com credenciais pendentes: teste é bloqueado com evidência persistida, capacidade permanece `CAPABILITY_NOT_VERIFIED`, e registro manual do ícone fica aguardando validação. Consulte [o relatório do Prompt 02](docs/etapas/prompt-02.md) para resultados e homologação.

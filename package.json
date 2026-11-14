@@ -9,13 +9,14 @@
     "lint": "oxlint --deny-warnings",
     "preview": "vite preview",
     "test": "node --experimental-strip-types --test tests/lab.test.ts tests/public-key.test.ts",
-    "test:api": "node --test tests/auth-api.test.mjs tests/foundation-api.test.mjs",
+    "test:api": "node --test tests/auth-api.test.mjs tests/foundation-api.test.mjs tests/console-api.test.mjs",
     "test:e2e": "playwright test",
     "db:reset": "bash scripts/db-reset.sh",
     "db:seed": "node scripts/seed-local.mjs",
     "db:types": "node scripts/generate-types.mjs",
     "test:db": "node scripts/test-db.mjs",
-    "test:concurrency": "node --test tests/foundation-concurrency.test.mjs"
+    "test:concurrency": "node --test tests/foundation-concurrency.test.mjs tests/console-concurrency.test.mjs",
+    "test:edge": "deno test supabase/functions/invitation-delivery/handler.test.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.0",
