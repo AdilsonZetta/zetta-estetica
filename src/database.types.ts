@@ -362,6 +362,39 @@ isOneToOne: false
 "add_tenant_unit":
 { Args: { "name": string,"tenant": string }; Returns: string
                            },
+"agenda_availability":
+{ Args: { "local_start": string,"tenant": string,"unit": string,"version_id": string }; Returns: Json
+                           },
+"agenda_block":
+{ Args: { "idempotency_key": string,"local_end": string,"local_start": string,"reason": string,"resource": string,"tenant": string,"unit": string }; Returns: Json
+                           },
+"agenda_grid":
+{ Args: { "local_day": string,"span"?: string,"tenant": string,"unit": string }; Returns: Json
+                           },
+"agenda_openings":
+{ Args: { "local_day": string,"resources": (string)[],"tenant": string,"unit": string,"version_id": string }; Returns: Json
+                           },
+"agenda_release_block":
+{ Args: { "block": string,"expected_version": number,"idempotency_key": string,"tenant": string,"unit": string }; Returns: Json
+                           },
+"agenda_reschedule":
+{ Args: { "appointment": string,"expected_version": number,"hold_minutes"?: number,"idempotency_key": string,"local_start": string,"resources": (string)[],"tenant": string,"unit": string }; Returns: Json
+                           },
+"agenda_reserve":
+{ Args: { "client": string,"confirm"?: boolean,"hold_minutes"?: number,"idempotency_key": string,"local_start": string,"resources": (string)[],"tenant": string,"unit": string,"version_id": string,"waitlist_entry"?: string }; Returns: Json
+                           },
+"agenda_transition":
+{ Args: { "action": string,"appointment": string,"expected_version": number,"idempotency_key": string,"reason"?: string,"tenant": string,"unit": string }; Returns: Json
+                           },
+"agenda_waitlist":
+{ Args: { "local_end"?: string,"local_start"?: string,"professional"?: string,"tenant": string,"unit": string,"version_id"?: string }; Returns: Json
+                           },
+"agenda_waitlist_cancel":
+{ Args: { "entry": string,"expected_version": number,"idempotency_key": string,"tenant": string,"unit": string }; Returns: Json
+                           },
+"agenda_waitlist_join":
+{ Args: { "client": string,"idempotency_key": string,"notes"?: string,"priority"?: number,"professionals"?: (string)[],"tenant": string,"unit": string,"version_id": string,"windows": Json }; Returns: Json
+                           },
 "catalog_availability":
 { Args: { "after_id"?: string,"local_end": string,"local_start": string,"tenant": string,"unit": string,"version_id"?: string }; Returns: Json
                            },
@@ -394,6 +427,9 @@ isOneToOne: false
                            },
 "delete_catalog_window":
 { Args: { "tenant": string,"unit": string,"window_id": string }; Returns: undefined
+                           },
+"expire_agenda_holds":
+{ Args: { "tenant": string,"unit": string }; Returns: number
                            },
 "export_tenant_metadata":
 { Args: { "tenant": string }; Returns: Json

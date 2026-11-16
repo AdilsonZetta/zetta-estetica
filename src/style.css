@@ -73,3 +73,12 @@ select { max-width: 550px; }
 .catalog .check input { width:1rem; flex-shrink:0; }
 .catalog-preview { padding:1rem; border-left:3px solid #cfff04; background:#f6f6f3; }
 .catalog .client-list span { overflow-wrap:anywhere; }
+
+.agenda { margin-top: 2rem; display: grid; gap: 1rem; }
+.agenda-toolbar, .agenda-nav, .agenda-tabs, .agenda-actions { display: flex; flex-wrap: wrap; gap: .75rem; align-items: end; }
+.agenda-nav button, .agenda-actions button, .agenda-tabs button { width: auto; margin-top: 0; }
+.agenda-tabs button[aria-pressed="true"], .agenda-nav button[aria-pressed="true"] { background: #cfff04; color: #111; border-color: #b3dc00; }
+.agenda-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 1rem; }
+.agenda .glass { min-width: 0; }
+.agenda h4 { font-family: 'Inter Tight', Inter, sans-serif; font-weight: 600; margin: 0 0 .25rem; }
+.agenda textarea { width: 100%; min-height: 4.5rem; font: inherit; padding: .75rem; border: 1px solid #c7c7cb; border-radius: 10px; background: #fff; }
