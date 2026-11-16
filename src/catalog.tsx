@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { addLocalMinutes } from './catalog-time'
 import type { Database, Json } from './database.types'
 
 type ResourceUnit = { unit_id: string; location: string; capacity: number }
@@ -17,6 +18,14 @@ type Resource = {
   can_edit: boolean
 }
 type Requirement = { kind: string; capability: string; quantity: number }
+type ServiceLink = {
+  resource_id: string
+  unit_id: string
+  name?: string
+  kind?: string
+  active?: boolean
+  eligible?: boolean
+}
 type Service = {
   id: string
   version_id: string
@@ -31,7 +40,7 @@ type Service = {
   preparation: string
   state: string
   units: string[]
-  resources: { resource_id: string; unit_id: string }[]
+  resources: ServiceLink[]
   requirements: Requirement[]
   can_edit: boolean
 }
@@ -141,6 +150,9 @@ export function ClinicCatalog({
   const [selectedVersion, setSelectedVersion] = useState(''),
     [serviceOptions, setServiceOptions] = useState<Service[]>([]),
     [teamOptions, setTeamOptions] = useState<{ id: string; name: string }[]>([])
+  const [historyBusy, setHistoryBusy] = useState(false)
+  const historyRequest = useRef(0)
+  const historyBusyRef = useRef(false)
   const fail = (code?: string) =>
     setError(
       code === '40001'
@@ -170,9 +182,14 @@ export function ClinicCatalog({
         after = page.at(-1)!.id
       }
     }
+    const accessCall = db.rpc('check_access', {
+      tenant,
+      unit,
+      permission: 'catalog.write',
+    })
     void Promise.all([
       db.rpc('list_catalog', { tenant, unit, kind: tab, query: search }),
-      db.rpc('check_access', { tenant, unit, permission: 'catalog.write' }),
+      accessCall,
       // Seletores carregam o catálogo de recursos em páginas, sem truncar profissionais.
       (async () => {
         const all: Resource[] = []
@@ -192,7 +209,23 @@ export function ClinicCatalog({
         }
       })(),
       loadServices(),
-      db.rpc('catalog_team_options', { tenant, unit }),
+      (async () => {
+        if (tab !== 'resources')
+          return { data: [] as { id: string; name: string }[], error: null }
+        const access = await accessCall
+        if (access.data !== true)
+          return { data: [] as { id: string; name: string }[], error: null }
+        const team = await db.rpc('catalog_team_options', { tenant, unit })
+        return team.error
+          ? {
+              data: [] as { id: string; name: string }[],
+              error: { code: team.error.code },
+            }
+          : {
+              data: team.data as unknown as { id: string; name: string }[],
+              error: null,
+            }
+      })(),
       db
         .from('units')
         .select('timezone')
@@ -282,21 +315,44 @@ export function ClinicCatalog({
     }
   }
   async function versions(s: Service, more = false) {
+    if (more && historyBusyRef.current) return
+    const request = ++historyRequest.current
+    historyBusyRef.current = true
+    setHistoryBusy(true)
     setService(s)
     setError('')
-    const r = await db.rpc('catalog_service_history', {
-      tenant,
-      unit,
-      service: s.id,
-      after_version: more ? history.at(-1)?.version : undefined,
-    })
-    if (r.error) fail(r.error.code)
-    else
-      setHistory(
-        more
-          ? [...history, ...(r.data as unknown as Service[])]
-          : (r.data as unknown as Service[]),
-      )
+    if (!more) setHistory([])
+    try {
+      const r = await db.rpc('catalog_service_history', {
+        tenant,
+        unit,
+        service: s.id,
+        after_version: more ? history.at(-1)?.version : undefined,
+      })
+      if (request !== historyRequest.current) return
+      if (r.error) fail(r.error.code)
+      else
+        setHistory(
+          more
+            ? [...history, ...(r.data as unknown as Service[])]
+            : (r.data as unknown as Service[]),
+        )
+    } finally {
+      if (request === historyRequest.current) {
+        historyBusyRef.current = false
+        setHistoryBusy(false)
+      }
+    }
+  }
+  function applyDuration(nextStart: string, versionId = selectedVersion) {
+    const version = serviceOptions.find((s) => s.version_id === versionId)
+    if (!version) return
+    const computed = addLocalMinutes(
+      nextStart,
+      version.duration_minutes,
+      timezone,
+    )
+    if (computed) setEnd(computed)
   }
   const checkUnit = (id: string, checked: boolean) =>
     setService({
@@ -354,6 +410,7 @@ export function ClinicCatalog({
               setQuery('')
               setMessage('')
               setError('')
+              setWindowId(null)
             }}
           >
             {title}
@@ -455,17 +512,23 @@ export function ClinicCatalog({
                         </button>
                         <button
                           disabled={busy}
-                          onClick={() =>
+                          onClick={() => {
+                            const id = row.id
                             void act(
                               () =>
                                 db.rpc('delete_catalog_window', {
                                   tenant,
                                   unit,
-                                  window_id: row.id,
+                                  window_id: id,
                                 }),
                               'Janela removida com auditoria.',
-                            )
-                          }
+                            ).then((ok) => {
+                              if (ok)
+                                setWindowId((current) =>
+                                  current === id ? null : current,
+                                )
+                            })
+                          }}
                         >
                           Remover janela de {row.name}
                         </button>
@@ -653,6 +716,44 @@ export function ClinicCatalog({
                   <p>Cadastre profissionais e recursos para habilitá-los.</p>
                 )}
               </fieldset>
+              {service.resources.some((x) => x.unit_id !== unit) && (
+                <fieldset>
+                  <legend>Vínculos nominados em outras unidades</legend>
+                  <p>
+                    A publicação exige habilitação vigente em cada unidade.
+                    Remova o vínculo que a nova versão não puder manter.
+                  </p>
+                  {service.resources
+                    .filter((x) => x.unit_id !== unit)
+                    .map((x) => (
+                      <label
+                        key={`${x.unit_id}:${x.resource_id}`}
+                        className="check"
+                      >
+                        <input
+                          type="checkbox"
+                          checked
+                          onChange={() =>
+                            setService({
+                              ...service,
+                              resources: service.resources.filter(
+                                (item) =>
+                                  item.unit_id !== x.unit_id ||
+                                  item.resource_id !== x.resource_id,
+                              ),
+                            })
+                          }
+                        />
+                        {kinds[x.kind || ''] || 'Recurso'} ·{' '}
+                        {x.name || 'Recurso de outra unidade'} ·{' '}
+                        {units.find((u) => u.id === x.unit_id)?.name ||
+                          'Outra unidade'}
+                        {(x.active === false || x.eligible === false) &&
+                          ' · Habilitação indisponível — remova da nova versão'}
+                      </label>
+                    ))}
+                </fieldset>
+              )}
               <fieldset>
                 <legend>Exigências de sala e equipamento</legend>
                 {service.requirements.map((q, i) => (
@@ -785,7 +886,10 @@ export function ClinicCatalog({
               </p>
             ))}
             {history.length > 0 && history.length % 30 === 0 && (
-              <button onClick={() => void versions(service, true)}>
+              <button
+                disabled={historyBusy}
+                onClick={() => void versions(service, true)}
+              >
                 Mais versões
               </button>
             )}
@@ -870,6 +974,14 @@ export function ClinicCatalog({
                     }
                   >
                     <option value="">Sem vínculo de acesso</option>
+                    {resource.membership_id &&
+                      !teamOptions.some(
+                        (m) => m.id === resource.membership_id,
+                      ) && (
+                        <option value={resource.membership_id}>
+                          Vínculo indisponível/revogado — remova ou substitua
+                        </option>
+                      )}
                     {teamOptions.map((m) => (
                       <option key={m.id} value={m.id}>
                         {m.name}
@@ -1073,18 +1185,32 @@ export function ClinicCatalog({
                   <select
                     required
                     value={windowResource}
+                    disabled={windowId !== null}
                     onChange={(e) => setWindowResource(e.target.value)}
                   >
                     <option value="">Selecione</option>
+                    {windowResource &&
+                      !resources.some((r) => r.id === windowResource) && (
+                        <option value={windowResource}>
+                          Recurso indisponível nesta unidade
+                        </option>
+                      )}
                     {resources
-                      .filter((r) => r.active)
+                      .filter((r) => r.active || r.id === windowResource)
                       .map((r) => (
                         <option key={r.id} value={r.id}>
                           {kinds[r.kind]} · {r.name}
+                          {!r.active && ' · Inativo'}
                         </option>
                       ))}
                   </select>
                 </label>
+                {windowId && (
+                  <p>
+                    A edição mantém o recurso desta janela. Cancele para
+                    escolher outro.
+                  </p>
+                )}
                 <label>
                   Tipo da janela
                   <select
@@ -1107,6 +1233,7 @@ export function ClinicCatalog({
                     onChange={(e) => {
                       setStart(e.target.value)
                       setFree(null)
+                      applyDuration(e.target.value)
                     }}
                   />
                 </label>
@@ -1178,17 +1305,7 @@ export function ClinicCatalog({
                 onChange={(e) => {
                   setSelectedVersion(e.target.value)
                   setFree(null)
-                  const v = serviceOptions.find(
-                    (s) => s.version_id === e.target.value,
-                  )
-                  if (v && start)
-                    setEnd(
-                      new Date(
-                        Date.parse(start + 'Z') + v.duration_minutes * 60000,
-                      )
-                        .toISOString()
-                        .slice(0, 16),
-                    )
+                  applyDuration(start, e.target.value)
                 }}
               >
                 <option value="">Todos os recursos</option>

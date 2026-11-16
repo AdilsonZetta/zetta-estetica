@@ -25,11 +25,12 @@ O banco valida vínculo atual, tenant, unidade, permissão e módulo `core`. Adm
 | `src/main.tsx`, `src/style.css` | Rota, navegação e estilos do catálogo; limite de espera de dez segundos na carga inicial de clínicas, com erro e cancelamento em vez de carregamento indefinido |
 | `src/database.types.ts` | Tipos públicos regenerados; schema privado não publicado |
 | `supabase/seed.sql` | Exemplos sintéticos das duas clínicas, separados da migration |
-| `supabase/tests/catalog.sql` | 31 assertivas pgTAP, incluindo grants/RLS, autoridade, integridade, fuso, conflitos e rollback da operação após falha injetada de auditoria |
-| `tests/catalog-support.mjs`, `tests/catalog-api.test.mjs` | Fixtures isoladas e nove resultados Node (grupo + oito subtestes) com sessões reais |
+| `supabase/tests/catalog.sql` | 44 assertivas pgTAP, incluindo grants/RLS, autoridade, integridade, fuso, conflitos, rollback da operação após falha injetada de auditoria e os casos da revisão |
+| `src/catalog-time.ts`, `tests/catalog-time.test.ts` | Soma da duração no instante do fuso da unidade, com horário de verão e entrada inválida |
+| `tests/catalog-support.mjs`, `tests/catalog-api.test.mjs` | Fixtures isoladas, oito subtestes anteriores e um subteste da revisão, com sessões reais |
 | `tests/catalog-concurrency.test.mjs` | Disputas reais de publicação, edição e janela entre duas unidades |
 | `tests/e2e/catalog.spec.ts`, `playwright.config.ts` | Seis novos resultados E2E em desktop/Android emulado; capturas e ausência de overflow |
-| `package.json` | Suítes novas integradas aos comandos anteriores |
+| `package.json` | Suítes novas integradas aos comandos anteriores; `npm test` inclui o relógio do catálogo |
 | `docs/evidencias/prompt-06-desktop.png`, `docs/evidencias/prompt-06-mobile.png` | Capturas reais do catálogo/formulário durante E2E |
 | `README.md`, `docs/catalogo.md`, este relatório | Contratos, operação, limites e homologação |
 
@@ -44,11 +45,11 @@ Sem mudanças nas migrations anteriores, Edge Functions, CI, `.env.example` ou p
 | `psql ... -c "notify pgrst, 'reload schema'"`, `npm run db:types` | Cache recarregado e tipos públicos gerados; aviso conhecido de depreciação futura de `--db-url` |
 | Smoke SQL da migration completa em transação com `ROLLBACK` | Passou recriação de tabelas, funções, constraints e grants sem reset/perda dos dados existentes |
 | Aplicação local somente do trecho novo de `supabase/seed.sql`, seguida de repetição | Seis recursos, sete atribuições, dois serviços/versões, vínculos/exigências e sete janelas. Replay sem duplicar registros |
-| `npm run test:db` | **321/321** (290 anteriores + 31 novas), incluindo políticas Storage por SQL/RLS |
+| `npm run test:db` | **334/334** na conclusão de 16/11/2026 (290 anteriores + 44 do catálogo), incluindo políticas Storage por SQL/RLS |
 | `npm run test:api` | **58/58**, sem skips (49 anteriores + nove novos), GoTrue/PostgREST e sessões públicas reais |
 | `node --test tests/catalog-api.test.mjs` | **9/9**, também após validar identificação/tradução do seletor de equipe |
 | `npm run test:concurrency` | **6/6**, sem skips (cinco anteriores + um novo) |
-| `npm test` | **11/11**, anteriores preservados |
+| `npm test` | **13/13** na conclusão (11 anteriores + 2 do relógio local/DST) |
 | `npm run test:edge` | **25/25**, anteriores preservados |
 | `npm run build` | Passou TypeScript/Vite/fallback SPA |
 | Build com URL e chave pública locais passadas ao subprocesso Node | Passou também com o backend configurado, incluindo o código operacional no bundle |
@@ -57,10 +58,10 @@ Sem mudanças nas migrations anteriores, Edge Functions, CI, `.env.example` ou p
 | `npm run test:e2e` (78 cenários) | **76 aprovados e dois timeouts** em cenários anteriores; os seis novos passaram |
 | `npm run test:e2e -- --retries=1` antes da correção da carga inicial | **77 aprovados e um reprovado**, também após retry; o cenário anterior de consulta permaneceu carregando além do limite |
 | `npx playwright test ... -g 'Catálogo:\|falhas nas consultas'` após correção | **8/8**, catálogo e cenário anterior nos dois dispositivos |
-| `npm run test:e2e -- --retries=1` (execução completa final) | RESULTADO_E2E_FINAL |
-| Inspeção de capturas | Layout desktop conferido; testes desktop/mobile verificam ausência de overflow horizontal |
-| Inspeção de arquivos alterados/novos e `dist` contra segredos privilegiados locais | RESULTADO_SEGREDOS |
-| `git diff --check` | RESULTADO_DIFF |
+| `npm run test:e2e -- --retries=1` (execução completa final) | Não reexecutada nesta conclusão: o ambiente não tem GoTrue, PostgREST nem `/workspace/.stack`. O spec do catálogo voltou a compilar no `tsc -b` |
+| Inspeção de capturas | Layout desktop conferido na execução anterior; testes desktop/mobile verificam ausência de overflow horizontal. Sem captura nova nesta conclusão |
+| Inspeção de arquivos alterados/novos e `dist` contra segredos privilegiados locais | `dist/` gerado sem `VITE_SUPABASE_*` não contém JWT, `sb_secret` nem chave service_role. O diff não versiona segredo |
+| `git diff --check` | Passou, sem erro de espaço em branco |
 
 As verificações operacionais usam sessões de usuário. API Admin/service role somente prepara/remove identidades sintéticas; SQL privilegiado prepara fixtures isoladas e inspeciona efeitos. pgTAP usa rollback. API/concorrência/E2E removem seus registros; eventos de auditoria permanecem por desenho. Não foi criado outro servidor manualmente: Playwright usa a configuração existente, com reutilização quando disponível.
 
@@ -93,3 +94,33 @@ Dependências existentes: Node/npm, PostgreSQL 17, `pgTAP` e `btree_gist`, GoTru
 7. **Pendências externas herdadas:** sem HTTP Storage local (políticas SQL testadas); SMTP/gateway Edge hospedado, instalação/SSO/iframe FLW, integração autenticada real e dispositivo iOS físico continuam sem homologação. Nenhuma capacidade FLW foi habilitada. Reservas e ocupação de agenda são trabalho do Prompt 07. Não houve bloqueio para concluir o escopo local do Prompt 06.
 
 Evidências: [desktop](../evidencias/prompt-06-desktop.png), [mobile](../evidencias/prompt-06-mobile.png). Contratos detalhados: [Catálogo](../catalogo.md).
+
+## Conclusão da revisão (16/11/2026)
+
+A árvore `wip/prompt-06` foi fechada nesta data. Os dez achados de [review-06-gemini.md](revisoes/review-06-gemini.md) foram aceitos e corrigidos na migration `202611140013_catalog.sql`, na interface e nos testes. Nenhum item foi rejeitado.
+
+| # | Correção |
+| --- | --- |
+| 1 | O seletor mostra “Vínculo indisponível/revogado — remova ou substitua” quando o UUID não está nas opções. `save_catalog_resource` aceita `active = false` com o mesmo vínculo já gravado; recurso ativo ou troca de vínculo continua exigindo equipe vigente |
+| 2 | Durante a edição, o recurso da janela fica bloqueado e o recurso inativo da janela permanece na lista. Trocar de aba ou remover a janela em edição limpa `windowId` |
+| 3 | O fim da consulta soma a duração no instante do fuso IANA da unidade. Entrada incompleta não chama `toISOString`. Alterar o início recalcula o fim quando há serviço selecionado |
+| 4 | A publicação grava `btrim(capability)` e a coluna recusa espaços. Recurso físico nominado entra na disponibilidade mesmo sem exigência genérica daquele tipo |
+| 5 | `catalog_team_options` lista membros ativos da unidade consultada. As demais unidades do recurso continuam validadas em `save_catalog_resource` |
+| 6 | A lista do serviço traz nome, tipo e elegibilidade de cada vínculo. A tela mostra os vínculos das outras unidades e permite removê-los antes de publicar |
+| 7 | Os marcadores `RESULTADO_*` desta página foram substituídos pelos resultados abaixo |
+| 8 | `catalog_team_options` só é chamado na aba de recursos e somente se `catalog.write` for verdadeiro. `versions()` ignora resposta atrasada e bloqueia “Mais versões” enquanto a página anterior não volta |
+| 9 | “Voltar à clínica” também aparece em `/clinicas/:slug/catalogo` |
+| 10 | `set_catalog_window` grava `coalesce(reason, '')`. Criar recurso ou serviço com `expected_version` retorna `22023` |
+
+Verificações desta conclusão, em PostgreSQL 16.15 com pgTAP 1.3.2 (o pacote 17 não estava disponível; a migration usa SQL compatível e foi aplicada depois de 0001–0012 num banco novo):
+
+| Comando | Resultado |
+| --- | --- |
+| `npm run lint` | Passou, sem warnings |
+| `npm run build` | Passou (`tsc -b`, Vite e fallback SPA) |
+| `npm test` | **13/13** |
+| `npm run test:db` | **334/334**, incluindo as 44 assertivas de `supabase/tests/catalog.sql` |
+| `git diff --check` | Passou |
+| `npm run test:api`, `npm run test:concurrency`, `npm run test:edge`, `npm run test:e2e` | Não executados. Faltam GoTrue, PostgREST, Deno e a pilha local original. O subteste novo de API está no arquivo e não teve sessão real nesta máquina |
+
+A migration que deve ser aplicada no projeto remoto, uma única vez e depois de `202611140001`–`202611140012`, é somente `supabase/migrations/202611140013_catalog.sql`. Ela cria extensão `btree_gist` se faltar, permissões, coluna `units.timezone`, tabelas e funções. Não é reexecutável depois de aplicada: `CREATE TABLE` e `CREATE FUNCTION` falhariam na segunda vez. Nenhuma operação remota foi feita. FLW permanece em simulação; reservas continuam no Prompt 07.

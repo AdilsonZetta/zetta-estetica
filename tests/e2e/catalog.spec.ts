@@ -14,6 +14,9 @@ async function enter(page: import('@playwright/test').Page) {
   await expect(
     page.getByRole('heading', { name: 'Serviços, profissionais e recursos' }),
   ).toBeVisible()
+  await expect(
+    page.getByRole('link', { name: 'Voltar à clínica', exact: true }),
+  ).toBeVisible()
 }
 test('Catálogo: publicar, versionar, inativar e ler histórico', async ({
   page,
@@ -217,11 +220,7 @@ test('Catálogo: recurso, jornada, folga, conflito e disponibilidade', async ({
 })
 
 // @ts-expect-error fixtures Node com Auth real, fora do bundle
-import {
-  catalogFixture,
-  resourcePayload,
-  servicePayload,
-} from '../catalog-support.mjs'
+import { catalogFixture, resourcePayload, servicePayload } from '../catalog-support.mjs'
 test('Catálogo: fuso persistido acompanha a troca entre unidades', async ({
   page,
 }) => {

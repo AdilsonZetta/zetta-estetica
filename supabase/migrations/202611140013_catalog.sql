@@ -61,7 +61,7 @@ create table private.catalog_service_resources (
 -- Exigências por tipo e capacidade, independentes dos recursos nominados habilitados.
 create table private.catalog_requirements (
  tenant_id uuid not null, version_id uuid not null, kind text not null check(kind in ('room','equipment')),
- capability text not null check(length(btrim(capability)) between 1 and 100), quantity integer not null check(quantity between 1 and 1000),
+ capability text not null check(capability = btrim(capability) and length(capability) between 1 and 100), quantity integer not null check(quantity between 1 and 1000),
  primary key(tenant_id,version_id,kind,capability), foreign key(tenant_id,version_id) references private.catalog_service_versions(tenant_id,id)
 );
 do $$ declare n text; begin foreach n in array array['catalog_resources','catalog_resource_units','catalog_windows','catalog_services','catalog_service_versions','catalog_service_units','catalog_service_resources','catalog_requirements'] loop
@@ -78,7 +78,7 @@ create function private.catalog_audit(t uuid,us uuid[],entity text,entity_id uui
 end $$;
 create function public.save_catalog_resource(tenant uuid,unit uuid,payload jsonb,resource uuid default null,expected_version integer default null) returns uuid
 language plpgsql security definer set search_path='' as $$
-declare rid uuid; old private.catalog_resources; j jsonb; u uuid; mid uuid; us uuid[] := '{}'; begin
+declare rid uuid; old private.catalog_resources; j jsonb; u uuid; mid uuid; historical boolean := false; us uuid[] := '{}'; begin
  perform private.catalog_assert(tenant,unit,'catalog.write');
  -- Serializa configurações compartilhadas e publicações no tenant, inclusive criação.
  perform pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended('catalog:'||tenant::text,0));
@@ -88,12 +88,14 @@ declare rid uuid; old private.catalog_resources; j jsonb; u uuid; mid uuid; us u
  for u in select ru.unit_id from private.catalog_resource_units ru where ru.tenant_id=tenant and ru.resource_id=resource loop perform private.catalog_assert(tenant,u,'catalog.write'); end loop;
  if expected_version is distinct from old.version then raise exception 'Versão desatualizada' using errcode='40001'; end if;
  if payload->>'kind' is distinct from old.kind then raise exception 'Tipo imutável' using errcode='22023'; end if;
- end if;
+ elsif expected_version is not null then raise exception 'Versão esperada só se aplica à edição' using errcode='22023'; end if;
  if jsonb_typeof(payload->'units') is distinct from 'array' or jsonb_array_length(payload->'units') not between 1 and 100 then raise exception 'Informe unidades' using errcode='22023'; end if;
  mid := nullif(payload->>'membership_id','')::uuid;
+ if resource is not null and mid is not distinct from old.membership_id and coalesce((payload->>'active')::boolean,true)=false then historical := true; end if;
  for j in select value from jsonb_array_elements(payload->'units') loop
  u := (j->>'unit_id')::uuid; perform private.catalog_assert(tenant,u,'catalog.write'); us:=array_append(us,u);
- if mid is not null and not exists(select 1 from public.tenant_memberships m join public.membership_units mu on mu.tenant_id=m.tenant_id and mu.membership_id=m.id where m.tenant_id=tenant and m.id=mid and m.status='active' and mu.unit_id=u) then raise exception 'Equipe sem escopo vigente na unidade' using errcode='22023'; end if;
+ -- Inativar pode conservar o vínculo já gravado mesmo depois da revogação. Troca ou recurso ativo exigem escopo vigente.
+ if mid is not null and not historical and not exists(select 1 from public.tenant_memberships m join public.membership_units mu on mu.tenant_id=m.tenant_id and mu.membership_id=m.id where m.tenant_id=tenant and m.id=mid and m.status='active' and mu.unit_id=u) then raise exception 'Equipe sem escopo vigente na unidade' using errcode='22023'; end if;
  end loop;
  if not unit=any(us) then raise exception 'Inclua a unidade ativa' using errcode='22023'; end if;
  if resource is null then
@@ -115,7 +117,9 @@ language plpgsql security definer set search_path='' as $$
 declare sid uuid; vid uuid; n integer; u uuid; j jsonb; r uuid; us uuid[]:='{}'; begin
  perform private.catalog_assert(tenant,unit,'catalog.write');
  perform pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended('catalog:'||tenant::text,0));
- if service is null then insert into private.catalog_services(tenant_id) values(tenant) returning id,current_version into sid,n;
+ if service is null then
+ if expected_version is not null then raise exception 'Versão esperada só se aplica à edição' using errcode='22023'; end if;
+ insert into private.catalog_services(tenant_id) values(tenant) returning id,current_version into sid,n;
  else
  select s.id,s.current_version into sid,n from private.catalog_services s where s.tenant_id=tenant and s.id=service for update;
  if not found then raise exception 'Serviço indisponível' using errcode='42501'; end if;
@@ -134,7 +138,8 @@ declare sid uuid; vid uuid; n integer; u uuid; j jsonb; r uuid; us uuid[]:='{}';
  insert into private.catalog_service_resources values(tenant,vid,u,r);
  end loop;
  for j in select value from jsonb_array_elements(coalesce(payload->'requirements','[]')) loop
- insert into private.catalog_requirements values(tenant,vid,j->>'kind',j->>'capability',(j->>'quantity')::integer);
+ if btrim(coalesce(j->>'capability',''))='' then raise exception 'Capacidade exigida inválida' using errcode='22023'; end if;
+ insert into private.catalog_requirements values(tenant,vid,j->>'kind',btrim(j->>'capability'),(j->>'quantity')::integer);
  end loop;
  update private.catalog_services set current_version=n+1 where id=sid;
  perform private.catalog_audit(tenant,us,'catalog_service_version',vid,'catalog_service_published'); return vid;
@@ -152,7 +157,7 @@ declare tz text; a timestamptz; b timestamptz; wid uuid; begin
  delete from private.catalog_windows w where w.tenant_id=tenant and w.unit_id=unit and w.resource_id=resource and w.id=window_id;
  if not found then raise exception 'Janela indisponível' using errcode='42501'; end if;
  end if;
- insert into private.catalog_windows(tenant_id,resource_id,unit_id,kind,period,timezone,local_start,local_end,reason) values(tenant,resource,unit,kind,tstzrange(a,b,'[)'),tz,local_start,local_end,reason) returning id into wid;
+ insert into private.catalog_windows(tenant_id,resource_id,unit_id,kind,period,timezone,local_start,local_end,reason) values(tenant,resource,unit,kind,tstzrange(a,b,'[)'),tz,local_start,local_end,coalesce(reason,'')) returning id into wid;
  perform private.catalog_audit(tenant,array[unit],'catalog_window',wid,'catalog_window_saved'); return wid;
 end $$;
 create function public.delete_catalog_window(tenant uuid,unit uuid,window_id uuid) returns void language plpgsql security definer set search_path='' as $$ begin
@@ -177,7 +182,7 @@ language plpgsql stable security definer set search_path='' as $$ declare result
  select coalesce(jsonb_agg(to_jsonb(x) order by x.id),'[]') into result from (
  select s.id,v.id as version_id,v.version,v.name,v.category,v.duration_minutes,v.buffer_before,v.buffer_after,v.price_cents,v.currency,v.preparation,v.state,
  (select coalesce(jsonb_agg(to_jsonb(req)-'tenant_id'-'version_id'),'[]') from private.catalog_requirements req where req.tenant_id=tenant and req.version_id=v.id) requirements,
- (select coalesce(jsonb_agg(jsonb_build_object('resource_id',sr.resource_id,'unit_id',sr.unit_id)),'[]') from private.catalog_service_resources sr where sr.tenant_id=tenant and sr.version_id=v.id and private.is_allowed(tenant,sr.unit_id,'catalog.read')) resources,
+ (select coalesce(jsonb_agg(jsonb_build_object('resource_id',sr.resource_id,'unit_id',sr.unit_id,'name',cr.name,'kind',cr.kind,'active',cr.active,'eligible',cr.active and (cr.membership_id is null or exists(select 1 from public.tenant_memberships m join public.membership_units mu on mu.tenant_id=m.tenant_id and mu.membership_id=m.id where m.tenant_id=tenant and m.id=cr.membership_id and m.status='active' and mu.unit_id=sr.unit_id))) order by sr.unit_id,sr.resource_id),'[]') from private.catalog_service_resources sr join private.catalog_resources cr on cr.tenant_id=sr.tenant_id and cr.id=sr.resource_id where sr.tenant_id=tenant and sr.version_id=v.id and private.is_allowed(tenant,sr.unit_id,'catalog.read')) resources,
  (select jsonb_agg(su.unit_id) from private.catalog_service_units su where su.tenant_id=tenant and su.version_id=v.id and private.is_allowed(tenant,su.unit_id,'catalog.read')) units,
  not exists(select 1 from private.catalog_service_units su where su.tenant_id=tenant and su.version_id=v.id and not private.is_allowed(tenant,su.unit_id,'catalog.write')) can_edit
  from private.catalog_services s join private.catalog_service_versions v on v.tenant_id=s.tenant_id and v.service_id=s.id and v.version=s.current_version
@@ -224,8 +229,9 @@ language plpgsql stable security definer set search_path='' as $$ declare a time
  where r.tenant_id=tenant and r.active and (after_id is null or r.id>after_id)
  and (r.membership_id is null or exists(select 1 from public.tenant_memberships m join public.membership_units mu on mu.tenant_id=m.tenant_id and mu.membership_id=m.id where m.tenant_id=tenant and m.id=r.membership_id and m.status='active' and mu.unit_id=unit))
  and (version_id is null or (r.kind='professional' and exists(select 1 from private.catalog_service_resources sr where sr.tenant_id=tenant and sr.version_id=catalog_availability.version_id and sr.unit_id=unit and sr.resource_id=r.id))
- or (r.kind<>'professional' and exists(select 1 from private.catalog_requirements q where q.tenant_id=tenant and q.version_id=catalog_availability.version_id and q.kind=r.kind and q.capability=any(r.capabilities) and ru.capacity>=q.quantity)
- and (not exists(select 1 from private.catalog_service_resources sr join private.catalog_resources cr on cr.tenant_id=sr.tenant_id and cr.id=sr.resource_id where sr.tenant_id=tenant and sr.version_id=catalog_availability.version_id and sr.unit_id=unit and cr.kind=r.kind) or exists(select 1 from private.catalog_service_resources sr where sr.tenant_id=tenant and sr.version_id=catalog_availability.version_id and sr.unit_id=unit and sr.resource_id=r.id))))
+ or (r.kind<>'professional' and (exists(select 1 from private.catalog_service_resources sr where sr.tenant_id=tenant and sr.version_id=catalog_availability.version_id and sr.unit_id=unit and sr.resource_id=r.id)
+ or (exists(select 1 from private.catalog_requirements q where q.tenant_id=tenant and q.version_id=catalog_availability.version_id and q.kind=r.kind and q.capability=any(r.capabilities) and ru.capacity>=q.quantity)
+ and not exists(select 1 from private.catalog_service_resources sr join private.catalog_resources cr on cr.tenant_id=sr.tenant_id and cr.id=sr.resource_id where sr.tenant_id=tenant and sr.version_id=catalog_availability.version_id and sr.unit_id=unit and cr.kind=r.kind)))))
  order by r.id limit 30) x);
 end $$;
 -- Sem acesso direto ao schema privado; RPCs são a única porta de leitura/escrita.
@@ -238,8 +244,7 @@ end $$;
 create function public.catalog_team_options(tenant uuid,unit uuid) returns jsonb language plpgsql stable security definer set search_path='' as $$ begin
  perform private.catalog_assert(tenant,unit,'catalog.write');
  return (select coalesce(jsonb_agg(jsonb_build_object('id',m.id,'name',coalesce(nullif(p.display_name,''),au.email,'Integrante da equipe')||' · '||case m.role when 'clinic_admin' then 'Admin da clínica' when 'manager' then 'Gerente' when 'professional' then 'Profissional' when 'reception' then 'Recepção' when 'finance' then 'Financeiro' else 'Auditoria' end)),'[]') from public.tenant_memberships m join auth.users au on au.id=m.user_id left join public.profiles p on p.id=m.user_id where m.tenant_id=tenant and m.status='active'
- and exists(select 1 from public.membership_units mu where mu.tenant_id=tenant and mu.membership_id=m.id and mu.unit_id=unit)
- and not exists(select 1 from public.membership_units mu where mu.tenant_id=tenant and mu.membership_id=m.id and not private.is_allowed(tenant,mu.unit_id,'catalog.write')));
+ and exists(select 1 from public.membership_units mu where mu.tenant_id=tenant and mu.membership_id=m.id and mu.unit_id=unit));
 end $$;
 revoke all on function public.catalog_team_options(uuid,uuid) from public,anon,service_role;
 grant execute on function public.catalog_team_options(uuid,uuid) to authenticated;

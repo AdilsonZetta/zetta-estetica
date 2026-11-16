@@ -418,4 +418,127 @@ test('Catálogo: integridade, versões e jornadas com sessões reais', async (t)
       }
     },
   )
+  await t.test(
+    'Revisão: seletor multiunidade, capacidade, nomeação e vínculo histórico',
+    async () => {
+      const team = await a.rpc('catalog_team_options', { tenant: A, unit: UA })
+      assert.equal(team.error, null)
+      assert.ok(team.data.some((x) => x.id === f.member))
+      assert.equal(
+        (
+          await f.c.rpc('save_catalog_resource', {
+            tenant: A,
+            unit: UA,
+            expected_version: 1,
+            payload: resourcePayload(`${marker}_criacao`),
+          })
+        ).error.code,
+        '22023',
+      )
+      assert.equal(
+        (
+          await f.c.rpc('publish_catalog_service', {
+            tenant: A,
+            unit: UA,
+            expected_version: 1,
+            payload: servicePayload(`${marker}_criacao`),
+          })
+        ).error.code,
+        '22023',
+      )
+      const named = await f.resource(
+        resourcePayload(`${marker}_sala_nomeada`, [UA], { kind: 'room' }),
+      )
+      const published = await f.service(
+        servicePayload(`${marker}_sem_exigencia`, {
+          resources: [{ resource_id: named, unit_id: UA }],
+          requirements: [],
+        }),
+      )
+      assert.equal(
+        (await window(UA, named, 'shift', '16:00', '18:00')).error,
+        null,
+      )
+      const avail = await f.c.rpc('catalog_availability', {
+        tenant: A,
+        unit: UA,
+        local_start: '2026-11-16T16:10',
+        local_end: '2026-11-16T16:40',
+        version_id: published.version_id,
+      })
+      assert.equal(avail.error, null)
+      assert.equal(
+        avail.data.find((x) => x.id === named)?.available,
+        true,
+      )
+      const trimmed = await f.service(
+        servicePayload(`${marker}_espaco`, {
+          resources: [{ resource_id: room, unit_id: UA }],
+          requirements: [{ kind: 'room', capability: ' avaliacao ', quantity: 1 }],
+        }),
+      )
+      assert.equal(
+        sql(
+          `select capability from private.catalog_requirements where version_id='${trimmed.version_id}'`,
+        ),
+        'avaliacao',
+      )
+      const blank = await f.c.rpc('set_catalog_window', {
+        tenant: A,
+        unit: UA,
+        resource: named,
+        kind: 'exception',
+        local_start: '2026-11-16T18:00',
+        local_end: '2026-11-16T19:00',
+        reason: null,
+      })
+      assert.equal(blank.error, null)
+      assert.equal(
+        sql(`select reason from private.catalog_windows where id='${blank.data}'`),
+        '',
+      )
+      const linked = await f.resource(
+        resourcePayload(`${marker}_historico`, [UA], { membership_id: f.member }),
+      )
+      sql(
+        `update public.tenant_memberships set status='revoked' where id='${f.member}'`,
+      )
+      try {
+        assert.equal(
+          (
+            await a.rpc('save_catalog_resource', {
+              tenant: A,
+              unit: UA,
+              resource: linked,
+              expected_version: 1,
+              payload: resourcePayload(`${marker}_historico`, [UA], {
+                membership_id: f.member,
+                active: true,
+              }),
+            })
+          ).error.code,
+          '22023',
+        )
+        assert.equal(
+          (
+            await a.rpc('save_catalog_resource', {
+              tenant: A,
+              unit: UA,
+              resource: linked,
+              expected_version: 1,
+              payload: resourcePayload(`${marker}_historico`, [UA], {
+                membership_id: f.member,
+                active: false,
+              }),
+            })
+          ).error,
+          null,
+        )
+      } finally {
+        sql(
+          `update public.tenant_memberships set status='active' where id='${f.member}'`,
+        )
+      }
+    },
+  )
 })
