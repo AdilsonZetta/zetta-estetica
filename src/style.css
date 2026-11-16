@@ -59,3 +59,17 @@ select { max-width: 550px; }
 .clients [role=tab][aria-selected=true] { background: #cfff04; color: #111; }
 .clients details { margin-block: 1.5rem; }
 .clients summary { cursor: pointer; font-weight: 600; }
+
+/* Catálogo usa os mesmos tokens de vidro e acento do shell. */
+.catalog { margin-top: 2rem; }
+.catalog-tabs, .catalog-search { display:flex; flex-wrap:wrap; gap:.75rem; align-items:end; margin-block:1rem; }
+.catalog-tabs button[aria-pressed="true"] { background:var(--accent, #cfff04); color:#111; }
+.catalog-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%, 280px),1fr)); gap:1rem; }
+.catalog .glass { margin-block:1rem; min-width:0; }
+.catalog label { display:block; margin-block:.6rem; }
+.catalog input:not([type="checkbox"]), .catalog select, .catalog textarea { display:block; width:100%; box-sizing:border-box; }
+.catalog fieldset { border:1px solid #dedede; border-radius:12px; padding:1rem; min-width:0; margin-block:1rem; }
+.catalog .check { display:flex; align-items:center; gap:.6rem; }
+.catalog .check input { width:1rem; flex-shrink:0; }
+.catalog-preview { padding:1rem; border-left:3px solid #cfff04; background:#f6f6f3; }
+.catalog .client-list span { overflow-wrap:anywhere; }

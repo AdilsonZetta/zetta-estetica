@@ -332,14 +332,14 @@ isOneToOne: true
                   ]
                 },"units": {
                   Row: {
-                    "active": boolean,"id": string,"name": string,"tenant_id": string
+                    "active": boolean,"id": string,"name": string,"tenant_id": string,"timezone": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "active"?: boolean,"id"?: string,"name": string,"tenant_id": string
+                    "active"?: boolean,"id"?: string,"name": string,"tenant_id": string,"timezone"?: string
                   }
                   Update: {
-                    "active"?: boolean,"id"?: string,"name"?: string,"tenant_id"?: string
+                    "active"?: boolean,"id"?: string,"name"?: string,"tenant_id"?: string,"timezone"?: string
                   }
                   Relationships: [
                     {
@@ -362,6 +362,15 @@ isOneToOne: false
 "add_tenant_unit":
 { Args: { "name": string,"tenant": string }; Returns: string
                            },
+"catalog_availability":
+{ Args: { "after_id"?: string,"local_end": string,"local_start": string,"tenant": string,"unit": string,"version_id"?: string }; Returns: Json
+                           },
+"catalog_service_history":
+{ Args: { "after_version"?: number,"service": string,"tenant": string,"unit": string }; Returns: Json
+                           },
+"catalog_team_options":
+{ Args: { "tenant": string,"unit": string }; Returns: Json
+                           },
 "check_access":
 { Args: { "module"?: string,"permission": string,"tenant": string,"unit": string }; Returns: boolean
                            },
@@ -382,6 +391,9 @@ isOneToOne: false
                            },
 "console_snapshot":
 { Args: Record<PropertyKey, never>; Returns: Json
+                           },
+"delete_catalog_window":
+{ Args: { "tenant": string,"unit": string,"window_id": string }; Returns: undefined
                            },
 "export_tenant_metadata":
 { Args: { "tenant": string }; Returns: Json
@@ -412,6 +424,9 @@ isOneToOne: false
               "id": string,"name": string,"slug": string
             }[]
                            },
+"list_catalog":
+{ Args: { "after_id"?: string,"kind"?: string,"query"?: string,"tenant": string,"unit": string }; Returns: Json
+                           },
 "merge_clients":
 { Args: { "confirmed"?: boolean,"reason": string,"source": string,"source_version": number,"survivor": string,"survivor_version": number,"tenant": string,"unit": string }; Returns: Json
                            },
@@ -434,6 +449,9 @@ isOneToOne: false
                            },
 "provision_tenant":
 { Args: { "brand": string,"email": string,"name": string,"plan": string,"request": string,"responsible": string,"slug": string,"timezone"?: string,"unit_name": string }; Returns: string
+                           },
+"publish_catalog_service":
+{ Args: { "expected_version"?: number,"payload": Json,"service"?: string,"tenant": string,"unit": string }; Returns: string
                            },
 "publish_module":
 { Args: { "change": string }; Returns: undefined
@@ -462,11 +480,20 @@ isOneToOne: false
 "revoke_support":
 { Args: { "grant_id": string }; Returns: undefined
                            },
+"save_catalog_resource":
+{ Args: { "expected_version"?: number,"payload": Json,"resource"?: string,"tenant": string,"unit": string }; Returns: string
+                           },
 "save_client":
 { Args: { "client"?: string,"email"?: string,"expected_version"?: number,"name": string,"phone"?: string,"reviewed"?: boolean,"tenant": string,"unit": string }; Returns: string
                            },
 "search_clients":
 { Args: { "after_id"?: string,"query"?: string,"tenant": string,"unit": string }; Returns: Json
+                           },
+"set_catalog_timezone":
+{ Args: { "tenant": string,"timezone": string,"unit": string }; Returns: undefined
+                           },
+"set_catalog_window":
+{ Args: { "kind": string,"local_end": string,"local_start": string,"reason"?: string,"resource": string,"tenant": string,"unit": string,"window_id"?: string }; Returns: string
                            },
 "set_client_link":
 { Args: { "client": string,"expected_version"?: number,"kind": string,"link"?: string,"link_state"?: string,"reference": string,"source": string,"tenant": string,"unit": string }; Returns: string
