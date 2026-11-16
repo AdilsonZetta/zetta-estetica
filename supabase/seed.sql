@@ -63,3 +63,30 @@ ru.tenant_id,ru.resource_id,ru.unit_id,'shift',tstzrange(d.a at time zone u.time
 from private.catalog_resource_units ru join private.catalog_resources r on r.tenant_id=ru.tenant_id and r.id=ru.resource_id join public.units u on u.tenant_id=ru.tenant_id and u.id=ru.unit_id
 cross join lateral(select case when right(ru.unit_id::text,12)='000000000012' then '2026-11-16 13:00'::timestamp else '2026-11-16 09:00'::timestamp end a,case when right(ru.unit_id::text,12)='000000000012' then '2026-11-16 17:00'::timestamp else '2026-11-16 12:00'::timestamp end b) d
 where right(r.id::text,12) in ('000000000101','000000000102','000000000103') on conflict do nothing;
+
+-- Prompt 07: um horário confirmado de demonstração em cada clínica, sem conta FLW.
+insert into private.clients(id,tenant_id,unit_id,name,phone_e164)
+select (left(t.id::text,24)||'000000000401')::uuid,t.id,u.id,'Mariana · exemplo','+551198765401'||right(t.id::text,1)
+from public.tenants t join public.units u on u.tenant_id=t.id
+where t.slug in ('clinica-aurora','clinica-horizonte') and right(u.id::text,12)='000000000011'
+on conflict do nothing;
+insert into private.appointments(id,tenant_id,unit_id,client_id,service_id,service_version_id,state,starts_at,ends_at,timezone,local_start,local_end,created_by)
+select (left(v.tenant_id::text,24)||'000000000501')::uuid,v.tenant_id,u.id,c.id,v.service_id,v.id,'confirmed',
+ '2026-11-16 10:00'::timestamp at time zone u.timezone,'2026-11-16 10:30'::timestamp at time zone u.timezone,u.timezone,
+ '2026-11-16 10:00','2026-11-16 10:30',m.user_id
+from private.catalog_service_versions v
+join public.units u on u.tenant_id=v.tenant_id and right(u.id::text,12)='000000000011'
+join private.clients c on c.tenant_id=v.tenant_id and c.unit_id=u.id and right(c.id::text,12)='000000000401'
+join public.tenant_memberships m on m.tenant_id=v.tenant_id and m.role='clinic_admin' and m.status='active'
+where right(v.id::text,12)='000000000211'
+on conflict do nothing;
+insert into private.appointment_resources(tenant_id,appointment_id,resource_id,unit_id)
+select a.tenant_id,a.id,r.id,a.unit_id
+from private.appointments a join private.catalog_resources r on r.tenant_id=a.tenant_id
+where right(a.id::text,12)='000000000501' and right(r.id::text,12) in ('000000000101','000000000102','000000000103')
+on conflict do nothing;
+insert into private.resource_reservations(tenant_id,resource_id,unit_id,period,occupies,appointment_id)
+select a.tenant_id,ar.resource_id,a.unit_id,tstzrange(a.starts_at-interval '5 minutes',a.ends_at+interval '10 minutes','[)'),true,a.id
+from private.appointments a join private.appointment_resources ar on ar.tenant_id=a.tenant_id and ar.appointment_id=a.id
+where right(a.id::text,12)='000000000501'
+and not exists (select 1 from private.resource_reservations rr where rr.appointment_id=a.id and rr.resource_id=ar.resource_id);

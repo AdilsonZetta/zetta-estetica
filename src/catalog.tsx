@@ -1295,8 +1295,8 @@ export function ClinicCatalog({
             <p>
               Consulta das janelas configuradas no início e fim acima. O
               intervalo deve corresponder à duração do serviço, sem buffers. Com
-              serviço, inclui buffers, habilitação e capacidades. Reservas serão
-              incorporadas na etapa de agenda.
+              serviço, inclui buffers, habilitação e capacidades. A ocupação
+              real fica na agenda.
             </p>
             <label>
               Serviço para disponibilidade

@@ -119,6 +119,12 @@ O admin clínico dispõe de tarefas e vínculos manuais em **Administrar equipe 
 
 ## Catálogo operacional (Prompt 06)
 
-Em **Clínica → Catálogo**, admin/gerente publica serviços versionados, configura profissionais/salas/equipamentos e janelas por data no fuso IANA da unidade. As versões antigas e as referências históricas são preservadas. Recursos compartilhados têm identidade única por clínica e jornadas sem sobreposição entre unidades. Consulta de disponibilidade é informativa e considera habilitação, capacidades, buffers e bloqueios; reservas pertencem à próxima etapa.
+Em **Clínica → Catálogo**, admin/gerente publica serviços versionados, configura profissionais/salas/equipamentos e janelas por data no fuso IANA da unidade. As versões antigas e as referências históricas são preservadas. Recursos compartilhados têm identidade única por clínica e jornadas sem sobreposição entre unidades. A consulta do catálogo continua informativa: não grava reserva.
 
-Contratos, limites, exemplos sintéticos para a agenda e roteiro: [Catálogo](docs/catalogo.md), [relatório do Prompt 06](docs/etapas/prompt-06.md). Sem novas variáveis de ambiente ou dependências de runtime. Não altera concessões de equipe.
+Contratos, limites, exemplos sintéticos e roteiro: [Catálogo](docs/catalogo.md), [relatório do Prompt 06](docs/etapas/prompt-06.md).
+
+## Agenda e reservas (Prompt 07)
+
+**Clínica → Agenda** mostra a grade por dia ou semana, reserva temporária, confirmação, check-in, reagendamento, cancelamento, falta, bloqueio rígido e lista de espera. A escrita passa só pelas RPCs. A ocupação usa `tstzrange [)` com buffers e exclusão GiST por tenant e recurso, inclusive entre unidades. Holds vencidos são liberados na própria RPC; `pg_cron` só é agendado se a extensão existir. Avisos ao cliente ficam em tarefa manual com `CAPABILITY_NOT_VERIFIED`.
+
+Contrato e roteiro: [Agenda](docs/agenda.md), [relatório do Prompt 07](docs/etapas/prompt-07.md). A migration a aplicar no projeto remoto, uma vez e depois de `202611140001`–`202611140013`, é `supabase/migrations/202611140014_agenda.sql`.

@@ -497,11 +497,18 @@ test('Catálogo: integridade, versões e jornadas com sessões reais', async (t)
         sql(`select reason from private.catalog_windows where id='${blank.data}'`),
         '',
       )
+      // O índice único catalog_resource_member impede dois profissionais com o mesmo vínculo.
+      // f.member já foi usado no subteste anterior; este caso usa outro integrante.
+      const spareUser = randomUUID()
+      const spare = randomUUID()
+      sql(
+        `insert into auth.users(id,email,email_confirmed_at) values('${spareUser}','catalog-hist-${spareUser}@example.com',now()); insert into public.tenant_memberships(id,tenant_id,user_id,role,status) values('${spare}','${A}','${spareUser}','professional','active'); insert into public.membership_units(tenant_id,membership_id,unit_id) values('${A}','${spare}','${UA}')`,
+      )
       const linked = await f.resource(
-        resourcePayload(`${marker}_historico`, [UA], { membership_id: f.member }),
+        resourcePayload(`${marker}_historico`, [UA], { membership_id: spare }),
       )
       sql(
-        `update public.tenant_memberships set status='revoked' where id='${f.member}'`,
+        `update public.tenant_memberships set status='revoked' where id='${spare}'`,
       )
       try {
         assert.equal(
@@ -512,7 +519,7 @@ test('Catálogo: integridade, versões e jornadas com sessões reais', async (t)
               resource: linked,
               expected_version: 1,
               payload: resourcePayload(`${marker}_historico`, [UA], {
-                membership_id: f.member,
+                membership_id: spare,
                 active: true,
               }),
             })
@@ -527,7 +534,7 @@ test('Catálogo: integridade, versões e jornadas com sessões reais', async (t)
               resource: linked,
               expected_version: 1,
               payload: resourcePayload(`${marker}_historico`, [UA], {
-                membership_id: f.member,
+                membership_id: spare,
                 active: false,
               }),
             })
@@ -536,7 +543,7 @@ test('Catálogo: integridade, versões e jornadas com sessões reais', async (t)
         )
       } finally {
         sql(
-          `update public.tenant_memberships set status='active' where id='${f.member}'`,
+          `update public.tenant_memberships set status='active' where id='${spare}'`,
         )
       }
     },
