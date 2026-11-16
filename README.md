@@ -116,3 +116,9 @@ O admin clínico dispõe de tarefas e vínculos manuais em **Administrar equipe 
 ## Clientes (Prompt 05)
 
 **Clínica → Clientes** oferece pesquisa por nome/telefone, ficha, vínculos manuais de contato/card FLW, histórico por módulo habilitado, merge supervisionado e prévia JSON de importação com relatório de rejeições. Toda operação exige unidade autorizada; o UUID é interno e telefone compartilhado nunca provoca fusão automática. FLW permanece manual e sem URL de card homologada. Consulte [contratos e roteiro](docs/clientes.md) e [relatório da etapa](docs/etapas/prompt-05.md). Aplicar as migrations aditivas `202611140011_clients.sql` e `202611140012_clients_review.sql`, nessa ordem, após as anteriores, recarregar PostgREST e gerar tipos; não aplicar fixtures sintéticas no projeto hospedado.
+
+## Catálogo operacional (Prompt 06)
+
+Em **Clínica → Catálogo**, admin/gerente publica serviços versionados, configura profissionais/salas/equipamentos e janelas por data no fuso IANA da unidade. As versões antigas e as referências históricas são preservadas. Recursos compartilhados têm identidade única por clínica e jornadas sem sobreposição entre unidades. Consulta de disponibilidade é informativa e considera habilitação, capacidades, buffers e bloqueios; reservas pertencem à próxima etapa.
+
+Contratos, limites, exemplos sintéticos para a agenda e roteiro: [Catálogo](docs/catalogo.md), [relatório do Prompt 06](docs/etapas/prompt-06.md). Sem novas variáveis de ambiente ou dependências de runtime. Não altera concessões de equipe.
